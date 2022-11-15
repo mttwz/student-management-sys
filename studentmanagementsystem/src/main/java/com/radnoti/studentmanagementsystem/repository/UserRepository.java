@@ -39,7 +39,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     
     @Procedure
     void registerStudent(String firstName, String lastName, String phone, Date birth, String email, String password);
-    
     @Procedure
     int login(String email, String password);
     

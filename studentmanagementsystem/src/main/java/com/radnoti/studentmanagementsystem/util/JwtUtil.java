@@ -76,6 +76,9 @@ public class JwtUtil {
     //enum
 
     public boolean validateJwt(String token) {
+        if(token == null){
+            return false;
+        }
 
         String[] parts = token.split("\\.");
         JSONObject header = new JSONObject(decode(parts[0]));

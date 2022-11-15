@@ -10,6 +10,9 @@ import com.radnoti.studentmanagementsystem.util.JwtUtil;
 import com.radnoti.studentmanagementsystem.model.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +55,10 @@ public class UserService {
 
     }
 
-    public void registerStudent(UserDTO userDTO) {
+    public void registerStudent(UserDTO userDTO) throws NoSuchAlgorithmException {
+        System.out.println(userDTO.getPassword());
+
+
 
         userRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
 
@@ -60,9 +66,13 @@ public class UserService {
     }
 
 
-    public UserLoginDTO login(UserDTO userDTO) {
+    public UserLoginDTO login(UserDTO userDTO) throws NoSuchAlgorithmException {
+
+
+
 
         UserLoginDTO userLoginDTO = new UserLoginDTO();
+
 
 
         int userId = userRepository.login(userDTO.getEmail(), userDTO.getPassword());
@@ -107,6 +117,12 @@ public class UserService {
             userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
 
         }
+
+
+    }
+    public boolean validateJwt(UserDTO userDTO) {
+        System.out.println(userDTO.getJwt());
+        return jwtUtil.validateJwt(userDTO.getJwt());
 
 
     }

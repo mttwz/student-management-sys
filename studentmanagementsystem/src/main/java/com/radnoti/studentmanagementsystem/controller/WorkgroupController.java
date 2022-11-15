@@ -32,7 +32,7 @@ public class WorkgroupController {
     ResponseFactory rf = new ResponseFactory();
 
     @PostMapping(path = "/createworkgroup", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void createWorkgroup(@RequestHeader("token") String jwt, @RequestBody WorkgroupDTO workgroupDTO) {
         workgroupService.createWorkgroup(jwt, workgroupDTO);
 

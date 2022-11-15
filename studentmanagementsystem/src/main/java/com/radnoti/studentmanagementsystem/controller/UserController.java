@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+
 /**
  * @author matevoros
  */
@@ -29,45 +31,54 @@ public class UserController {
         userService.updateJwt(userDTO);
 
     }
-
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/register", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void register(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
         userService.register(jwt, userDTO);
     }
-
+    @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping(path = "/registerstudent", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO) {
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
+        System.out.println(userDTO.getEmail());
+        System.out.println(userDTO.getPassword());
+
         userService.registerStudent(userDTO);
 
     }
 
-    @CrossOrigin(origins = "*")
+    @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping(path = "/login", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO) {
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
         return userService.login(userDTO);
     }
 
     @PostMapping(path = "/setuserIiactivated", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void setUserIsActivated(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
         userService.setUserIsActivated(jwt, userDTO);
 
     }
 
     @PostMapping(path = "/deleteuser", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void deleteUser(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
         userService.deleteUser(jwt, userDTO);
 
     }
 
     @PostMapping(path = "/setuserrole", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void setUserRole(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
         userService.setUserRole(jwt, userDTO);
+    }
+    @CrossOrigin(origins = "http://localhost:4200/")
+    @PostMapping(path = "/validatejwt", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody boolean validateJwt(@RequestBody UserDTO userDTO) {
+        return userService.validateJwt(userDTO);
     }
 
 }

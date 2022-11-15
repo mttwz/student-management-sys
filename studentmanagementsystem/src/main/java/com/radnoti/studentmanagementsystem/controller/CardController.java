@@ -26,7 +26,7 @@ public class CardController {
     ResponseFactory rf = new ResponseFactory();
 
     @PostMapping(path = "/createcard", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void connectCardToStudent(@RequestHeader("token") String jwt, @RequestBody CardDTO cardDTO) {
         cardService.createCard(jwt, cardDTO);
 

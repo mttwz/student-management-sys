@@ -31,19 +31,19 @@ public class StudentController {
     ResponseFactory rf = new ResponseFactory();
 
     @PostMapping(path = "/connectcardtostudent", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void connectCardToStudent(@RequestHeader("token") String jwt, @RequestBody StudentDTO studentDTO) {
         studentService.connectCardToStudent(jwt, studentDTO);
     }
 
     @PostMapping(path = "/addstudenttoworkgroup", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void addStudentToWorkgroup(@RequestHeader("token") String jwt, @RequestBody StudentDTO studentDTO) {
         studentService.addStudentToWorkgroup(jwt, studentDTO);
     }
 
     @PostMapping(path = "/connectstudenttoUser", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void connectStudentToUser(@RequestHeader("token") String jwt, @RequestBody StudentDTO studentDTO) {
         studentService.connectStudentToUser(jwt, studentDTO);
     }
