@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.NoSuchAlgorithmException;
+
 
 /**
  * @author matevoros
@@ -40,7 +40,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping(path = "/registerstudent", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
+    public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO){
         System.out.println(userDTO.getEmail());
         System.out.println(userDTO.getPassword());
 
@@ -51,7 +51,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping(path = "/login", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
+    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO){
         return userService.login(userDTO);
     }
 
