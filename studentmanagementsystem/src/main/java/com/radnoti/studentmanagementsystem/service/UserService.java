@@ -15,6 +15,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author matevoros
@@ -28,7 +29,7 @@ public class UserService {
 
     JwtUtil jwtUtil = new JwtUtil();
 
-
+    @Transactional
     public String updateJwt(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         String jwt = "";
@@ -41,7 +42,7 @@ public class UserService {
         //optionalUser.ifPresent(u -> userRepository.updateJwt(u.getId(), jwtUtil.generateJwt(u.getId(), u.getRoleId().getRoleType())));
         return jwt;
     }
-
+    @Transactional
     public void register(String jwt, UserDTO userDTO) {
 
 
@@ -52,7 +53,7 @@ public class UserService {
 
 
     }
-
+    @Transactional
     public void registerStudent(UserDTO userDTO){
         System.out.println(userDTO.getPassword());
 
@@ -63,7 +64,7 @@ public class UserService {
 
     }
 
-
+    @Transactional
     public UserLoginDTO login(UserDTO userDTO){
 
 
@@ -87,7 +88,7 @@ public class UserService {
 
 
     }
-
+    @Transactional
     public void setUserIsActivated(String jwt, UserDTO userDTO) {
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
             userRepository.setUserIsActivated(userDTO.getId());
@@ -96,7 +97,7 @@ public class UserService {
 
 
     }
-
+    @Transactional
     public void deleteUser(String jwt, UserDTO userDTO) {
 
 
@@ -107,7 +108,7 @@ public class UserService {
 
 
     }
-
+    @Transactional
     public void setUserRole(String jwt, UserDTO userDTO) {
 
 
@@ -118,6 +119,7 @@ public class UserService {
 
 
     }
+    @Transactional
     public boolean validateJwt(UserDTO userDTO) {
         System.out.println(userDTO.getJwt());
         return jwtUtil.validateJwt(userDTO.getJwt());

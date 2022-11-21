@@ -10,6 +10,7 @@ import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author matevoros
@@ -21,7 +22,7 @@ public class WorkgroupService {
     WorkgroupRepository workgroupRepository;
 
     JwtUtil jwtUtil = new JwtUtil();
-
+    @Transactional
     public void createWorkgroup(String jwt, WorkgroupDTO workgroupDTO) {
 
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {

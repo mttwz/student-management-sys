@@ -12,6 +12,7 @@ import com.radnoti.studentmanagementsystem.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class StudentService {
 
     JwtUtil jwtUtil = new JwtUtil();
 
-
+    @Transactional
     public void connectCardToStudent(String jwt, StudentDTO studentDTO) {
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
 /*            Optional<Student> student = studentRepository.findById(studentDTO.getId());
@@ -37,7 +38,7 @@ public class StudentService {
             studentRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
         }
     }
-
+    @Transactional
     public void addStudentToWorkgroup(String jwt, StudentDTO studentDTO) {
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
             studentRepository.addStudentToWorkgroup(studentDTO.getId(), studentDTO.getWorkgroupId());
@@ -45,7 +46,7 @@ public class StudentService {
 
 
     }
-
+    @Transactional
     public void connectStudentToUser(String jwt, StudentDTO studentDTO) {
 
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {

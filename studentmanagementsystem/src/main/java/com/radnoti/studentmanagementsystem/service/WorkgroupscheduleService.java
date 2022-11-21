@@ -6,6 +6,7 @@ import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepositor
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WorkgroupscheduleService {
@@ -13,7 +14,7 @@ public class WorkgroupscheduleService {
     private WorkgroupscheduleRepository workgroupscheduleRepository;
 
     JwtUtil jwtUtil = new JwtUtil();
-
+    @Transactional
     public void createWorkgroupSchedule(String jwt, WorkgroupscheduleDTO workgroupscheduleDTO){
             if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
                 workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(),workgroupscheduleDTO.getWorkgroupId(),workgroupscheduleDTO.getStart(),workgroupscheduleDTO.getEnd(),workgroupscheduleDTO.getOnsite());

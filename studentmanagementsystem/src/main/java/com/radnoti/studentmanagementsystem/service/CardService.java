@@ -10,28 +10,26 @@ import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- *
  * @author matevoros
  */
 @Service
 public class CardService {
-    
+
     @Autowired
     private CardRepository cardRepository;
-    
+
     JwtUtil jwtUtil = new JwtUtil();
-    
-    
-    
-        public void createCard(String jwt, CardDTO cardDTO) {
-            if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-                cardRepository.createCard(cardDTO.getHash());
+
+    @Transactional
+    public void createCard(String jwt, CardDTO cardDTO) {
+        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+            cardRepository.createCard(cardDTO.getHash());
 
 
-            }
+        }
     }
 }
