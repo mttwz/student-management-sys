@@ -80,14 +80,19 @@ public class JwtUtil {
     }
 
     public boolean roleCheck(String roleName, String token) {
-        String[] parts = token.split("\\.");
-        JSONObject header = new JSONObject(decode(parts[0]));
-        JSONObject data = new JSONObject(decode(parts[1]));
-        String signature = decode(parts[2]);
-        if (data.getString("role").equals(roleName)) {
-            return true;
-        };
-        return false;
+        try {
+            String[] parts = token.split("\\.");
+            JSONObject header = new JSONObject(decode(parts[0]));
+            JSONObject data = new JSONObject(decode(parts[1]));
+            String signature = decode(parts[2]);
+            if (data.getString("role").equals(roleName)) {
+                return true;
+            };
+            return false;
+        }catch (Exception ex){
+            return false;
+        }
+
 
     }
 
