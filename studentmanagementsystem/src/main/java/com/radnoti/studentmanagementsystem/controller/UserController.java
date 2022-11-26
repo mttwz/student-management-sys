@@ -5,13 +5,13 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.dto.UserLoginDTO;
 import com.radnoti.studentmanagementsystem.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
 
 /**
@@ -26,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path = "/updatejwt", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void updateJwt(@RequestBody UserDTO userDTO) {
         userService.updateJwt(userDTO);
 
@@ -41,9 +41,6 @@ public class UserController {
     @PostMapping(path = "/registerstudent", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO){
-        System.out.println(userDTO.getEmail());
-        System.out.println(userDTO.getPassword());
-
         userService.registerStudent(userDTO);
 
     }
@@ -51,9 +48,10 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping(path = "/login", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO){
+    public @ResponseBody UserDTO.UserLoginDTO login(@RequestBody UserDTO userDTO){
         return userService.login(userDTO);
     }
+
 
     @PostMapping(path = "/setuserIiactivated", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
@@ -77,7 +75,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200/")
     @PostMapping(path = "/validatejwt", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody boolean validateJwt(@RequestBody UserDTO userDTO) {
+    public @ResponseBody Map validateJwt(@RequestBody UserDTO userDTO) {
         return userService.validateJwt(userDTO);
     }
 

@@ -17,6 +17,11 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+
+
+
+
+
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -100,6 +105,16 @@
             <artifactId>jjwt-api</artifactId>
             <version>0.10.7</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.2</version>
         </dependency>
 
         <dependency>

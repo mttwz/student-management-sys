@@ -5,7 +5,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.dto.UserLoginDTO;
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 import com.radnoti.studentmanagementsystem.model.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -36,7 +35,7 @@ public class UserService {
         if (optionalUser.isPresent()) {
             userDTO.setId(optionalUser.get().getId());
             userDTO.setRoleName(optionalUser.get().getRoleId().getRoleType());
-            jwt = jwtUtil.generateJwt(userDTO);
+            jwt = jwtUtil.generateJwt(optionalUser);
             //userRepository.updateJwt(optionalUser.get().getId(), jwt);
         }
         //optionalUser.ifPresent(u -> userRepository.updateJwt(u.getId(), jwtUtil.generateJwt(u.getId(), u.getRoleId().getRoleType())));
@@ -65,29 +64,28 @@ public class UserService {
     }
 
     @Transactional
-    public UserLoginDTO login(UserDTO userDTO){
-
-
-
-
-        UserLoginDTO userLoginDTO = new UserLoginDTO();
-
-
-
+    public UserDTO.UserLoginDTO login(UserDTO userDTO){
+        UserDTO.UserLoginDTO userLoginDTO = new UserDTO.UserLoginDTO();
         int userId = userRepository.login(userDTO.getEmail(), userDTO.getPassword());
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
-            userDTO.setId(userId);
-            userDTO.setRoleName(optionalUser.get().getRoleId().getRoleType());
-            userLoginDTO.setJwt(jwtUtil.generateJwt(userDTO));
-            userLoginDTO.setEmail(userDTO.getEmail());
-
             userLoginDTO.setId(userId);
+            userLoginDTO.setEmail(optionalUser.get().getEmail());
+            userLoginDTO.setJwt(jwtUtil.generateJwt(optionalUser));
+            userLoginDTO.setFirstName(optionalUser.get().getFirstName());
+            userLoginDTO.setLastName(optionalUser.get().getLastName());
+
+
         }
         return userLoginDTO;
-
-
     }
+
+    @Transactional
+    public Optional<User> getUserData(UserDTO userDTO){
+        Optional<User> user = userRepository.findById(userDTO.getId());
+        return user;
+    }
+
     @Transactional
     public void setUserIsActivated(String jwt, UserDTO userDTO) {
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
@@ -119,10 +117,16 @@ public class UserService {
 
 
     }
+
+
+    //ezt nemtudom miert csináltam
     @Transactional
-    public boolean validateJwt(UserDTO userDTO) {
-        System.out.println(userDTO.getJwt());
-        return jwtUtil.validateJwt(userDTO.getJwt());
+    public Map validateJwt(UserDTO userDTO) {
+        HashMap<String, String> map = new HashMap<>();
+
+        boolean isValid = jwtUtil.validateJwt(userDTO.getJwt());
+        map.put("valid", String.valueOf(isValid));
+        return map;
 
 
     }
