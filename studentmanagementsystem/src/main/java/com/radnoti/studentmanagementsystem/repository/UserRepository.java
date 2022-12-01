@@ -5,6 +5,8 @@
 package com.radnoti.studentmanagementsystem.repository;
 
 import com.radnoti.studentmanagementsystem.model.User;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,5 +52,10 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     
     @Procedure
     void setUserRole(Integer userId, String roleName);
+
+    @Procedure
+    ArrayList<ArrayList<String>> getWorkgroupScheduleByUserId(Integer userId);
+
+
     
 }

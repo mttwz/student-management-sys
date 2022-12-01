@@ -4,13 +4,16 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
+import com.radnoti.studentmanagementsystem.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -78,5 +81,16 @@ public class UserController {
     public @ResponseBody Map validateJwt(@RequestBody UserDTO userDTO) {
         return userService.validateJwt(userDTO);
     }
+
+
+
+    @CrossOrigin(origins = "http://localhost:4200/")
+    @PostMapping(path = "/getworkgroupschedulebyuserid", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(@RequestBody UserDTO userDTO) {
+        return userService.getWorkgroupScheduleByUserId(userDTO);
+    }
+
+
 
 }
