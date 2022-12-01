@@ -19,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -26,15 +27,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "Password_reset")
+@Table(name = "password_reset")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Passwordreset.findAll", query = "SELECT p FROM Passwordreset p"),
-    @NamedQuery(name = "Passwordreset.findById", query = "SELECT p FROM Passwordreset p WHERE p.id = :id"),
-    @NamedQuery(name = "Passwordreset.findByResetCode", query = "SELECT p FROM Passwordreset p WHERE p.resetCode = :resetCode"),
-    @NamedQuery(name = "Passwordreset.findByExpireDate", query = "SELECT p FROM Passwordreset p WHERE p.expireDate = :expireDate"),
-    @NamedQuery(name = "Passwordreset.findByIsUsed", query = "SELECT p FROM Passwordreset p WHERE p.isUsed = :isUsed")})
-public class Passwordreset implements Serializable {
+    @NamedQuery(name = "PasswordReset.findAll", query = "SELECT p FROM PasswordReset p"),
+    @NamedQuery(name = "PasswordReset.findById", query = "SELECT p FROM PasswordReset p WHERE p.id = :id"),
+    @NamedQuery(name = "PasswordReset.findByResetCode", query = "SELECT p FROM PasswordReset p WHERE p.resetCode = :resetCode"),
+    @NamedQuery(name = "PasswordReset.findByExpireDate", query = "SELECT p FROM PasswordReset p WHERE p.expireDate = :expireDate"),
+    @NamedQuery(name = "PasswordReset.findByIsUsed", query = "SELECT p FROM PasswordReset p WHERE p.isUsed = :isUsed")})
+public class PasswordReset implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,28 +43,23 @@ public class Passwordreset implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 255)
     @Column(name = "reset_code")
     private String resetCode;
     @Column(name = "expire_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date expireDate;
-    @Basic(optional = false)
     @Column(name = "is_used")
-    private boolean isUsed;
+    private Boolean isUsed;
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student studentId;
 
-    public Passwordreset() {
+    public PasswordReset() {
     }
 
-    public Passwordreset(Integer id) {
+    public PasswordReset(Integer id) {
         this.id = id;
-    }
-
-    public Passwordreset(Integer id, boolean isUsed) {
-        this.id = id;
-        this.isUsed = isUsed;
     }
 
     public Integer getId() {
@@ -90,11 +86,11 @@ public class Passwordreset implements Serializable {
         this.expireDate = expireDate;
     }
 
-    public boolean getIsUsed() {
+    public Boolean getIsUsed() {
         return isUsed;
     }
 
-    public void setIsUsed(boolean isUsed) {
+    public void setIsUsed(Boolean isUsed) {
         this.isUsed = isUsed;
     }
 
@@ -116,10 +112,10 @@ public class Passwordreset implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Passwordreset)) {
+        if (!(object instanceof PasswordReset)) {
             return false;
         }
-        Passwordreset other = (Passwordreset) object;
+        PasswordReset other = (PasswordReset) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -128,7 +124,7 @@ public class Passwordreset implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Passwordreset[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.PasswordReset[ id=" + id + " ]";
     }
     
 }

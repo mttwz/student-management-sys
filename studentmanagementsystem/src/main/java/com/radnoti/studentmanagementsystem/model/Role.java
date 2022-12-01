@@ -16,6 +16,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -24,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author matevoros
  */
 @Entity
-@Table(name = "Role")
+@Table(name = "role")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
@@ -38,6 +39,7 @@ public class Role implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 255)
     @Column(name = "role_type")
     private String roleType;
     @OneToMany(mappedBy = "roleId")
@@ -48,6 +50,12 @@ public class Role implements Serializable {
 
     public Role(Integer id) {
         this.id = id;
+    }
+
+    public Role(Integer id, String roleType, Collection<User> userCollection) {
+        this.id = id;
+        this.roleType = roleType;
+        this.userCollection = userCollection;
     }
 
     public Integer getId() {

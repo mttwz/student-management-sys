@@ -8,6 +8,8 @@ import com.radnoti.studentmanagementsystem.model.Student;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author matevoros
@@ -17,15 +19,14 @@ public interface StudentRepository extends CrudRepository<Student, Integer>  {
     @Procedure
     void connectCardToStudent(Integer studentId, Integer cardId);
     
-    @Procedure
-    void addStudentToWorkgroup(Integer studentId, Integer workgroupId);
+
     
     @Procedure
     void connectStudentToUser(Integer studentId, Integer userId);
     
     @Procedure
     void logStudent(Integer studentId);
-    
-    
+
+
     
 }

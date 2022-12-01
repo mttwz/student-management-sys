@@ -5,15 +5,19 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.Card;
 import com.radnoti.studentmanagementsystem.model.Student;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
+import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -26,6 +30,7 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     JwtUtil jwtUtil = new JwtUtil();
+    DateFormatUtil dateFormatUtil = new DateFormatUtil();
 
     @Transactional
     public void connectCardToStudent(String jwt, StudentDTO studentDTO) {
@@ -38,23 +43,14 @@ public class StudentService {
             studentRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
         }
     }
-    @Transactional
-    public void addStudentToWorkgroup(String jwt, StudentDTO studentDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-            studentRepository.addStudentToWorkgroup(studentDTO.getId(), studentDTO.getWorkgroupId());
-        }
 
-
-    }
     @Transactional
     public void connectStudentToUser(String jwt, StudentDTO studentDTO) {
-
         if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
             studentRepository.connectStudentToUser(studentDTO.getId(), studentDTO.getUserId());
-
         }
-
-
     }
+
+
 
 }

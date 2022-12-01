@@ -16,6 +16,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -24,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author matevoros
  */
 @Entity
-@Table(name = "Workgroup")
+@Table(name = "workgroup")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Workgroup.findAll", query = "SELECT w FROM Workgroup w"),
@@ -39,20 +40,30 @@ public class Workgroup implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 255)
     @Column(name = "group_name")
     private String groupName;
+    @Size(max = 255)
     @Column(name = "institution")
     private String institution;
     @OneToMany(mappedBy = "workgroupId")
-    private Collection<Workgroupschedule> workgroupscheduleCollection;
+    private Collection<WorkgroupSchedule> workgroupScheduleCollection;
     @OneToMany(mappedBy = "workgroupId")
-    private Collection<Student> studentCollection;
+    private Collection<User> userCollection;
 
     public Workgroup() {
     }
 
     public Workgroup(Integer id) {
         this.id = id;
+    }
+
+    public Workgroup(Integer id, String groupName, String institution, Collection<WorkgroupSchedule> workgroupScheduleCollection, Collection<User> userCollection) {
+        this.id = id;
+        this.groupName = groupName;
+        this.institution = institution;
+        this.workgroupScheduleCollection = workgroupScheduleCollection;
+        this.userCollection = userCollection;
     }
 
     public Integer getId() {
@@ -80,21 +91,21 @@ public class Workgroup implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Workgroupschedule> getWorkgroupscheduleCollection() {
-        return workgroupscheduleCollection;
+    public Collection<WorkgroupSchedule> getWorkgroupScheduleCollection() {
+        return workgroupScheduleCollection;
     }
 
-    public void setWorkgroupscheduleCollection(Collection<Workgroupschedule> workgroupscheduleCollection) {
-        this.workgroupscheduleCollection = workgroupscheduleCollection;
+    public void setWorkgroupScheduleCollection(Collection<WorkgroupSchedule> workgroupScheduleCollection) {
+        this.workgroupScheduleCollection = workgroupScheduleCollection;
     }
 
     @XmlTransient
-    public Collection<Student> getStudentCollection() {
-        return studentCollection;
+    public Collection<User> getUserCollection() {
+        return userCollection;
     }
 
-    public void setStudentCollection(Collection<Student> studentCollection) {
-        this.studentCollection = studentCollection;
+    public void setUserCollection(Collection<User> userCollection) {
+        this.userCollection = userCollection;
     }
 
     @Override

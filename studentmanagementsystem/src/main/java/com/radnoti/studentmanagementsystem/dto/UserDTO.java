@@ -34,6 +34,8 @@ public class UserDTO implements Serializable {
 
     private String password;
 
+    private Integer workgroupId;
+
     private String jwt;
 
     private Date jwtExpireDate;
@@ -52,7 +54,7 @@ public class UserDTO implements Serializable {
 
     private String roleName;
 
-    private StudentDTO student;
+    //private StudentDTO student;
 
     public UserDTO() {
     }
@@ -111,6 +113,14 @@ public class UserDTO implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getWorkgroupId() {
+        return workgroupId;
+    }
+
+    public void setWorkgroupId(Integer workgroupId) {
+        this.workgroupId = workgroupId;
     }
 
     public String getJwt() {
@@ -185,13 +195,13 @@ public class UserDTO implements Serializable {
         this.roleName = roleId;
     }
 
-    public StudentDTO getStudent() {
-        return student;
-    }
-
-    public void setStudent(StudentDTO student) {
-        this.student = student;
-    }
+//    public StudentDTO getStudent() {
+//        return student;
+//    }
+//
+//    public void setStudent(StudentDTO student) {
+//        this.student = student;
+//    }
 
     public static class UserLoginDTO implements Serializable {
 
