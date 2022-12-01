@@ -2,7 +2,7 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.User;
-import com.radnoti.studentmanagementsystem.model.Workgroupschedule;
+import com.radnoti.studentmanagementsystem.model.WorkgroupSchedule;
 import com.radnoti.studentmanagementsystem.service.WorkgroupscheduleService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -27,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author matevoros
  */
 @Entity
-@Table(name = "Student")
+@Table(name = "student")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
@@ -41,18 +40,15 @@ public class Student implements Serializable {
     @Column(name = "id")
     private Integer id;
     @OneToMany(mappedBy = "studentId")
-    private Collection<Attendance> attendanceCollection;
+    private Collection<PasswordReset> passwordResetCollection;
     @JoinColumn(name = "card_id", referencedColumnName = "id")
     @OneToOne
     private Card cardId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @OneToOne
     private User userId;
-    @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
-    @ManyToOne
-    private Workgroup workgroupId;
     @OneToMany(mappedBy = "studentId")
-    private Collection<Passwordreset> passwordresetCollection;
+    private Collection<Attendance> attendanceCollection;
 
     public Student() {
     }
@@ -60,17 +56,6 @@ public class Student implements Serializable {
     public Student(Integer id) {
         this.id = id;
     }
-
-    public Student(Integer id, Collection<Attendance> attendanceCollection, Card cardId, User userId, Workgroup workgroupId, Collection<Passwordreset> passwordresetCollection) {
-        this.id = id;
-        this.attendanceCollection = attendanceCollection;
-        this.cardId = cardId;
-        this.userId = userId;
-        this.workgroupId = workgroupId;
-        this.passwordresetCollection = passwordresetCollection;
-    }
-    
-    
 
     public Integer getId() {
         return id;
@@ -80,13 +65,21 @@ public class Student implements Serializable {
         this.id = id;
     }
 
-    @XmlTransient
-    public Collection<Attendance> getAttendanceCollection() {
-        return attendanceCollection;
+    public Student(Integer id, Collection<PasswordReset> passwordResetCollection, Card cardId, User userId, Collection<Attendance> attendanceCollection) {
+        this.id = id;
+        this.passwordResetCollection = passwordResetCollection;
+        this.cardId = cardId;
+        this.userId = userId;
+        this.attendanceCollection = attendanceCollection;
     }
 
-    public void setAttendanceCollection(Collection<Attendance> attendanceCollection) {
-        this.attendanceCollection = attendanceCollection;
+    @XmlTransient
+    public Collection<PasswordReset> getPasswordResetCollection() {
+        return passwordResetCollection;
+    }
+
+    public void setPasswordResetCollection(Collection<PasswordReset> passwordResetCollection) {
+        this.passwordResetCollection = passwordResetCollection;
     }
 
     public Card getCardId() {
@@ -105,21 +98,13 @@ public class Student implements Serializable {
         this.userId = userId;
     }
 
-    public Workgroup getWorkgroupId() {
-        return workgroupId;
-    }
-
-    public void setWorkgroupId(Workgroup workgroupId) {
-        this.workgroupId = workgroupId;
-    }
-
     @XmlTransient
-    public Collection<Passwordreset> getPasswordresetCollection() {
-        return passwordresetCollection;
+    public Collection<Attendance> getAttendanceCollection() {
+        return attendanceCollection;
     }
 
-    public void setPasswordresetCollection(Collection<Passwordreset> passwordresetCollection) {
-        this.passwordresetCollection = passwordresetCollection;
+    public void setAttendanceCollection(Collection<Attendance> attendanceCollection) {
+        this.attendanceCollection = attendanceCollection;
     }
 
     @Override

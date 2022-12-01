@@ -9,8 +9,6 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,10 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
-import javax.persistence.Persistence;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
@@ -55,52 +54,66 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 255)
     @Column(name = "first_name")
     private String firstName;
+    @Size(max = 255)
     @Column(name = "last_name")
     private String lastName;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 255)
     @Column(name = "phone")
     private String phone;
     @Column(name = "birth")
     @Temporal(TemporalType.DATE)
     private Date birth;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 255)
     @Column(name = "email")
     private String email;
+    @Size(max = 255)
     @Column(name = "password")
     private String password;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "registered_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredAt;
     @Lob
+    @Size(max = 65535)
     @Column(name = "activation_code")
     private String activationCode;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "is_activated")
     private boolean isActivated;
     @Column(name = "activated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date activatedAt;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "is_deleted")
     private boolean isDeleted;
     @Column(name = "deleted_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
+    @OneToOne(mappedBy = "userId")
+    private Student student;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
     private Role roleId;
-    @OneToOne(mappedBy = "userId")
-    private Student student;
+    @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
+    @ManyToOne
+    private Workgroup workgroupId;
 
     public User() {
     }
-    
-    public User(Integer id){
+
+    public User(Integer id) {
         this.id = id;
     }
 
-    public User(Integer id, String firstName, String lastName, String phone, Date birth, String email, String password, Date registeredAt, String activationCode, boolean isActivated, Date activatedAt, boolean isDeleted, Date deletedAt, Role roleId, Student student) {
+    public User(Integer id, String firstName, String lastName, String phone, Date birth, String email, String password, Date registeredAt, String activationCode, boolean isActivated, Date activatedAt, boolean isDeleted, Date deletedAt, Student student, Role roleId, Workgroup workgroupId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -114,10 +127,10 @@ public class User implements Serializable {
         this.activatedAt = activatedAt;
         this.isDeleted = isDeleted;
         this.deletedAt = deletedAt;
-        this.roleId = roleId;
         this.student = student;
+        this.roleId = roleId;
+        this.workgroupId = workgroupId;
     }
-
 
     public User(Integer id, Date registeredAt, boolean isActivated, boolean isDeleted) {
         this.id = id;
@@ -182,7 +195,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-
     public Date getRegisteredAt() {
         return registeredAt;
     }
@@ -231,6 +243,14 @@ public class User implements Serializable {
         this.deletedAt = deletedAt;
     }
 
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
     public Role getRoleId() {
         return roleId;
     }
@@ -239,12 +259,12 @@ public class User implements Serializable {
         this.roleId = roleId;
     }
 
-    public Student getStudent() {
-        return student;
+    public Workgroup getWorkgroupId() {
+        return workgroupId;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setWorkgroupId(Workgroup workgroupId) {
+        this.workgroupId = workgroupId;
     }
 
     @Override
@@ -271,5 +291,5 @@ public class User implements Serializable {
     public String toString() {
         return "com.radnoti.studentmanagementsystem.model.User[ id=" + id + " ]";
     }
-
+    
 }

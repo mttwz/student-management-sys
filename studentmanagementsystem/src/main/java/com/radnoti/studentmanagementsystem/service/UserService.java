@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
@@ -108,10 +109,15 @@ public class UserService {
         return map;
     }
 
+    @Transactional
+    public void addUserToWorkgroup(String jwt, UserDTO userDTO) {
+        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+            userRepository.addUserToWorkgroup(userDTO.getId(), userDTO.getWorkgroupId());
+        }
+    }
 
     @Transactional
     public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(UserDTO userDTO){
-        //
         ArrayList<ArrayList<String>> workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         ArrayList<WorkgroupscheduleDTO> dtoList = new ArrayList<>();
 

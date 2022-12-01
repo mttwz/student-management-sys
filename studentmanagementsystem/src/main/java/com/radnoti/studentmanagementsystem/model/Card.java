@@ -15,6 +15,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -22,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "Card")
+@Table(name = "card")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Card.findAll", query = "SELECT c FROM Card c"),
@@ -36,6 +37,7 @@ public class Card implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 255)
     @Column(name = "hash")
     private String hash;
     @OneToOne(mappedBy = "cardId")
@@ -46,6 +48,12 @@ public class Card implements Serializable {
 
     public Card(Integer id) {
         this.id = id;
+    }
+
+    public Card(Integer id, String hash, Student student) {
+        this.id = id;
+        this.hash = hash;
+        this.student = student;
     }
 
     public Integer getId() {

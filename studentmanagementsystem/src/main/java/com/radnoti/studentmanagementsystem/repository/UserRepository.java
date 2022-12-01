@@ -54,6 +54,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     void setUserRole(Integer userId, String roleName);
 
     @Procedure
+    void addUserToWorkgroup(Integer userId, Integer workgroupId);
+
+    @Procedure
     ArrayList<ArrayList<String>> getWorkgroupScheduleByUserId(Integer userId);
 
 

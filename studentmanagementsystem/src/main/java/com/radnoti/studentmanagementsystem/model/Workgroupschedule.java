@@ -19,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -26,16 +27,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "Workgroup_schedule")
+@Table(name = "workgroup_schedule")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Workgroupschedule.findAll", query = "SELECT w FROM Workgroupschedule w"),
-    @NamedQuery(name = "Workgroupschedule.findById", query = "SELECT w FROM Workgroupschedule w WHERE w.id = :id"),
-    @NamedQuery(name = "Workgroupschedule.findByName", query = "SELECT w FROM Workgroupschedule w WHERE w.name = :name"),
-    @NamedQuery(name = "Workgroupschedule.findByStart", query = "SELECT w FROM Workgroupschedule w WHERE w.start = :start"),
-    @NamedQuery(name = "Workgroupschedule.findByEnd", query = "SELECT w FROM Workgroupschedule w WHERE w.end = :end"),
-    @NamedQuery(name = "Workgroupschedule.findByIsOnsite", query = "SELECT w FROM Workgroupschedule w WHERE w.isOnsite = :isOnsite")})
-public class Workgroupschedule implements Serializable {
+    @NamedQuery(name = "WorkgroupSchedule.findAll", query = "SELECT w FROM WorkgroupSchedule w"),
+    @NamedQuery(name = "WorkgroupSchedule.findById", query = "SELECT w FROM WorkgroupSchedule w WHERE w.id = :id"),
+    @NamedQuery(name = "WorkgroupSchedule.findByName", query = "SELECT w FROM WorkgroupSchedule w WHERE w.name = :name"),
+    @NamedQuery(name = "WorkgroupSchedule.findByStart", query = "SELECT w FROM WorkgroupSchedule w WHERE w.start = :start"),
+    @NamedQuery(name = "WorkgroupSchedule.findByEnd", query = "SELECT w FROM WorkgroupSchedule w WHERE w.end = :end"),
+    @NamedQuery(name = "WorkgroupSchedule.findByIsOnsite", query = "SELECT w FROM WorkgroupSchedule w WHERE w.isOnsite = :isOnsite")})
+public class WorkgroupSchedule implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,6 +44,7 @@ public class Workgroupschedule implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 255)
     @Column(name = "name")
     private String name;
     @Column(name = "start")
@@ -57,11 +59,20 @@ public class Workgroupschedule implements Serializable {
     @ManyToOne
     private Workgroup workgroupId;
 
-    public Workgroupschedule() {
+    public WorkgroupSchedule() {
     }
 
-    public Workgroupschedule(Integer id) {
+    public WorkgroupSchedule(Integer id) {
         this.id = id;
+    }
+
+    public WorkgroupSchedule(Integer id, String name, Date start, Date end, Boolean isOnsite, Workgroup workgroupId) {
+        this.id = id;
+        this.name = name;
+        this.start = start;
+        this.end = end;
+        this.isOnsite = isOnsite;
+        this.workgroupId = workgroupId;
     }
 
     public Integer getId() {
@@ -122,10 +133,10 @@ public class Workgroupschedule implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Workgroupschedule)) {
+        if (!(object instanceof WorkgroupSchedule)) {
             return false;
         }
-        Workgroupschedule other = (Workgroupschedule) object;
+        WorkgroupSchedule other = (WorkgroupSchedule) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -134,7 +145,7 @@ public class Workgroupschedule implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Workgroupschedule[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.WorkgroupSchedule[ id=" + id + " ]";
     }
     
 }
