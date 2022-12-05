@@ -27,7 +27,7 @@ public class CardController {
 
     @PostMapping(path = "/createcard", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectCardToStudent(@RequestHeader("token") String jwt, @RequestBody CardDTO cardDTO) {
+    public @ResponseBody void connectCardToStudent(@RequestHeader("Authorization") String jwt, @RequestBody CardDTO cardDTO) {
         cardService.createCard(jwt, cardDTO);
 
 

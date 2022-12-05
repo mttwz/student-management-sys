@@ -29,8 +29,11 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    JwtUtil jwtUtil = new JwtUtil();
-    DateFormatUtil dateFormatUtil = new DateFormatUtil();
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private DateFormatUtil dateFormatUtil;
 
     @Transactional
     public void connectCardToStudent(String jwt, StudentDTO studentDTO) {

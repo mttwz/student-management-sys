@@ -39,7 +39,7 @@ public class JwtUtil {
         Integer userId = optionalUser.get().getId();
         String role = optionalUser.get().getRoleId().getRoleType();
 
-        //System.out.println(u);
+
         Instant now = Instant.now();
 
         String token = Jwts.builder()
@@ -53,15 +53,16 @@ public class JwtUtil {
                         signingKey
                 )
                 .compact();
-        return token;
+        return "Bearer " +token;
 
     }
     //enum
 
     public boolean validateJwt(String token) {
         try{
-            Jwts.parser().setSigningKey(Secret).parseClaimsJws(token);
-            String[] parts = token.split("\\.");
+            String cleanToken = token.split(" ")[1];
+            Jwts.parser().setSigningKey(Secret).parseClaimsJws(cleanToken);
+            String[] parts = cleanToken.split("\\.");
             JSONObject data = new JSONObject(decode(parts[1]));
             if (data.getLong("exp") > (System.currentTimeMillis() / 1000)) {
                 return true;
@@ -81,7 +82,8 @@ public class JwtUtil {
 
     public boolean roleCheck(String roleName, String token) {
         try {
-            String[] parts = token.split("\\.");
+            String cleanToken = token.split(" ")[1];
+            String[] parts = cleanToken.split("\\.");
             JSONObject header = new JSONObject(decode(parts[0]));
             JSONObject data = new JSONObject(decode(parts[1]));
             String signature = decode(parts[2]);
@@ -97,14 +99,16 @@ public class JwtUtil {
     }
 
     public String getRoleFromJwt(String token) {
-        String[] parts = token.split("\\.");
+        String cleanToken = token.split(" ")[1];
+        String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
         return data.getString("role");
 
     }
 
     public Integer getIdFromJwt(String token) {
-        String[] parts = token.split("\\.");
+        String cleanToken = token.split(" ")[1];
+        String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
         return data.getInt("id");
 

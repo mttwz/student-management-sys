@@ -28,10 +28,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
 
-    JwtUtil jwtUtil = new JwtUtil();
 
-    DateFormatUtil dateFormatUtil = new DateFormatUtil();
+    @Autowired
+    private DateFormatUtil dateFormatUtil;
 
     @Transactional
     public String updateJwt(UserDTO userDTO) {
@@ -54,7 +56,6 @@ public class UserService {
     }
     @Transactional
     public void registerStudent(UserDTO userDTO){
-        System.out.println(userDTO.getPassword());
         userRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
     }
 
@@ -103,7 +104,6 @@ public class UserService {
     @Transactional
     public Map validateJwt(UserDTO userDTO) {
         HashMap<String, String> map = new HashMap<>();
-
         boolean isValid = jwtUtil.validateJwt(userDTO.getJwt());
         map.put("valid", String.valueOf(isValid));
         return map;

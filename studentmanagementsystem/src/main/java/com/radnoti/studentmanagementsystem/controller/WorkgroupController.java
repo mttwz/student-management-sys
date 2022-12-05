@@ -33,7 +33,7 @@ public class WorkgroupController {
 
     @PostMapping(path = "/createworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void createWorkgroup(@RequestHeader("token") String jwt, @RequestBody WorkgroupDTO workgroupDTO) {
+    public @ResponseBody void createWorkgroup(@RequestHeader("Authorization") String jwt, @RequestBody WorkgroupDTO workgroupDTO) {
         workgroupService.createWorkgroup(jwt, workgroupDTO);
 
     }

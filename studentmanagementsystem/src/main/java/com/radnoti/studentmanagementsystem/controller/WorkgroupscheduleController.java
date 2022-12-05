@@ -23,7 +23,7 @@ public class WorkgroupscheduleController {
 
     @PostMapping(path = "/createworkgroupschedule", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void createWorkgroupSchedule(@RequestHeader("token") String jwt, @RequestBody WorkgroupscheduleDTO workgroupscheduleDTO) {
+    public @ResponseBody void createWorkgroupSchedule(@RequestHeader("Authorization") String jwt, @RequestBody WorkgroupscheduleDTO workgroupscheduleDTO) {
         workgroupscheduleService.createWorkgroupSchedule(jwt, workgroupscheduleDTO);
     }
 

@@ -21,7 +21,9 @@ public class WorkgroupService {
     @Autowired
     WorkgroupRepository workgroupRepository;
 
-    JwtUtil jwtUtil = new JwtUtil();
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Transactional
     public void createWorkgroup(String jwt, WorkgroupDTO workgroupDTO) {
 

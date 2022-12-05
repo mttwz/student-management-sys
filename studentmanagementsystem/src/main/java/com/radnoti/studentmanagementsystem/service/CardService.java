@@ -22,7 +22,8 @@ public class CardService {
     @Autowired
     private CardRepository cardRepository;
 
-    JwtUtil jwtUtil = new JwtUtil();
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Transactional
     public void createCard(String jwt, CardDTO cardDTO) {

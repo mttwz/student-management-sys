@@ -15,8 +15,11 @@ public class WorkgroupscheduleService {
     @Autowired
     private WorkgroupscheduleRepository workgroupscheduleRepository;
 
-    JwtUtil jwtUtil = new JwtUtil();
-    DateFormatUtil dateFormatUtil = new DateFormatUtil();
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private DateFormatUtil dateFormatUtil;
 
     @Transactional
     public void createWorkgroupSchedule(String jwt, WorkgroupscheduleDTO workgroupscheduleDTO){

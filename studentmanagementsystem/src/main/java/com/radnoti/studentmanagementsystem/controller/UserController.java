@@ -38,7 +38,7 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/register", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void register(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
+    public @ResponseBody void register(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
         userService.register(jwt, userDTO);
     }
     @CrossOrigin(origins = "http://localhost:4200/")
@@ -59,21 +59,21 @@ public class UserController {
 
     @PostMapping(path = "/setuserIiactivated", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void setUserIsActivated(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
+    public @ResponseBody void setUserIsActivated(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
         userService.setUserIsActivated(jwt, userDTO);
 
     }
 
     @PostMapping(path = "/deleteuser", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void deleteUser(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
+    public @ResponseBody void deleteUser(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
         userService.deleteUser(jwt, userDTO);
 
     }
 
     @PostMapping(path = "/setuserrole", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void setUserRole(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
+    public @ResponseBody void setUserRole(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
         userService.setUserRole(jwt, userDTO);
     }
     @CrossOrigin(origins = "http://localhost:4200/")
@@ -87,7 +87,7 @@ public class UserController {
 
     @PostMapping(path = "/addstudenttoworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void addUserToWorkgroup(@RequestHeader("token") String jwt, @RequestBody UserDTO userDTO) {
+    public @ResponseBody void addUserToWorkgroup(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
         userService.addUserToWorkgroup(jwt, userDTO);
     }
 

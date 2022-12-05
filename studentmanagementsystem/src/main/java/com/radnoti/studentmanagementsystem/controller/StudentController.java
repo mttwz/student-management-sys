@@ -35,7 +35,7 @@ public class StudentController {
 
     @PostMapping(path = "/connectcardtostudent", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectCardToStudent(@RequestHeader("token") String jwt, @RequestBody StudentDTO studentDTO) {
+    public @ResponseBody void connectCardToStudent(@RequestHeader("Authorization") String jwt, @RequestBody StudentDTO studentDTO) {
         studentService.connectCardToStudent(jwt, studentDTO);
     }
 
@@ -43,7 +43,7 @@ public class StudentController {
 
     @PostMapping(path = "/connectstudenttoUser", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectStudentToUser(@RequestHeader("token") String jwt, @RequestBody StudentDTO studentDTO) {
+    public @ResponseBody void connectStudentToUser(@RequestHeader("Authorization") String jwt, @RequestBody StudentDTO studentDTO) {
         studentService.connectStudentToUser(jwt, studentDTO);
     }
 
