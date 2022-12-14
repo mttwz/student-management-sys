@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.dto;
 
+import com.radnoti.studentmanagementsystem.model.Card;
+
 import java.io.Serializable;
 
 /**
@@ -19,9 +21,12 @@ public class CardDTO implements Serializable {
 
     private String hash;
 
-    private StudentDTO student;
-
     public CardDTO() {
+    }
+
+    public CardDTO(Card card) {
+        this.id = card.getId();
+        this.hash = card.getHash();
     }
 
     public Integer getId() {
@@ -40,11 +45,4 @@ public class CardDTO implements Serializable {
         this.hash = hash;
     }
 
-    public StudentDTO getStudent() {
-        return student;
-    }
-
-    public void setStudent(StudentDTO student) {
-        this.student = student;
-    }
 }

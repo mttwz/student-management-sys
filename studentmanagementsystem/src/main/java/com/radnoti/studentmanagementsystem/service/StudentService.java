@@ -4,21 +4,13 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
-import com.radnoti.studentmanagementsystem.model.Card;
-import com.radnoti.studentmanagementsystem.model.Student;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * @author matevoros
@@ -26,33 +18,27 @@ import java.util.Optional;
 @Service
 public class StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final StudentRepository studentRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
 
-    @Transactional
-    public void connectCardToStudent(String jwt, StudentDTO studentDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-/*            Optional<Student> student = studentRepository.findById(studentDTO.getId());
-            if (student.isPresent()){
-                student.get().setCardId(new Card(studentDTO.getCardId()));
-                studentRepository.save(student.get());
-            }*/
-            studentRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
-        }
+    private final  JwtUtil jwtUtil;
+
+
+    private final DateFormatUtil dateFormatUtil;
+
+    public StudentService(StudentRepository studentRepository, JwtUtil jwtUtil, DateFormatUtil dateFormatUtil) {
+        this.studentRepository = studentRepository;
+        this.jwtUtil = jwtUtil;
+        this.dateFormatUtil = dateFormatUtil;
     }
 
+
     @Transactional
-    public void connectStudentToUser(String jwt, StudentDTO studentDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-            studentRepository.connectStudentToUser(studentDTO.getId(), studentDTO.getUserId());
-        }
+    public void registerStudent(UserDTO userDTO){
+        studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
     }
+
 
 
 

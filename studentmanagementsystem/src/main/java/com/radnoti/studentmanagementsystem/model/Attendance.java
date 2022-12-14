@@ -54,17 +54,6 @@ public class Attendance implements Serializable {
     public Attendance() {
     }
 
-    public Attendance(Integer id) {
-        this.id = id;
-    }
-
-    public Attendance(Integer id, Date arrival, Date leaving, Student studentId) {
-        this.id = id;
-        this.arrival = arrival;
-        this.leaving = leaving;
-        this.studentId = studentId;
-    }
-
     public Integer getId() {
         return id;
     }

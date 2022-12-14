@@ -62,18 +62,6 @@ public class WorkgroupSchedule implements Serializable {
     public WorkgroupSchedule() {
     }
 
-    public WorkgroupSchedule(Integer id) {
-        this.id = id;
-    }
-
-    public WorkgroupSchedule(Integer id, String name, Date start, Date end, Boolean isOnsite, Workgroup workgroupId) {
-        this.id = id;
-        this.name = name;
-        this.start = start;
-        this.end = end;
-        this.isOnsite = isOnsite;
-        this.workgroupId = workgroupId;
-    }
 
     public Integer getId() {
         return id;

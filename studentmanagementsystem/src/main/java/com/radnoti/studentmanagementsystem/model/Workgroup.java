@@ -54,17 +54,6 @@ public class Workgroup implements Serializable {
     public Workgroup() {
     }
 
-    public Workgroup(Integer id) {
-        this.id = id;
-    }
-
-    public Workgroup(Integer id, String groupName, String institution, Collection<WorkgroupSchedule> workgroupScheduleCollection, Collection<User> userCollection) {
-        this.id = id;
-        this.groupName = groupName;
-        this.institution = institution;
-        this.workgroupScheduleCollection = workgroupScheduleCollection;
-        this.userCollection = userCollection;
-    }
 
     public Integer getId() {
         return id;

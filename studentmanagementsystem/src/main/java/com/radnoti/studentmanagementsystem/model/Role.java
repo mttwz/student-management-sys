@@ -48,16 +48,6 @@ public class Role implements Serializable {
     public Role() {
     }
 
-    public Role(Integer id) {
-        this.id = id;
-    }
-
-    public Role(Integer id, String roleType, Collection<User> userCollection) {
-        this.id = id;
-        this.roleType = roleType;
-        this.userCollection = userCollection;
-    }
-
     public Integer getId() {
         return id;
     }

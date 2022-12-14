@@ -19,18 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CardService {
 
-    @Autowired
-    private CardRepository cardRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Transactional
-    public void createCard(String jwt, CardDTO cardDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-            cardRepository.createCard(cardDTO.getHash());
 
 
-        }
-    }
+
 }

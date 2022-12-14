@@ -46,16 +46,6 @@ public class Card implements Serializable {
     public Card() {
     }
 
-    public Card(Integer id) {
-        this.id = id;
-    }
-
-    public Card(Integer id, String hash, Student student) {
-        this.id = id;
-        this.hash = hash;
-        this.student = student;
-    }
-
     public Integer getId() {
         return id;
     }

@@ -46,10 +46,6 @@ public class PasswordReset implements Serializable {
     public PasswordReset() {
     }
 
-    public PasswordReset(Integer id) {
-        this.id = id;
-    }
-
     public Integer getId() {
         return id;
     }

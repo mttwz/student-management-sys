@@ -53,10 +53,6 @@ public class Student implements Serializable {
     public Student() {
     }
 
-    public Student(Integer id) {
-        this.id = id;
-    }
-
     public Integer getId() {
         return id;
     }

@@ -9,21 +9,18 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
  * @author matevoros
  */
 public interface StudentRepository extends CrudRepository<Student, Integer>  {
-    
-    @Procedure
-    void connectCardToStudent(Integer studentId, Integer cardId);
-    
 
-    
+
     @Procedure
-    void connectStudentToUser(Integer studentId, Integer userId);
-    
+    void registerStudent(String firstName, String lastName, String phone, Date birth, String email, String password);
+
     @Procedure
     void logStudent(Integer studentId);
 

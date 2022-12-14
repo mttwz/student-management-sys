@@ -25,22 +25,11 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
-    boolean validateRole(Integer userId,Integer roleId);
-    
-    @Procedure
-    boolean validateJwt(Integer userId, String jwt);
-    
-    @Procedure
     int register(String firstName, String lastName, String phone, Date birth, String email, String password);
-    
-    //@Procedure
-    //void updateJwt(Integer userId, String jwt);
-    
+
     @Procedure
     int getUserIdByToken(String token);
-    
-    @Procedure
-    void registerStudent(String firstName, String lastName, String phone, Date birth, String email, String password);
+
     @Procedure
     int login(String email, String password);
     

@@ -4,21 +4,11 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
-import com.radnoti.studentmanagementsystem.model.Student;
-import com.radnoti.studentmanagementsystem.model.User;
 import com.radnoti.studentmanagementsystem.service.StudentService;
-import com.radnoti.studentmanagementsystem.service.UserService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,25 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/student")
 public class StudentController {
 
-    @Autowired
-    private StudentService studentService;
+    private final StudentService studentService;
 
-    ResponseFactory rf = new ResponseFactory();
-
-    @PostMapping(path = "/connectcardtostudent", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectCardToStudent(@RequestHeader("Authorization") String jwt, @RequestBody StudentDTO studentDTO) {
-        studentService.connectCardToStudent(jwt, studentDTO);
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
 
-
-    @PostMapping(path = "/connectstudenttoUser", consumes = {"application/json"})
+    @CrossOrigin(origins = "http://localhost:4200/")
+    @PostMapping(path = "/registerstudent", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectStudentToUser(@RequestHeader("Authorization") String jwt, @RequestBody StudentDTO studentDTO) {
-        studentService.connectStudentToUser(jwt, studentDTO);
-    }
+    public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO){
+        studentService.registerStudent(userDTO);
 
+    }
 
 
 

@@ -109,36 +109,6 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Integer id) {
-        this.id = id;
-    }
-
-    public User(Integer id, String firstName, String lastName, String phone, Date birth, String email, String password, Date registeredAt, String activationCode, boolean isActivated, Date activatedAt, boolean isDeleted, Date deletedAt, Student student, Role roleId, Workgroup workgroupId) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.birth = birth;
-        this.email = email;
-        this.password = password;
-        this.registeredAt = registeredAt;
-        this.activationCode = activationCode;
-        this.isActivated = isActivated;
-        this.activatedAt = activatedAt;
-        this.isDeleted = isDeleted;
-        this.deletedAt = deletedAt;
-        this.student = student;
-        this.roleId = roleId;
-        this.workgroupId = workgroupId;
-    }
-
-    public User(Integer id, Date registeredAt, boolean isActivated, boolean isDeleted) {
-        this.id = id;
-        this.registeredAt = registeredAt;
-        this.isActivated = isActivated;
-        this.isDeleted = isDeleted;
-    }
-
     public Integer getId() {
         return id;
     }
