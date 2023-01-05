@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.User;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.util.JwtUtil;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -61,6 +62,38 @@ public class UserService {
             dtoList.add(wsDTO);
         }
         return dtoList;
+    }
+
+    @Transactional
+    public void addUserToWorkgroup(String jwt, UserDTO userDTO) {
+        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+            userRepository.addUserToWorkgroup(userDTO.getId(), userDTO.getWorkgroupId());
+        }
+    }
+
+    @Transactional
+    public Optional<User> getUserData(UserDTO userDTO){
+        Optional<User> user = userRepository.findById(userDTO.getId());
+        return user;
+    }
+
+    @Transactional
+    public void setUserIsActivated(String jwt, UserDTO userDTO) {
+        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+            userRepository.setUserIsActivated(userDTO.getId());
+        }
+    }
+    @Transactional
+    public void deleteUser(String jwt, UserDTO userDTO) {
+        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+            userRepository.setUserIsDeleted(userDTO.getId());
+        }
+    }
+    @Transactional
+    public void setUserRole(String jwt, UserDTO userDTO) {
+        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+            userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
+        }
     }
 
 

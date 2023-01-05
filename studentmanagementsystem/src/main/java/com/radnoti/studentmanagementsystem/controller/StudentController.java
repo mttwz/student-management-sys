@@ -6,7 +6,6 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.service.StudentService;
-import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
