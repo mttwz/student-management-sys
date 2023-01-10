@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping(path = "/superadmin")
+@RequestMapping(path = "/api/v1/superadmin")
 public class SuperadminController {
 
 
@@ -35,7 +35,7 @@ public class SuperadminController {
         userService.register(jwt, userDTO);
     }
 
-    @PostMapping(path = "/setuserIiactivated", consumes = {"application/json"})
+    @PostMapping(path = "/setuserisactivated", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void setUserIsActivated(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
         userService.setUserIsActivated(jwt, userDTO);

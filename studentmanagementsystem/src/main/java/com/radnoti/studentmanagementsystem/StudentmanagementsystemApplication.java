@@ -22,7 +22,7 @@ public class StudentmanagementsystemApplication {
 		String[] beanz = applicationContext.getBeanDefinitionNames();
 		Arrays.sort(beanz);
 		for (String s : beanz) {
-			System.out.println(s);
+			//System.out.println(s);
 		}
 
 

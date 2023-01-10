@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "/api/v1/auth")
 public class AuthController {
 
     private final AuthService authService;
