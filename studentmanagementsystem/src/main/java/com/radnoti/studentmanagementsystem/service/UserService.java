@@ -31,7 +31,6 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
 
-
     private final DateFormatUtil dateFormatUtil;
 
     public UserService(UserRepository userRepository, JwtUtil jwtUtil, DateFormatUtil dateFormatUtil) {
@@ -41,14 +40,12 @@ public class UserService {
     }
 
     @Transactional
-    public void register(String jwt, UserDTO userDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt)) {
-            userRepository.register(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
-        }
+    public void adduser(UserDTO userDTO) {
+        userRepository.register(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
     }
 
     @Transactional
-    public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(UserDTO userDTO){
+    public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(UserDTO userDTO) {
         ArrayList<ArrayList<String>> workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         ArrayList<WorkgroupscheduleDTO> dtoList = new ArrayList<>();
         for (int i = 0; i < workgroupScheduleList.size(); i++) {
@@ -65,37 +62,36 @@ public class UserService {
     }
 
     @Transactional
-    public void addUserToWorkgroup(String jwt, UserDTO userDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+    public void addUserToWorkgroup(UserDTO userDTO) {
+
             userRepository.addUserToWorkgroup(userDTO.getId(), userDTO.getWorkgroupId());
-        }
+
     }
 
     @Transactional
-    public Optional<User> getUserData(UserDTO userDTO){
+    public Optional<User> getUserData(UserDTO userDTO) {
         Optional<User> user = userRepository.findById(userDTO.getId());
         return user;
     }
 
     @Transactional
-    public void setUserIsActivated(String jwt, UserDTO userDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+    public void setUserIsActivated(UserDTO userDTO) {
+
             userRepository.setUserIsActivated(userDTO.getId());
-        }
-    }
-    @Transactional
-    public void deleteUser(String jwt, UserDTO userDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-            userRepository.setUserIsDeleted(userDTO.getId());
-        }
-    }
-    @Transactional
-    public void setUserRole(String jwt, UserDTO userDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
-            userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
-        }
+
     }
 
+    @Transactional
+    public void deleteUser(UserDTO userDTO) {
+        userRepository.setUserIsDeleted(userDTO.getId());
+    }
+
+    @Transactional
+    public void setUserRole(UserDTO userDTO) {
+
+            userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
+
+    }
 
 
 }

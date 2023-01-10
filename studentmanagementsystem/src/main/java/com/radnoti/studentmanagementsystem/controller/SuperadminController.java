@@ -29,37 +29,37 @@ public class SuperadminController {
 
 
     @CrossOrigin(origins = "http://localhost:4200")
-    @PostMapping(path = "/register", consumes = {"application/json"})
+    @PostMapping(path = "/adduser", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void register(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
-        userService.register(jwt, userDTO);
+    public @ResponseBody void adduser(@RequestBody UserDTO userDTO) {
+        userService.adduser(userDTO);
     }
 
     @PostMapping(path = "/setuserisactivated", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void setUserIsActivated(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
-        userService.setUserIsActivated(jwt, userDTO);
+    public @ResponseBody void setUserIsActivated(@RequestBody UserDTO userDTO) {
+        userService.setUserIsActivated(userDTO);
 
     }
 
     @PostMapping(path = "/deleteuser", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void deleteUser(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
-        userService.deleteUser(jwt, userDTO);
+    public @ResponseBody void deleteUser(@RequestBody UserDTO userDTO) {
+        userService.deleteUser(userDTO);
 
     }
 
     @PostMapping(path = "/setuserrole", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void setUserRole(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
-        userService.setUserRole(jwt, userDTO);
+    public @ResponseBody void setUserRole(@RequestBody UserDTO userDTO) {
+        userService.setUserRole(userDTO);
 
     }
 
     @PostMapping(path = "/addstudenttoworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void addUserToWorkgroup(@RequestHeader("Authorization") String jwt, @RequestBody UserDTO userDTO) {
-        userService.addUserToWorkgroup(jwt, userDTO);
+    public @ResponseBody void addUserToWorkgroup(@RequestBody UserDTO userDTO) {
+        userService.addUserToWorkgroup(userDTO);
     }
 
     @CrossOrigin(origins = "http://localhost:4200/")
@@ -71,26 +71,26 @@ public class SuperadminController {
 
     @PostMapping(path = "/connectcardtostudent", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectCardToStudent(@RequestHeader("Authorization") String jwt, @RequestBody StudentDTO studentDTO) {
-        cardService.connectCardToStudent(jwt, studentDTO);
+    public @ResponseBody void connectCardToStudent(@RequestBody StudentDTO studentDTO) {
+        cardService.connectCardToStudent(studentDTO);
     }
 
     @PostMapping(path = "/connectstudenttoUser", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectStudentToUser(@RequestHeader("Authorization") String jwt, @RequestBody StudentDTO studentDTO) {
-        cardService.connectStudentToUser(jwt, studentDTO);
+    public @ResponseBody void connectStudentToUser(@RequestBody StudentDTO studentDTO) {
+        cardService.connectStudentToUser(studentDTO);
     }
 
     @PostMapping(path = "/createcard", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectCardToStudent(@RequestHeader("Authorization") String jwt, @RequestBody CardDTO cardDTO) {
-        cardService.createCard(jwt, cardDTO);
+    public @ResponseBody void connectCardToStudent(@RequestBody CardDTO cardDTO) {
+        cardService.createCard(cardDTO);
     }
 
     @PostMapping(path = "/createworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void createWorkgroup(@RequestHeader("Authorization") String jwt, @RequestBody WorkgroupDTO workgroupDTO) {
-        workgroupService.createWorkgroup(jwt, workgroupDTO);
+    public @ResponseBody void createWorkgroup(@RequestBody WorkgroupDTO workgroupDTO) {
+        workgroupService.createWorkgroup(workgroupDTO);
 
     }
 

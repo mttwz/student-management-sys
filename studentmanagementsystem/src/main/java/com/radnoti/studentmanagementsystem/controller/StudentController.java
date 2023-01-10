@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @author matevoros
  */
 @RestController
-@RequestMapping(path = "/api/v1/student")
+@RequestMapping(path = "api/v1/student")
 public class StudentController {
 
     private final StudentService studentService;
@@ -25,11 +25,10 @@ public class StudentController {
 
 
     @CrossOrigin(origins = "http://localhost:4200/")
-    @PostMapping(path = "/registerstudent", consumes = {"application/json"})
+    @PostMapping(path = "/register", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void registerStudent(@RequestBody UserDTO userDTO){
-        studentService.registerStudent(userDTO);
-
+    public @ResponseBody void register(@RequestBody UserDTO userDTO){
+        studentService.register(userDTO);
     }
 
 

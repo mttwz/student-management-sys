@@ -30,6 +30,10 @@ public class WorkgroupscheduleDTO implements Serializable {
     public WorkgroupscheduleDTO() {
     }
 
+    public WorkgroupscheduleDTO(int id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

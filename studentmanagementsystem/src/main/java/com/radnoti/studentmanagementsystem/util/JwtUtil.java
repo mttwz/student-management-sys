@@ -38,6 +38,7 @@ public class JwtUtil {
 
         Integer userId = optionalUser.get().getId();
         String role = optionalUser.get().getRoleId().getRoleType();
+        String email = optionalUser.get().getEmail();
 
 
         Instant now = Instant.now();
@@ -45,6 +46,7 @@ public class JwtUtil {
         String token = Jwts.builder()
                 .setIssuer("Mate")
                 .claim("id", userId)
+                .claim("email", email )
                 .claim("role", role)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(7, ChronoUnit.DAYS)))
@@ -59,16 +61,21 @@ public class JwtUtil {
     //enum
 
     public boolean validateJwt(String token) {
+
         try{
+
             String cleanToken = token.split(" ")[1];
             Jwts.parser().setSigningKey(Secret).parseClaimsJws(cleanToken);
+
             String[] parts = cleanToken.split("\\.");
             JSONObject data = new JSONObject(decode(parts[1]));
+
             if (data.getLong("exp") > (System.currentTimeMillis() / 1000)) {
                 return true;
             };
             return false;
         }catch (Exception e){
+            e.printStackTrace();
             return  false;
         }
         //lehetséges ikszepsönök de lehet hogy van még
@@ -111,6 +118,14 @@ public class JwtUtil {
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
         return data.getInt("id");
+
+    }
+
+    public String getEmailFromJwt(String token) {
+        String cleanToken = token.split(" ")[1];
+        String[] parts = cleanToken.split("\\.");
+        JSONObject data = new JSONObject(decode(parts[1]));
+        return data.getString("email");
 
     }
 
