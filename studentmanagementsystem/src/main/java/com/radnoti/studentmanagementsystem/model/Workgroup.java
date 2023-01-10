@@ -54,7 +54,6 @@ public class Workgroup implements Serializable {
     public Workgroup() {
     }
 
-
     public Integer getId() {
         return id;
     }

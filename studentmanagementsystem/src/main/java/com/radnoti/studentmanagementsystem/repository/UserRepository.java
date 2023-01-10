@@ -6,10 +6,7 @@ package com.radnoti.studentmanagementsystem.repository;
 
 import com.radnoti.studentmanagementsystem.model.User;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
@@ -47,6 +44,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
     ArrayList<ArrayList<String>> getWorkgroupScheduleByUserId(Integer userId);
+
+    @Procedure
+    Optional<User> findByUsername(String email);
 
 
     

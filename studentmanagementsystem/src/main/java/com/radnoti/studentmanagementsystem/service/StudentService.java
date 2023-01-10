@@ -35,7 +35,7 @@ public class StudentService {
 
 
     @Transactional
-    public void registerStudent(UserDTO userDTO){
+    public void register(UserDTO userDTO){
         studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
     }
 

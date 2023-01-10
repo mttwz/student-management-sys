@@ -25,11 +25,11 @@ public class WorkgroupService {
     private JwtUtil jwtUtil;
 
     @Transactional
-    public void createWorkgroup(String jwt, WorkgroupDTO workgroupDTO) {
+    public void createWorkgroup(WorkgroupDTO workgroupDTO) {
 
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+
             workgroupRepository.createWorkgroup(workgroupDTO.getGroupName(), workgroupDTO.getInstitution());
-        }
+
 
     }
 

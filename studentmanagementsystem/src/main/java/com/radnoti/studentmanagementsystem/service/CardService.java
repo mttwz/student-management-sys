@@ -29,31 +29,31 @@ public class CardService {
 
 
     @Transactional
-    public void createCard(String jwt, CardDTO cardDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+    public void createCard(CardDTO cardDTO) {
+
             cardRepository.createCard(cardDTO.getHash());
 
-        }
+
     }
 
 
     @Transactional
-    public void connectCardToStudent(String jwt, StudentDTO studentDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+    public void connectCardToStudent(StudentDTO studentDTO) {
+
 /*            Optional<Student> student = studentRepository.findById(studentDTO.getId());
             if (student.isPresent()){
                 student.get().setCardId(new Card(studentDTO.getCardId()));
                 studentRepository.save(student.get());
             }*/
             cardRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
-        }
+
     }
 
     @Transactional
-    public void connectStudentToUser(String jwt, StudentDTO studentDTO) {
-        if (jwtUtil.roleCheck("Superadmin", jwt) && jwtUtil.validateJwt(jwt)) {
+    public void connectStudentToUser(StudentDTO studentDTO) {
+
             cardRepository.connectStudentToUser(studentDTO.getId(), studentDTO.getUserId());
-        }
+
     }
 
 
