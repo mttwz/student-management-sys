@@ -1,6 +1,6 @@
-package com.radnoti.studentmanagementsystem.util;
+package com.radnoti.studentmanagementsystem.security;
 
-import com.radnoti.studentmanagementsystem.service.UDService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,27 +19,20 @@ import java.util.List;
 import static org.aspectj.util.LangUtil.isEmpty;
 
 @Component
-public class RequestFilterUtil extends OncePerRequestFilter {
+@RequiredArgsConstructor
+public class RequestFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final UDService udService;
-
-    public RequestFilterUtil(JwtUtil jwtUtil, UDService udService) {
-        this.jwtUtil = jwtUtil;
-        this.udService = udService;
-    }
-
+    private final JwtConfig jwtConfig;
+    private final UserDetailsServiceImp userDetailsServiceImp;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (isEmpty(authHeader) || !authHeader.startsWith("Bearer ") || !jwtUtil.validateJwt(authHeader)) {
+        if (isEmpty(authHeader) || !authHeader.startsWith("Bearer ") || !jwtConfig.validateJwt(authHeader)) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        UserDetails userDetails = udService.loadUserByUsername(jwtUtil.getEmailFromJwt(authHeader));
+        UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(jwtConfig.getEmailFromJwt(authHeader));
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
@@ -52,6 +45,5 @@ public class RequestFilterUtil extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
-
     }
 }

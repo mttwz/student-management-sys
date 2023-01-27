@@ -11,9 +11,8 @@ public class DateFormatUtil {
     public Date dateFormatter(String dateString){
         try {
             String[] splitDate = dateString.substring(0,dateString.length()-2).split(" ");
-            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date =formatter.parse(splitDate[0]+ " " + splitDate[1]);
-            return date;
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return formatter.parse(splitDate[0]+ " " + splitDate[1]);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

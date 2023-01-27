@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -15,6 +16,10 @@ import java.util.Arrays;
 @EnableAutoConfiguration
 @ComponentScan
 @SpringBootApplication
+@EnableGlobalMethodSecurity(
+		prePostEnabled = true,
+		securedEnabled = true,
+		jsr250Enabled = true)
 public class StudentmanagementsystemApplication {
 
 	public static void main(String[] args) {
@@ -24,10 +29,6 @@ public class StudentmanagementsystemApplication {
 		for (String s : beanz) {
 			//System.out.println(s);
 		}
-
-
-
-
 	}
 
 }

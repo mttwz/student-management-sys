@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.model;
+package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,13 +25,14 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author matevoros
  */
 @Entity
-@Table(name = "role")
+@Table(name = "Workgroup")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
-    @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id"),
-    @NamedQuery(name = "Role.findByRoleType", query = "SELECT r FROM Role r WHERE r.roleType = :roleType")})
-public class Role implements Serializable {
+    @NamedQuery(name = "Workgroup.findAll", query = "SELECT w FROM Workgroup w"),
+    @NamedQuery(name = "Workgroup.findById", query = "SELECT w FROM Workgroup w WHERE w.id = :id"),
+    @NamedQuery(name = "Workgroup.findByGroupName", query = "SELECT w FROM Workgroup w WHERE w.groupName = :groupName"),
+    @NamedQuery(name = "Workgroup.findByInstitution", query = "SELECT w FROM Workgroup w WHERE w.institution = :institution")})
+public class Workgroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,12 +41,21 @@ public class Role implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Size(max = 255)
-    @Column(name = "role_type")
-    private String roleType;
-    @OneToMany(mappedBy = "roleId")
+    @Column(name = "group_name")
+    private String groupName;
+    @Size(max = 255)
+    @Column(name = "institution")
+    private String institution;
+    @OneToMany(mappedBy = "workgroupId")
     private Collection<User> userCollection;
+    @OneToMany(mappedBy = "workgroupId")
+    private Collection<Workgroupschedule> workgroupscheduleCollection;
 
-    public Role() {
+    public Workgroup() {
+    }
+
+    public Workgroup(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -56,12 +66,20 @@ public class Role implements Serializable {
         this.id = id;
     }
 
-    public String getRoleType() {
-        return roleType;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(String institution) {
+        this.institution = institution;
     }
 
     @XmlTransient
@@ -71,6 +89,15 @@ public class Role implements Serializable {
 
     public void setUserCollection(Collection<User> userCollection) {
         this.userCollection = userCollection;
+    }
+
+    @XmlTransient
+    public Collection<Workgroupschedule> getWorkgroupscheduleCollection() {
+        return workgroupscheduleCollection;
+    }
+
+    public void setWorkgroupscheduleCollection(Collection<Workgroupschedule> workgroupscheduleCollection) {
+        this.workgroupscheduleCollection = workgroupscheduleCollection;
     }
 
     @Override
@@ -83,10 +110,10 @@ public class Role implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Role)) {
+        if (!(object instanceof Workgroup)) {
             return false;
         }
-        Role other = (Role) object;
+        Workgroup other = (Workgroup) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +122,7 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Role[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.Workgroup[ id=" + id + " ]";
     }
     
 }

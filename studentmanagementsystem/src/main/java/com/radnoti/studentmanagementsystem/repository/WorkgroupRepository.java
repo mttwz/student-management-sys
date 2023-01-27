@@ -4,7 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.repository;
 
-import com.radnoti.studentmanagementsystem.model.Workgroup;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 

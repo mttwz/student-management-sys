@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.model;
+package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,27 +13,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author matevoros
  */
 @Entity
-@Table(name = "attendance")
+@Table(name = "Student")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Attendance.findAll", query = "SELECT a FROM Attendance a"),
-    @NamedQuery(name = "Attendance.findById", query = "SELECT a FROM Attendance a WHERE a.id = :id"),
-    @NamedQuery(name = "Attendance.findByArrival", query = "SELECT a FROM Attendance a WHERE a.arrival = :arrival"),
-    @NamedQuery(name = "Attendance.findByLeaving", query = "SELECT a FROM Attendance a WHERE a.leaving = :leaving")})
-public class Attendance implements Serializable {
+    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
+    @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
+public class Student implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,17 +39,20 @@ public class Attendance implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "arrival")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date arrival;
-    @Column(name = "leaving")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date leaving;
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
-    @ManyToOne
-    private Student studentId;
+    @OneToMany(mappedBy = "studentId")
+    private Collection<Attendance> attendanceCollection;
+    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    @OneToOne
+    private Card cardId;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne
+    private User userId;
 
-    public Attendance() {
+    public Student() {
+    }
+
+    public Student(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -62,28 +63,29 @@ public class Attendance implements Serializable {
         this.id = id;
     }
 
-    public Date getArrival() {
-        return arrival;
+    @XmlTransient
+    public Collection<Attendance> getAttendanceCollection() {
+        return attendanceCollection;
     }
 
-    public void setArrival(Date arrival) {
-        this.arrival = arrival;
+    public void setAttendanceCollection(Collection<Attendance> attendanceCollection) {
+        this.attendanceCollection = attendanceCollection;
     }
 
-    public Date getLeaving() {
-        return leaving;
+    public Card getCardId() {
+        return cardId;
     }
 
-    public void setLeaving(Date leaving) {
-        this.leaving = leaving;
+    public void setCardId(Card cardId) {
+        this.cardId = cardId;
     }
 
-    public Student getStudentId() {
-        return studentId;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setStudentId(Student studentId) {
-        this.studentId = studentId;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -96,10 +98,10 @@ public class Attendance implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Attendance)) {
+        if (!(object instanceof Student)) {
             return false;
         }
-        Attendance other = (Attendance) object;
+        Student other = (Student) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -108,7 +110,7 @@ public class Attendance implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Attendance[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.Student[ id=" + id + " ]";
     }
     
 }

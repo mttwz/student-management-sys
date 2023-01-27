@@ -1,9 +1,10 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
-import com.radnoti.studentmanagementsystem.util.JwtUtil;
+import com.radnoti.studentmanagementsystem.security.JwtConfig;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,22 +13,20 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 
 @Service
+@RequiredArgsConstructor
 public class WorkgroupscheduleService {
-    @Autowired
-    private WorkgroupscheduleRepository workgroupscheduleRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final WorkgroupscheduleRepository workgroupscheduleRepository;
 
-    @Autowired
-    private DateFormatUtil dateFormatUtil;
+    private final JwtConfig jwtConfig;
+
+    private final DateFormatUtil dateFormatUtil;
 
     @Transactional
     public void createWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
-        workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getWorkgroupId(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getOnsite());
+        workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getWorkgroupId(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite());
     }
 
     @Transactional
@@ -45,7 +44,6 @@ public class WorkgroupscheduleService {
                 dir.mkdirs();
             }
 
-
             File serverFile = new File(dir.getAbsolutePath() + "/" + file.getOriginalFilename());
             if (serverFile.exists()) {
                 dir.mkdirs();
@@ -54,7 +52,7 @@ public class WorkgroupscheduleService {
             stream.write(bytes);
             stream.close();
 
-            System.out.println("Server File Location=" + serverFile.getAbsolutePath());
+
         } catch (Exception e) {
 
         }

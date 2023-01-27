@@ -4,10 +4,11 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.dto.CardDTO;
-import com.radnoti.studentmanagementsystem.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
+import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
-import com.radnoti.studentmanagementsystem.util.JwtUtil;
+import com.radnoti.studentmanagementsystem.security.JwtConfig;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,17 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @author matevoros
  */
 @Service
+@RequiredArgsConstructor
 public class CardService {
 
-    private final JwtUtil jwtUtil;
+    private final JwtConfig jwtConfig;
 
     private final CardRepository cardRepository;
-
-    public CardService(JwtUtil jwtUtil, CardRepository cardRepository) {
-        this.jwtUtil = jwtUtil;
-        this.cardRepository = cardRepository;
-    }
-
 
     @Transactional
     public void createCard(CardDTO cardDTO) {
@@ -49,12 +45,7 @@ public class CardService {
 
     }
 
-    @Transactional
-    public void connectStudentToUser(StudentDTO studentDTO) {
 
-            cardRepository.connectStudentToUser(studentDTO.getId(), studentDTO.getUserId());
-
-    }
 
 
 }

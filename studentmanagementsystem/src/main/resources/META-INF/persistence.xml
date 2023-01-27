@@ -4,13 +4,13 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>com.radnoti.studentmanagementsystem.User</class>
         <class>com.radnoti.studentmanagementsystem.model.Workgroupschedule</class>
-        <class>com.radnoti.studentmanagementsystem.model.Card</class>
-        <class>com.radnoti.studentmanagementsystem.model.Workgroup</class>
+        <class>com.radnoti.studentmanagementsystem.model.entity.Card</class>
+        <class>com.radnoti.studentmanagementsystem.model.entity.Workgroup</class>
         <class>com.radnoti.studentmanagementsystem.model.Passwordreset</class>
-        <class>com.radnoti.studentmanagementsystem.model.Role</class>
-        <class>com.radnoti.studentmanagementsystem.model.User</class>
-        <class>com.radnoti.studentmanagementsystem.model.Attendance</class>
-        <class>com.radnoti.studentmanagementsystem.model.Student</class>
+        <class>com.radnoti.studentmanagementsystem.model.entity.Role</class>
+        <class>com.radnoti.studentmanagementsystem.model.entity.User</class>
+        <class>com.radnoti.studentmanagementsystem.model.entity.Attendance</class>
+        <class>com.radnoti.studentmanagementsystem.model.entity.Student</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:8889/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
             <property name="javax.persistence.jdbc.user" value="root"/>

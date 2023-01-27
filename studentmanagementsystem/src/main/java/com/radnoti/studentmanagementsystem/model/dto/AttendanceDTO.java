@@ -2,7 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.dto;
+package com.radnoti.studentmanagementsystem.model.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +17,13 @@ import java.util.Date;
  * @author matevoros
  */
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class AttendanceDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Integer id;
 
@@ -21,9 +32,6 @@ public class AttendanceDTO implements Serializable {
     private Date leaving;
 
     private StudentDTO studentId;
-
-    public AttendanceDTO() {
-    }
 
 
 }
