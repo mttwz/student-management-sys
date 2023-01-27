@@ -5,16 +5,17 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
-import com.radnoti.studentmanagementsystem.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.dto.WorkgroupscheduleDTO;
-import com.radnoti.studentmanagementsystem.model.User;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
-import com.radnoti.studentmanagementsystem.util.JwtUtil;
+import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 
 
 import java.util.*;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,22 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
  * @author matevoros
  */
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
 
     private final UserRepository userRepository;
 
 
-    private final JwtUtil jwtUtil;
+    private final JwtConfig jwtConfig;
 
 
     private final DateFormatUtil dateFormatUtil;
-
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil, DateFormatUtil dateFormatUtil) {
-        this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
-        this.dateFormatUtil = dateFormatUtil;
-    }
 
     @Transactional
     public void adduser(UserDTO userDTO) {
@@ -49,14 +45,14 @@ public class UserService {
         ArrayList<ArrayList<String>> workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         ArrayList<WorkgroupscheduleDTO> dtoList = new ArrayList<>();
         for (int i = 0; i < workgroupScheduleList.size(); i++) {
-            WorkgroupscheduleDTO wsDTO = new WorkgroupscheduleDTO();
-            wsDTO.setId(Integer.parseInt(workgroupScheduleList.get(i).get(0)));
-            wsDTO.setName(workgroupScheduleList.get(i).get(1));
-            wsDTO.setWorkgroupId(Integer.parseInt(workgroupScheduleList.get(i).get(2)));
-            wsDTO.setStart(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(3)));
-            wsDTO.setEnd(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(4)));
-            wsDTO.setOnsite(Boolean.valueOf(workgroupScheduleList.get(i).get(5)));
-            dtoList.add(wsDTO);
+            WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO();
+            workgroupscheduleDTO.setId(Integer.parseInt(workgroupScheduleList.get(i).get(0)));
+            workgroupscheduleDTO.setName(workgroupScheduleList.get(i).get(1));
+            workgroupscheduleDTO.setWorkgroupId(Integer.parseInt(workgroupScheduleList.get(i).get(2)));
+            workgroupscheduleDTO.setStart(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(3)));
+            workgroupscheduleDTO.setEnd(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(4)));
+            workgroupscheduleDTO.setIsOnsite(Boolean.valueOf(workgroupScheduleList.get(i).get(5)));
+            dtoList.add(workgroupscheduleDTO);
         }
         return dtoList;
     }

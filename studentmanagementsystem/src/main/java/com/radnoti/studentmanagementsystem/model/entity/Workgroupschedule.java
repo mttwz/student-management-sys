@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.model;
+package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -28,17 +27,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "workgroup_schedule")
+@Table(name = "Workgroup_schedule")
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = "WorkgroupSchedule.findAll", query = "SELECT w FROM WorkgroupSchedule w"),
-        @NamedQuery(name = "WorkgroupSchedule.findById", query = "SELECT w FROM WorkgroupSchedule w WHERE w.id = :id"),
-        @NamedQuery(name = "WorkgroupSchedule.findByName", query = "SELECT w FROM WorkgroupSchedule w WHERE w.name = :name"),
-        @NamedQuery(name = "WorkgroupSchedule.findByFiles", query = "SELECT w FROM WorkgroupSchedule w WHERE w.files = :files"),
-        @NamedQuery(name = "WorkgroupSchedule.findByStart", query = "SELECT w FROM WorkgroupSchedule w WHERE w.start = :start"),
-        @NamedQuery(name = "WorkgroupSchedule.findByEnd", query = "SELECT w FROM WorkgroupSchedule w WHERE w.end = :end"),
-        @NamedQuery(name = "WorkgroupSchedule.findByIsOnsite", query = "SELECT w FROM WorkgroupSchedule w WHERE w.isOnsite = :isOnsite")})
-public class WorkgroupSchedule implements Serializable {
+    @NamedQuery(name = "Workgroupschedule.findAll", query = "SELECT w FROM Workgroupschedule w"),
+    @NamedQuery(name = "Workgroupschedule.findById", query = "SELECT w FROM Workgroupschedule w WHERE w.id = :id"),
+    @NamedQuery(name = "Workgroupschedule.findByName", query = "SELECT w FROM Workgroupschedule w WHERE w.name = :name"),
+    @NamedQuery(name = "Workgroupschedule.findByStart", query = "SELECT w FROM Workgroupschedule w WHERE w.start = :start"),
+    @NamedQuery(name = "Workgroupschedule.findByEnd", query = "SELECT w FROM Workgroupschedule w WHERE w.end = :end"),
+    @NamedQuery(name = "Workgroupschedule.findByIsOnsite", query = "SELECT w FROM Workgroupschedule w WHERE w.isOnsite = :isOnsite")})
+public class Workgroupschedule implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,13 +47,6 @@ public class WorkgroupSchedule implements Serializable {
     @Size(max = 255)
     @Column(name = "name")
     private String name;
-    @Lob
-    @Size(max = 65535)
-    @Column(name = "description")
-    private String description;
-    @Size(max = 255)
-    @Column(name = "files")
-    private String files;
     @Column(name = "start")
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
@@ -68,10 +59,10 @@ public class WorkgroupSchedule implements Serializable {
     @ManyToOne
     private Workgroup workgroupId;
 
-    public WorkgroupSchedule() {
+    public Workgroupschedule() {
     }
 
-    public WorkgroupSchedule(Integer id) {
+    public Workgroupschedule(Integer id) {
         this.id = id;
     }
 
@@ -89,22 +80,6 @@ public class WorkgroupSchedule implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getFiles() {
-        return files;
-    }
-
-    public void setFiles(String files) {
-        this.files = files;
     }
 
     public Date getStart() {
@@ -149,10 +124,10 @@ public class WorkgroupSchedule implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof WorkgroupSchedule)) {
+        if (!(object instanceof Workgroupschedule)) {
             return false;
         }
-        WorkgroupSchedule other = (WorkgroupSchedule) object;
+        Workgroupschedule other = (Workgroupschedule) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -161,7 +136,7 @@ public class WorkgroupSchedule implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.WorkgroupSchedule[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.Workgroupschedule[ id=" + id + " ]";
     }
-
+    
 }

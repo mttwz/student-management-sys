@@ -4,11 +4,10 @@
  */
 package com.radnoti.studentmanagementsystem.repository;
 
-import com.radnoti.studentmanagementsystem.model.Student;
+import com.radnoti.studentmanagementsystem.model.entity.Student;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -23,6 +22,9 @@ public interface StudentRepository extends CrudRepository<Student, Integer>  {
 
     @Procedure
     void logStudent(Integer studentId);
+
+    @Procedure
+    void connectStudentToUser(Integer studentId, Integer userId);
 
 
     

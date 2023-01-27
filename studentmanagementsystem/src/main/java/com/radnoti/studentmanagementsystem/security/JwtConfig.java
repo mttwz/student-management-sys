@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.util;
+package com.radnoti.studentmanagementsystem.security;
 
-import com.radnoti.studentmanagementsystem.model.User;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import io.jsonwebtoken.*;
 
 import java.security.Key;
@@ -15,20 +15,19 @@ import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import io.jsonwebtoken.security.Keys;
 import org.json.JSONObject;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author matevoros
  */
-@Service
-public class JwtUtil {
+@Component
+public class JwtConfig {
 
-   
-
-    private static String Secret = "EktNSOvg5bmDXExYEgavT4HmateDXcZIZSXYv5oZWVCE3GxDvCiPuQUis35R0Ly=";
+    @Value("${jwt.secret}")
+    private String Secret;
 
     public String generateJwt(Optional<User> optionalUser) {
 
@@ -72,10 +71,9 @@ public class JwtUtil {
 
             if (data.getLong("exp") > (System.currentTimeMillis() / 1000)) {
                 return true;
-            };
+            }
             return false;
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (SignatureException | IllegalArgumentException | MalformedJwtException | NullPointerException e){
             return  false;
         }
         //lehetséges ikszepsönök de lehet hogy van még
@@ -87,23 +85,7 @@ public class JwtUtil {
 
     }
 
-    public boolean roleCheck(String roleName, String token) {
-        try {
-            String cleanToken = token.split(" ")[1];
-            String[] parts = cleanToken.split("\\.");
-            JSONObject header = new JSONObject(decode(parts[0]));
-            JSONObject data = new JSONObject(decode(parts[1]));
-            String signature = decode(parts[2]);
-            if (data.getString("role").equals(roleName)) {
-                return true;
-            };
-            return false;
-        }catch (Exception ex){
-            return false;
-        }
 
-
-    }
 
     public String getRoleFromJwt(String token) {
         String cleanToken = token.split(" ")[1];

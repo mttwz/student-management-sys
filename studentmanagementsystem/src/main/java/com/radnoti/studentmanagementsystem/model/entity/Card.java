@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.model;
+package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "card")
+@Table(name = "Card")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Card.findAll", query = "SELECT c FROM Card c"),
@@ -44,6 +44,10 @@ public class Card implements Serializable {
     private Student student;
 
     public Card() {
+    }
+
+    public Card(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {

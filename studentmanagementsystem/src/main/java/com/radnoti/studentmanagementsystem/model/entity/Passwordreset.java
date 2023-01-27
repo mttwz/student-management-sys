@@ -2,28 +2,40 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.model;
+package com.radnoti.studentmanagementsystem.model.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author matevoros
  */
 @Entity
-@Table(name = "password_reset")
+@Table(name = "Password_reset")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PasswordReset.findAll", query = "SELECT p FROM PasswordReset p"),
-    @NamedQuery(name = "PasswordReset.findById", query = "SELECT p FROM PasswordReset p WHERE p.id = :id"),
-    @NamedQuery(name = "PasswordReset.findByResetCode", query = "SELECT p FROM PasswordReset p WHERE p.resetCode = :resetCode"),
-    @NamedQuery(name = "PasswordReset.findByExpireDate", query = "SELECT p FROM PasswordReset p WHERE p.expireDate = :expireDate"),
-    @NamedQuery(name = "PasswordReset.findByIsUsed", query = "SELECT p FROM PasswordReset p WHERE p.isUsed = :isUsed")})
-public class PasswordReset implements Serializable {
+    @NamedQuery(name = "Passwordreset.findAll", query = "SELECT p FROM Passwordreset p"),
+    @NamedQuery(name = "Passwordreset.findById", query = "SELECT p FROM Passwordreset p WHERE p.id = :id"),
+    @NamedQuery(name = "Passwordreset.findByResetCode", query = "SELECT p FROM Passwordreset p WHERE p.resetCode = :resetCode"),
+    @NamedQuery(name = "Passwordreset.findByExpireDate", query = "SELECT p FROM Passwordreset p WHERE p.expireDate = :expireDate"),
+    @NamedQuery(name = "Passwordreset.findByIsUsed", query = "SELECT p FROM Passwordreset p WHERE p.isUsed = :isUsed")})
+public class Passwordreset implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,11 +51,15 @@ public class PasswordReset implements Serializable {
     private Date expireDate;
     @Column(name = "is_used")
     private Boolean isUsed;
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
-    private Student studentId;
+    private User userId;
 
-    public PasswordReset() {
+    public Passwordreset() {
+    }
+
+    public Passwordreset(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -78,12 +94,12 @@ public class PasswordReset implements Serializable {
         this.isUsed = isUsed;
     }
 
-    public Student getStudentId() {
-        return studentId;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setStudentId(Student studentId) {
-        this.studentId = studentId;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -96,10 +112,10 @@ public class PasswordReset implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PasswordReset)) {
+        if (!(object instanceof Passwordreset)) {
             return false;
         }
-        PasswordReset other = (PasswordReset) object;
+        Passwordreset other = (Passwordreset) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -108,7 +124,7 @@ public class PasswordReset implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.PasswordReset[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.Passwordreset[ id=" + id + " ]";
     }
     
 }

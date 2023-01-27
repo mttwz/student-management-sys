@@ -1,11 +1,12 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
-import com.radnoti.studentmanagementsystem.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.User;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
-import com.radnoti.studentmanagementsystem.util.JwtUtil;
+import com.radnoti.studentmanagementsystem.security.JwtConfig;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,26 +15,21 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
 
-    private final JwtUtil jwtUtil;
+    private final JwtConfig jwtConfig;
 
     private final DateFormatUtil dateFormatUtil;
-
-    public AuthService(UserRepository userRepository, JwtUtil jwtUtil, DateFormatUtil dateFormatUtil) {
-        this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
-        this.dateFormatUtil = dateFormatUtil;
-    }
 
     @Transactional
     public String updateJwt(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         String jwt = "";
         if (optionalUser.isPresent()) {
-            jwt = jwtUtil.generateJwt(optionalUser);
+            jwt = jwtConfig.generateJwt(optionalUser);
         }
         return jwt;
     }
@@ -46,7 +42,7 @@ public class AuthService {
         if (optionalUser.isPresent()) {
             userLoginDTO.setId(userId);
             userLoginDTO.setEmail(optionalUser.get().getEmail());
-            userLoginDTO.setJwt(jwtUtil.generateJwt(optionalUser));
+            userLoginDTO.setJwt(jwtConfig.generateJwt(optionalUser));
             userLoginDTO.setFirstName(optionalUser.get().getFirstName());
             userLoginDTO.setLastName(optionalUser.get().getLastName());
         }
@@ -54,11 +50,10 @@ public class AuthService {
     }
 
 
-
     @Transactional
     public Map validateJwt(UserDTO userDTO) {
         HashMap<String, String> map = new HashMap<>();
-        boolean isValid = jwtUtil.validateJwt(userDTO.getJwt());
+        boolean isValid = jwtConfig.validateJwt(userDTO.getJwt());
         map.put("valid", String.valueOf(isValid));
         return map;
     }

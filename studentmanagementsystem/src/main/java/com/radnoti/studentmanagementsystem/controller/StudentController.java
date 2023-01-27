@@ -4,33 +4,40 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.service.StudentService;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.RolesAllowed;
 
 /**
  * @author matevoros
  */
 @RestController
-@RequestMapping(path = "api/v1/student")
+@RequestMapping(path = "/student")
+@CrossOrigin(origins = "http://localhost:4200/")
+@RequiredArgsConstructor
 public class StudentController {
 
     private final StudentService studentService;
 
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
-    }
 
 
     @CrossOrigin(origins = "http://localhost:4200/")
-    @PostMapping(path = "/register", consumes = {"application/json"})
+    @PostMapping(path = "/registerstudent", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void register(@RequestBody UserDTO userDTO){
-        studentService.register(userDTO);
+        studentService.registerStudent(userDTO);
     }
 
-
-
+    @RolesAllowed({"SUPERADMIN"})
+    @PostMapping(path = "/connectstudenttouser", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody void connectStudentToUser(@RequestBody StudentDTO studentDTO) {
+        studentService.connectStudentToUser(studentDTO);
+    }
 }

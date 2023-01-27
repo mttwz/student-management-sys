@@ -4,13 +4,12 @@
  */
 package com.radnoti.studentmanagementsystem.repository;
 
-import com.radnoti.studentmanagementsystem.model.User;
-
 import java.util.*;
 
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -43,7 +42,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     void addUserToWorkgroup(Integer userId, Integer workgroupId);
 
     @Procedure
-    ArrayList<ArrayList<String>> getWorkgroupScheduleByUserId(Integer userId);
+    ArrayList<ArrayList<String>>getWorkgroupScheduleByUserId(Integer userId);
 
     @Procedure
     Optional<User> findByUsername(String email);

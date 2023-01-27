@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.radnoti.studentmanagementsystem.model;
+package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,20 +18,21 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author matevoros
  */
 @Entity
-@Table(name = "user")
+@Table(name = "User")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
@@ -74,8 +76,6 @@ public class User implements Serializable {
     @Size(max = 255)
     @Column(name = "password")
     private String password;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "registered_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredAt;
@@ -83,30 +83,32 @@ public class User implements Serializable {
     @Size(max = 65535)
     @Column(name = "activation_code")
     private String activationCode;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "is_activated")
-    private boolean isActivated;
+    private Boolean isActivated;
     @Column(name = "activated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date activatedAt;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
     @Column(name = "deleted_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
-    @OneToOne(mappedBy = "userId")
-    private Student student;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
     private Role roleId;
     @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
     @ManyToOne
     private Workgroup workgroupId;
+    @OneToOne(mappedBy = "userId")
+    private Student student;
+    @OneToMany(mappedBy = "userId")
+    private Collection<Passwordreset> passwordresetCollection;
 
     public User() {
+    }
+
+    public User(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -181,11 +183,11 @@ public class User implements Serializable {
         this.activationCode = activationCode;
     }
 
-    public boolean getIsActivated() {
+    public Boolean getIsActivated() {
         return isActivated;
     }
 
-    public void setIsActivated(boolean isActivated) {
+    public void setIsActivated(Boolean isActivated) {
         this.isActivated = isActivated;
     }
 
@@ -197,11 +199,11 @@ public class User implements Serializable {
         this.activatedAt = activatedAt;
     }
 
-    public boolean getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(boolean isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
@@ -211,14 +213,6 @@ public class User implements Serializable {
 
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
     }
 
     public Role getRoleId() {
@@ -235,6 +229,23 @@ public class User implements Serializable {
 
     public void setWorkgroupId(Workgroup workgroupId) {
         this.workgroupId = workgroupId;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    @XmlTransient
+    public Collection<Passwordreset> getPasswordresetCollection() {
+        return passwordresetCollection;
+    }
+
+    public void setPasswordresetCollection(Collection<Passwordreset> passwordresetCollection) {
+        this.passwordresetCollection = passwordresetCollection;
     }
 
     @Override
