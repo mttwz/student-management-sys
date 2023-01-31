@@ -19,7 +19,6 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
-
     private final JwtConfig jwtConfig;
 
     private final DateFormatUtil dateFormatUtil;

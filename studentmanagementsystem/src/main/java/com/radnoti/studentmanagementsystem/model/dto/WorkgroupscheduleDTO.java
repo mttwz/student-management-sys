@@ -4,9 +4,13 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import lombok.*;
 
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -20,11 +24,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class WorkgroupscheduleDTO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private Integer id;
 
     private String name;
+
+    private String workgroupName;
 
     private Date start;
 
@@ -32,7 +36,7 @@ public class WorkgroupscheduleDTO implements Serializable {
 
     private Boolean isOnsite;
 
-    private Integer workgroupId;
+    private Collection<WorkgroupDTO> workgroupCollection;
 
     public WorkgroupscheduleDTO(Integer id) {
         this.id = id;

@@ -6,6 +6,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
@@ -41,26 +42,32 @@ public class UserService {
     }
 
     @Transactional
-    public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(UserDTO userDTO) {
-        ArrayList<ArrayList<String>> workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
+    public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(String authHeader, UserDTO userDTO) {
+        ArrayList<ArrayList<String>> workgroupScheduleList;
+        if (jwtConfig.getRoleFromJwt(authHeader).equals("admin")){
+            System.out.println("asd");
+            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtConfig.getIdFromJwt(authHeader));
+        }else {
+            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
+        }
+
         ArrayList<WorkgroupscheduleDTO> dtoList = new ArrayList<>();
         for (int i = 0; i < workgroupScheduleList.size(); i++) {
             WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO();
             workgroupscheduleDTO.setId(Integer.parseInt(workgroupScheduleList.get(i).get(0)));
             workgroupscheduleDTO.setName(workgroupScheduleList.get(i).get(1));
-            workgroupscheduleDTO.setWorkgroupId(Integer.parseInt(workgroupScheduleList.get(i).get(2)));
-            workgroupscheduleDTO.setStart(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(3)));
-            workgroupscheduleDTO.setEnd(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(4)));
-            workgroupscheduleDTO.setIsOnsite(Boolean.valueOf(workgroupScheduleList.get(i).get(5)));
+            workgroupscheduleDTO.setStart(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(2)));
+            workgroupscheduleDTO.setEnd(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(3)));
+            workgroupscheduleDTO.setIsOnsite(Boolean.valueOf(workgroupScheduleList.get(i).get(4)));
             dtoList.add(workgroupscheduleDTO);
         }
         return dtoList;
     }
 
     @Transactional
-    public void addUserToWorkgroup(UserDTO userDTO) {
+    public void addUserToWorkgroup(WorkgroupmembersDTO workgroupmembersDTO) {
 
-            userRepository.addUserToWorkgroup(userDTO.getId(), userDTO.getWorkgroupId());
+        userRepository.addUserToWorkgroup(workgroupmembersDTO.getUserId(), workgroupmembersDTO.getWorkgroupId());
 
     }
 
@@ -73,7 +80,7 @@ public class UserService {
     @Transactional
     public void setUserIsActivated(UserDTO userDTO) {
 
-            userRepository.setUserIsActivated(userDTO.getId());
+        userRepository.setUserIsActivated(userDTO.getId());
 
     }
 
@@ -85,7 +92,7 @@ public class UserService {
     @Transactional
     public void setUserRole(UserDTO userDTO) {
 
-            userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
+        userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
 
     }
 

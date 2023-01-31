@@ -4,8 +4,6 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
-import lombok.*;
-
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;

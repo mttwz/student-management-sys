@@ -5,17 +5,17 @@
 package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,14 +23,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
-@Table(name = "Workgroup")
+@Table(name = "Workgroup_members")
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = "Workgroup.findAll", query = "SELECT w FROM Workgroup w"),
-        @NamedQuery(name = "Workgroup.findById", query = "SELECT w FROM Workgroup w WHERE w.id = :id"),
-        @NamedQuery(name = "Workgroup.findByGroupName", query = "SELECT w FROM Workgroup w WHERE w.groupName = :groupName"),
-        @NamedQuery(name = "Workgroup.findByInstitution", query = "SELECT w FROM Workgroup w WHERE w.institution = :institution")})
-public class Workgroup implements Serializable {
+    @NamedQuery(name = "Workgroupmembers.findAll", query = "SELECT w FROM Workgroupmembers w"),
+    @NamedQuery(name = "Workgroupmembers.findById", query = "SELECT w FROM Workgroupmembers w WHERE w.id = :id")})
+public class Workgroupmembers implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,17 +36,17 @@ public class Workgroup implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 255)
-    @Column(name = "group_name")
-    private String groupName;
-    @Size(max = 255)
-    @Column(name = "institution")
-    private String institution;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ManyToOne
+    private User userId;
+    @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
+    @ManyToOne
+    private Workgroup workgroupId;
 
-    public Workgroup() {
+    public Workgroupmembers() {
     }
 
-    public Workgroup(Integer id) {
+    public Workgroupmembers(Integer id) {
         this.id = id;
     }
 
@@ -60,20 +58,20 @@ public class Workgroup implements Serializable {
         this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
-    public String getInstitution() {
-        return institution;
+    public Workgroup getWorkgroupId() {
+        return workgroupId;
     }
 
-    public void setInstitution(String institution) {
-        this.institution = institution;
+    public void setWorkgroupId(Workgroup workgroupId) {
+        this.workgroupId = workgroupId;
     }
 
     @Override
@@ -86,10 +84,10 @@ public class Workgroup implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Workgroup)) {
+        if (!(object instanceof Workgroupmembers)) {
             return false;
         }
-        Workgroup other = (Workgroup) object;
+        Workgroupmembers other = (Workgroupmembers) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -98,7 +96,7 @@ public class Workgroup implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Workgroup[ id=" + id + " ]";
+        return "com.radnoti.studentmanagementsystem.model.Workgroupmembers[ id=" + id + " ]";
     }
-
+    
 }

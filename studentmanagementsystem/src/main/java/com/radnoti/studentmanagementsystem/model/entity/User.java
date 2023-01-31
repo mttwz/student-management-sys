@@ -96,9 +96,8 @@ public class User implements Serializable {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
     private Role roleId;
-    @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
-    @ManyToOne
-    private Workgroup workgroupId;
+    @OneToMany(mappedBy = "userId")
+    private Collection<Workgroupmembers> workgroupmembersCollection;
     @OneToOne(mappedBy = "userId")
     private Student student;
     @OneToMany(mappedBy = "userId")
@@ -223,12 +222,13 @@ public class User implements Serializable {
         this.roleId = roleId;
     }
 
-    public Workgroup getWorkgroupId() {
-        return workgroupId;
+    @XmlTransient
+    public Collection<Workgroupmembers> getWorkgroupmembersCollection() {
+        return workgroupmembersCollection;
     }
 
-    public void setWorkgroupId(Workgroup workgroupId) {
-        this.workgroupId = workgroupId;
+    public void setWorkgroupmembersCollection(Collection<Workgroupmembers> workgroupmembersCollection) {
+        this.workgroupmembersCollection = workgroupmembersCollection;
     }
 
     public Student getStudent() {

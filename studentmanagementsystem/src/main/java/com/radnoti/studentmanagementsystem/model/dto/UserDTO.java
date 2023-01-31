@@ -4,12 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.radnoti.studentmanagementsystem.model.entity.*;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,44 +23,28 @@ import java.util.Date;
 public class UserDTO implements Serializable {
 
     private Integer id;
-
-    private String firstName;
-
-    private String lastName;
-
-    private String phone;
-
-    private Date birth;
-
-    private String email;
-
-    private String password;
-
-    private Integer workgroupId;
-
-    private String jwt;
-
-    private Date jwtExpireDate;
-
-    private Date registeredAt;
-
-    private String activationCode;
-
-    private boolean isActivated;
-
-    private Date activatedAt;
-
-    private boolean isDeleted;
-
-    private Date deletedAt;
-
     private String roleName;
-
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private Date birth;
+    private String email;
+    private String password;
+    private Date registeredAt;
+    private String activationCode;
+    private Boolean isActivated;
+    private Date activatedAt;
+    private Boolean isDeleted;
+    private Date deletedAt;
+    private Collection<WorkgroupmembersDTO> workgroupmembersCollection;
+    private StudentDTO student;
     private Collection<PasswordresetDTO> passwordresetCollection;
+    private String jwt;
 
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class UserLoginDTO implements Serializable {
 
         private Integer id;
