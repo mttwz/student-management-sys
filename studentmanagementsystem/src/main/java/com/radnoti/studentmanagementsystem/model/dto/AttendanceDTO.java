@@ -4,10 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,6 +18,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @ToString
+@Data
 public class AttendanceDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

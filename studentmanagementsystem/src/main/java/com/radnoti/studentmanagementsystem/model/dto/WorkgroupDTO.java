@@ -4,10 +4,14 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.radnoti.studentmanagementsystem.model.entity.User;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -28,8 +32,8 @@ public class WorkgroupDTO implements Serializable {
 
     private String institution;
 
-    private Collection<WorkgroupscheduleDTO> workgroupscheduleCollection;
+    private UserDTO userId;
 
-    private Collection<StudentDTO> studentCollection;
+    private WorkgroupscheduleDTO scheduleId;
 
 }

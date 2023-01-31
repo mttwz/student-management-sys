@@ -1,13 +1,16 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.HeaderParam;
 import java.util.ArrayList;
 
 @RestController
@@ -51,16 +54,17 @@ public class UserController {
     @RolesAllowed({"SUPERADMIN","ADMIN"})
     @PostMapping(path = "/addusertoworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void addUserToWorkgroup(@RequestBody UserDTO userDTO) {
-        System.out.println(userDTO);
-        userService.addUserToWorkgroup(userDTO);
+    public @ResponseBody void addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
+        System.out.println(workgroupmembersDTO);
+        userService.addUserToWorkgroup(workgroupmembersDTO);
     }
 
     @RolesAllowed({"SUPERADMIN","ADMIN"})
     @PostMapping(path = "/getworkgroupschedulebyuserid", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(@RequestBody UserDTO userDTO) {
-        return userService.getWorkgroupScheduleByUserId(userDTO);
+    public @ResponseBody ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDTO userDTO) {
+
+        return userService.getWorkgroupScheduleByUserId(authHeader,userDTO);
     }
 
 }

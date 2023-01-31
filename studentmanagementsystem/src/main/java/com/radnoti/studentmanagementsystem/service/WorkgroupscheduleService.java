@@ -26,7 +26,7 @@ public class WorkgroupscheduleService {
 
     @Transactional
     public void createWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
-        workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getWorkgroupId(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite());
+        workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite());
     }
 
     @Transactional
