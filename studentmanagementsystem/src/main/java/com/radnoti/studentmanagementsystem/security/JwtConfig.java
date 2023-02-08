@@ -29,15 +29,15 @@ public class JwtConfig {
     @Value("${jwt.secret}")
     private String Secret;
 
-    public String generateJwt(Optional<User> optionalUser) {
+    public String generateJwt(User user) {
 
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(Secret);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-        Integer userId = optionalUser.get().getId();
-        String role = optionalUser.get().getRoleId().getRoleType();
-        String email = optionalUser.get().getEmail();
+        Integer userId = user.getId();
+        String role = user.getRoleId().getRoleType();
+        String email = user.getEmail();
 
 
         Instant now = Instant.now();
@@ -73,7 +73,7 @@ public class JwtConfig {
                 return true;
             }
             return false;
-        }catch (SignatureException | IllegalArgumentException | MalformedJwtException | NullPointerException e){
+        }catch (SignatureException | IllegalArgumentException | MalformedJwtException | NullPointerException | ExpiredJwtException e){
             return  false;
         }
         //lehetséges ikszepsönök de lehet hogy van még

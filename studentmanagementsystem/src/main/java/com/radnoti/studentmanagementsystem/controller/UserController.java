@@ -3,6 +3,7 @@ package com.radnoti.studentmanagementsystem.controller;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -63,8 +64,15 @@ public class UserController {
     @PostMapping(path = "/getworkgroupschedulebyuserid", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDTO userDTO) {
-
         return userService.getWorkgroupScheduleByUserId(authHeader,userDTO);
+    }
+
+
+    @RolesAllowed({"SUPERADMIN"})
+    @GetMapping(path = "/getalluser")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ArrayList<UserDTO> getWorkgroupScheduleByUserId() {
+        return userService.getAllUser();
     }
 
 }

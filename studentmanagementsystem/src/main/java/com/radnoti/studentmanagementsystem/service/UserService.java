@@ -97,4 +97,14 @@ public class UserService {
     }
 
 
+    public ArrayList<UserDTO> getAllUser() {
+        System.out.println("aaaaaaa");
+        Iterable<User> userIterable = userRepository.findAll();
+        ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
+        for (User u: userIterable) {
+            UserDTO userDTO = new UserDTO(u);
+            userDTOArrayList.add(userDTO);
+        }
+        return userDTOArrayList;
+    }
 }
