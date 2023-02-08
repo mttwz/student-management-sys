@@ -47,6 +47,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Procedure
     Optional<User> findByUsername(String email);
 
-
-    
+    @Procedure
+    ArrayList<User> getAllUser();
 }

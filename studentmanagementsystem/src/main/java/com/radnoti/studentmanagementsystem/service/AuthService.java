@@ -7,8 +7,11 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +31,7 @@ public class AuthService {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         String jwt = "";
         if (optionalUser.isPresent()) {
-            jwt = jwtConfig.generateJwt(optionalUser);
+            jwt = jwtConfig.generateJwt(optionalUser.get());
         }
         return jwt;
     }
@@ -41,19 +44,22 @@ public class AuthService {
         if (optionalUser.isPresent()) {
             userLoginDTO.setId(userId);
             userLoginDTO.setEmail(optionalUser.get().getEmail());
-            userLoginDTO.setJwt(jwtConfig.generateJwt(optionalUser));
+            userLoginDTO.setJwt(jwtConfig.generateJwt(optionalUser.get()));
             userLoginDTO.setFirstName(optionalUser.get().getFirstName());
             userLoginDTO.setLastName(optionalUser.get().getLastName());
+            return userLoginDTO;
         }
-        return userLoginDTO;
+
+        throw new UsernameNotFoundException("Invalid");
+
     }
 
 
     @Transactional
     public Map validateJwt(UserDTO userDTO) {
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, Boolean> map = new HashMap<>();
         boolean isValid = jwtConfig.validateJwt(userDTO.getJwt());
-        map.put("valid", String.valueOf(isValid));
+        map.put("valid", isValid);
         return map;
     }
 }

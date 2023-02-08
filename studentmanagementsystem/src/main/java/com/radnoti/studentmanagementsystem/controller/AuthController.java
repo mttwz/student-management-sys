@@ -30,7 +30,6 @@ public class AuthController {
 
 
     @PostMapping(path = "/login", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
     public @ResponseBody UserDTO.UserLoginDTO login(@RequestBody UserDTO userDTO){
         return authService.login(userDTO);
     }

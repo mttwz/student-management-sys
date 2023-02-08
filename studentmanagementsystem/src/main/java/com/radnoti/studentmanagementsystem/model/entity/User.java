@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
+import lombok.AllArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author matevoros
  */
+@AllArgsConstructor
 @Entity
 @Table(name = "User")
 @XmlRootElement

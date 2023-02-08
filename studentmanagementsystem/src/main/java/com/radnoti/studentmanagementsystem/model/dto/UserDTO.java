@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import lombok.*;
 
@@ -29,6 +30,7 @@ public class UserDTO implements Serializable {
     private String phone;
     private Date birth;
     private String email;
+
     private String password;
     private Date registeredAt;
     private String activationCode;
@@ -36,10 +38,25 @@ public class UserDTO implements Serializable {
     private Date activatedAt;
     private Boolean isDeleted;
     private Date deletedAt;
-    private Collection<WorkgroupmembersDTO> workgroupmembersCollection;
-    private StudentDTO student;
-    private Collection<PasswordresetDTO> passwordresetCollection;
+
     private String jwt;
+
+
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.roleName = user.getRoleId().getRoleType();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.phone = user.getPhone();
+        this.birth = user.getBirth();
+        this.email = user.getEmail();
+        this.registeredAt = user.getRegisteredAt();
+        this.isActivated = user.getIsActivated();
+        this.activatedAt = user.getActivatedAt();
+        this.isDeleted = user.getIsDeleted();
+        this.deletedAt = user.getDeletedAt();
+        this.activationCode = null;
+    }
 
     @Getter
     @Setter
@@ -56,6 +73,8 @@ public class UserDTO implements Serializable {
         private String lastName;
 
         private String jwt;
+
+
 
     }
 }
