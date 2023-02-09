@@ -1,12 +1,12 @@
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class WorkgroupmembersDTO {
 
     private Integer id;

@@ -107,4 +107,13 @@ public class UserService {
         }
         return userDTOArrayList;
     }
+
+    public UserDTO getUserInfo(UserDTO userDTO) {
+        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+        if(optionalUser.isPresent()){
+            return new UserDTO(optionalUser.get());
+        }
+        return userDTO;
+
+    }
 }
