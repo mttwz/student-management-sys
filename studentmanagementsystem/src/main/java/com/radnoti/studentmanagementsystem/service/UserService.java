@@ -38,7 +38,13 @@ public class UserService {
 
     @Transactional
     public void adduser(UserDTO userDTO) {
-        userRepository.register(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        int roleId;
+        if(Objects.equals(userDTO.getRoleName(), "superadmin")){
+            roleId = 1;
+        }else if(Objects.equals(userDTO.getRoleName(), "admin")){
+            roleId = 2;
+        } else roleId = 3;
+        userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
     }
 
     @Transactional
