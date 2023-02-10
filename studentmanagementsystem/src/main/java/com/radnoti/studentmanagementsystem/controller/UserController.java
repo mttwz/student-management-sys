@@ -56,6 +56,7 @@ public class UserController {
     @PostMapping(path = "/addusertoworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
+        System.out.println(workgroupmembersDTO);
         userService.addUserToWorkgroup(workgroupmembersDTO);
     }
 
@@ -70,15 +71,8 @@ public class UserController {
     @RolesAllowed({"SUPERADMIN"})
     @GetMapping(path = "/getalluser")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ArrayList<UserDTO> getAllUser() {
+    public @ResponseBody ArrayList<UserDTO> getWorkgroupScheduleByUserId() {
         return userService.getAllUser();
-    }
-
-    @RolesAllowed({"SUPERADMIN"})
-    @PostMapping(path = "/getuserinfo", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody UserDTO getUserInfo(@RequestBody UserDTO userDTO) {
-        return userService.getUserInfo(userDTO);
     }
 
 }
