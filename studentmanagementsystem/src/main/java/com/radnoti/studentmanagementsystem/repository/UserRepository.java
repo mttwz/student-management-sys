@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
-    int register(String firstName, String lastName, String phone, Date birth, String email, String password);
+    int register(Integer roleId,String firstName, String lastName, String phone, Date birth, String email, String password);
 
     @Procedure
     int getUserIdByToken(String token);
