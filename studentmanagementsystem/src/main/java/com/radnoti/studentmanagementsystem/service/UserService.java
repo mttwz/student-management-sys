@@ -17,8 +17,10 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * @author matevoros
@@ -38,13 +40,21 @@ public class UserService {
 
     @Transactional
     public void adduser(UserDTO userDTO) {
-        int roleId;
-        if(Objects.equals(userDTO.getRoleName(), "superadmin")){
-            roleId = 1;
-        }else if(Objects.equals(userDTO.getRoleName(), "admin")){
-            roleId = 2;
-        } else roleId = 3;
-        userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
+        if(optionalUser.isEmpty()){
+            if((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty()||userDTO.getPassword().isEmpty()) ){
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
+            }
+            int roleId;
+            if(Objects.equals(userDTO.getRoleName(), "superadmin")){
+                roleId = 1;
+            }else if(Objects.equals(userDTO.getRoleName(), "admin")){
+                roleId = 2;
+            } else roleId = 3;
+            userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
+
+
     }
 
     @Transactional
@@ -112,5 +122,14 @@ public class UserService {
             userDTOArrayList.add(userDTO);
         }
         return userDTOArrayList;
+    }
+
+    public UserDTO getUserInfo(UserDTO userDTO) {
+        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+        if(optionalUser.isPresent()){
+            return new UserDTO(optionalUser.get());
+        }
+        return userDTO;
+
     }
 }
