@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -26,8 +27,9 @@ public class UserController {
     @RolesAllowed({"SUPERADMIN"})
     @PostMapping(path = "/registeruser", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void adduser(@RequestBody UserDTO userDTO) {
+    public @ResponseBody ResponseEntity<String> adduser(@RequestBody UserDTO userDTO) {
         userService.adduser(userDTO);
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
     @RolesAllowed({"SUPERADMIN"})
@@ -73,6 +75,14 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ArrayList<UserDTO> getWorkgroupScheduleByUserId() {
         return userService.getAllUser();
+    }
+
+
+    @RolesAllowed({"SUPERADMIN"})
+    @PostMapping(path = "/getuserinfo", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody UserDTO getUserInfo(@RequestBody UserDTO userDTO) {
+        return userService.getUserInfo(userDTO);
     }
 
 }
