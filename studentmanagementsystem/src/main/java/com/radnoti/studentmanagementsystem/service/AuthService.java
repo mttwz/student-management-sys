@@ -41,7 +41,7 @@ public class AuthService {
         UserDTO.UserLoginDTO userLoginDTO = new UserDTO.UserLoginDTO();
         int userId = userRepository.login(userDTO.getEmail(), userDTO.getPassword());
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
+        if (optionalUser.isPresent() && optionalUser.get().getIsActivated() && !optionalUser.get().getIsDeleted()) {
             userLoginDTO.setId(userId);
             userLoginDTO.setEmail(optionalUser.get().getEmail());
             userLoginDTO.setJwt(jwtConfig.generateJwt(optionalUser.get()));

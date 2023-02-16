@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
+import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.print.DocFlavor;
+
 /**
  * @author matevoros
  */
@@ -31,6 +34,10 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+
+    private final CardService cardService;
+
+
 
 
     private final JwtConfig jwtConfig;
@@ -127,9 +134,16 @@ public class UserService {
     public UserDTO getUserInfo(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if(optionalUser.isPresent()){
+            //if(Objects.equals(optionalUser.get().getRoleId().getRoleType(), "student")){
+            //    UserDTO userDTOWithCard = new UserDTO(optionalUser.get());
+            //    System.err.println(cardService.getUserCard(userDTOWithCard).getId());
+            //    userDTOWithCard.setCardId(cardService.getUserCard(userDTOWithCard).getId());
+            //    return userDTOWithCard;
+            //}
             return new UserDTO(optionalUser.get());
         }
         return userDTO;
+
 
     }
 }
