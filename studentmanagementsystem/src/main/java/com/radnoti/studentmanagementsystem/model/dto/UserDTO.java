@@ -38,8 +38,8 @@ public class UserDTO implements Serializable {
     private Date activatedAt;
     private Boolean isDeleted;
     private Date deletedAt;
-
     private String jwt;
+    private String searchText;
 
 
 

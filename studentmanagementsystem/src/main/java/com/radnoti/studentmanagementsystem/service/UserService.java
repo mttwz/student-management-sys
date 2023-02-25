@@ -5,10 +5,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
-import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
@@ -104,9 +101,7 @@ public class UserService {
 
     @Transactional
     public void setUserIsActivated(UserDTO userDTO) {
-
         userRepository.setUserIsActivated(userDTO.getId());
-
     }
 
     @Transactional
@@ -116,9 +111,7 @@ public class UserService {
 
     @Transactional
     public void setUserRole(UserDTO userDTO) {
-
         userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
-
     }
 
     @Transactional
@@ -170,4 +163,22 @@ public class UserService {
             }
         }
     }
+
+    @Transactional
+    public ArrayList<UserDTO> searchSuperadmin(SearchDTO searchDTO){
+        ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
+
+        if (Objects.equals(searchDTO.getSearchFilter(), "All user")){
+            ArrayList<User> userArrayList = userRepository.searchAllUser(searchDTO.getSearchText());
+            for (int i = 0; i < userArrayList.size(); i++) {
+                UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+                userDTOArrayList.add(actualUserDto);
+            }
+        }
+
+        return userDTOArrayList;
+    }
+
+
+
 }

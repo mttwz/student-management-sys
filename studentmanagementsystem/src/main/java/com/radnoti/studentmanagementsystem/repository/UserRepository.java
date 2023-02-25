@@ -51,6 +51,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Procedure
     ArrayList<User> getAllUser();
 
+    @Procedure
+    ArrayList<User> searchAllUser(String string);
+
 
 
 

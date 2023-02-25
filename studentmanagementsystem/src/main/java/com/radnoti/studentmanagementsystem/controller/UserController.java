@@ -1,5 +1,6 @@
 package com.radnoti.studentmanagementsystem.controller;
 
+import com.radnoti.studentmanagementsystem.model.dto.SearchDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
@@ -41,7 +42,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void deleteUser(@RequestBody UserDTO userDTO) {
         userService.deleteUser(userDTO);
-
     }
 
     @RolesAllowed({"SUPERADMIN"})
@@ -49,14 +49,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void setUserRole(@RequestBody UserDTO userDTO) {
         userService.setUserRole(userDTO);
-
     }
 
     @RolesAllowed({"SUPERADMIN","ADMIN"})
     @PostMapping(path = "/addusertoworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
-
         userService.addUserToWorkgroup(workgroupmembersDTO);
     }
 
@@ -88,6 +86,14 @@ public class UserController {
     public @ResponseBody ResponseEntity<String> editUserInfo(@RequestBody UserDTO userDTO) {
         userService.editUserInfo(userDTO);
         return new ResponseEntity<>("{}", HttpStatus.OK);
+    }
+
+
+    @RolesAllowed(("SUPERADMIN"))
+    @PostMapping(path = "/searchsuperadmin")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ArrayList<UserDTO> searchSuperadmin(@RequestBody SearchDTO searchDTO){
+        return userService.searchSuperadmin(searchDTO);
     }
 
 }
