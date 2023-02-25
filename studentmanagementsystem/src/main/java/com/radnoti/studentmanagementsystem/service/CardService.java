@@ -6,6 +6,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class CardService {
     }
 
 
-
-
+    public CardDTO getUserCard(UserDTO userDTO) {
+        return new CardDTO(cardRepository.getUserCard(userDTO.getId()));
+    }
 }

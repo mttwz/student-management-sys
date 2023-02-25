@@ -42,6 +42,8 @@ public class UserDTO implements Serializable {
     private String jwt;
 
 
+
+
     public UserDTO(User user) {
         this.id = user.getId();
         this.roleName = user.getRoleId().getRoleType();

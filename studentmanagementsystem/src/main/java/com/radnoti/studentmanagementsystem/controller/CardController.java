@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,4 +33,6 @@ public class CardController {
     public @ResponseBody void connectCardToStudent(@RequestBody CardDTO cardDTO) {
         cardService.createCard(cardDTO);
     }
+
+
 }
