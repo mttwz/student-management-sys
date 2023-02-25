@@ -3,7 +3,6 @@ package com.radnoti.studentmanagementsystem.controller;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.HeaderParam;
+
 import java.util.ArrayList;
 
 @RestController
@@ -26,8 +25,7 @@ public class UserController {
 
     @RolesAllowed({"SUPERADMIN"})
     @PostMapping(path = "/registeruser", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ResponseEntity<String> adduser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> adduser(@RequestBody UserDTO userDTO) {
         userService.adduser(userDTO);
         return new ResponseEntity<>("{}", HttpStatus.OK);
     }
@@ -58,7 +56,7 @@ public class UserController {
     @PostMapping(path = "/addusertoworkgroup", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
-        System.out.println(workgroupmembersDTO);
+
         userService.addUserToWorkgroup(workgroupmembersDTO);
     }
 
@@ -83,6 +81,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody UserDTO getUserInfo(@RequestBody UserDTO userDTO) {
         return userService.getUserInfo(userDTO);
+    }
+
+    @RolesAllowed({"SUPERADMIN"})
+    @PostMapping(path = "/edituserinfo", consumes = {"application/json"})
+    public @ResponseBody ResponseEntity<String> editUserInfo(@RequestBody UserDTO userDTO) {
+        userService.editUserInfo(userDTO);
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
 }

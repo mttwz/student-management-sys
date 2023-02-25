@@ -9,6 +9,7 @@ import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
@@ -18,6 +19,7 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,9 +121,9 @@ public class UserService {
 
     }
 
-
+    @Transactional
     public ArrayList<UserDTO> getAllUser() {
-        System.out.println("aaaaaaa");
+
         Iterable<User> userIterable = userRepository.findAll();
         ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
         for (User u: userIterable) {
@@ -130,7 +132,7 @@ public class UserService {
         }
         return userDTOArrayList;
     }
-
+    @Transactional
     public UserDTO getUserInfo(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if(optionalUser.isPresent()){
@@ -145,5 +147,27 @@ public class UserService {
         return userDTO;
 
 
+    }
+    @Transactional
+    public void editUserInfo(UserDTO userDTO) {
+        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+        if (optionalUser.isPresent()){
+            if (Objects.equals(userDTO.getRoleName(), "superadmin")){
+                optionalUser.get().setRoleId(new Role(1));
+            }else if (Objects.equals(userDTO.getRoleName(), "admin")){
+                optionalUser.get().setRoleId(new Role(2));
+            }else optionalUser.get().setRoleId(new Role(3));
+            try {
+
+                optionalUser.get().setFirstName(userDTO.getFirstName());
+                optionalUser.get().setLastName(userDTO.getLastName());
+                optionalUser.get().setBirth(userDTO.getBirth());
+                optionalUser.get().setEmail(userDTO.getEmail());
+                optionalUser.get().setPhone(userDTO.getPhone());
+                userRepository.save(optionalUser.get());
+            }catch (IncorrectResultSizeDataAccessException e){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
+            }
+        }
     }
 }
