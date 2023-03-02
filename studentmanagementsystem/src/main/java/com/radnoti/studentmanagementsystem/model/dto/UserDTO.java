@@ -41,6 +41,11 @@ public class UserDTO implements Serializable {
     private String jwt;
     private String searchText;
 
+    private Integer WorkgroupId;
+    private String workgroup;
+
+    private String institution;
+
 
 
 

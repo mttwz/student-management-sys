@@ -1,10 +1,9 @@
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.model.dto.SearchDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.*;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.service.UserService;
+import com.radnoti.studentmanagementsystem.service.WorkgroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 public class UserController {
 
     private final UserService userService;
+    private final WorkgroupService workgroupService;
 
 
     @RolesAllowed({"SUPERADMIN"})
@@ -95,5 +95,13 @@ public class UserController {
     public @ResponseBody ArrayList<UserDTO> searchSuperadmin(@RequestBody SearchDTO searchDTO){
         return userService.searchSuperadmin(searchDTO);
     }
+
+    @RolesAllowed(("SUPERADMIN"))
+    @PostMapping(path = "/getuserfromworkgroup")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ArrayList<UserDTO> getAllUserIdFromWorkgroup(@RequestBody UserDTO userDTO){
+        return userService.getUserFromWorkgroup(userDTO);
+    }
+
 
 }

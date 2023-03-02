@@ -6,8 +6,6 @@ package com.radnoti.studentmanagementsystem.repository;
 
 import java.util.*;
 
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
@@ -54,6 +52,20 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Procedure
     ArrayList<User> searchAllUser(String string);
 
+    @Procedure
+    ArrayList<User> searchStudents(String string);
+
+    @Procedure
+    ArrayList<User> searchAdmins(String string);
+
+    @Procedure
+    ArrayList<User> searchSuperadmins(String string);
+
+    @Procedure
+    ArrayList<User> searchWorkgroups(String string);
+
+    @Procedure
+    ArrayList<User> getUserFromWorkgroup(Integer id);
 
 
 

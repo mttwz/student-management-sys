@@ -4,9 +4,12 @@
  */
 package com.radnoti.studentmanagementsystem.repository;
 
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -16,5 +19,8 @@ public interface WorkgroupRepository extends CrudRepository<Workgroup, Integer> 
     
     @Procedure
     void createWorkgroup(String groupName, String institution);
+
+//    @Procedure
+//    ArrayList<Workgroup> getAllUserIdFromWorkgroup(Integer workgroupId);
     
 }

@@ -8,6 +8,9 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.model.entity.User;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
+import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -33,6 +36,8 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+
+    private final WorkgroupRepository workgroupRepository;
 
     private final CardService cardService;
 
@@ -168,8 +173,38 @@ public class UserService {
     public ArrayList<UserDTO> searchSuperadmin(SearchDTO searchDTO){
         ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
 
-        if (Objects.equals(searchDTO.getSearchFilter(), "All user")){
+        if (Objects.equals(searchDTO.getSearchFilter(), "All users")){
             ArrayList<User> userArrayList = userRepository.searchAllUser(searchDTO.getSearchText());
+            for (int i = 0; i < userArrayList.size(); i++) {
+                UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+                userDTOArrayList.add(actualUserDto);
+            }
+        }else if(Objects.equals(searchDTO.getSearchFilter(), "Superadmin")){
+            ArrayList<User> userArrayList = userRepository.searchSuperadmins(searchDTO.getSearchText());
+            for (int i = 0; i < userArrayList.size(); i++) {
+                UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+                userDTOArrayList.add(actualUserDto);
+            }
+        } else if(Objects.equals(searchDTO.getSearchFilter(), "Student")){
+            ArrayList<User> userArrayList = userRepository.searchStudents(searchDTO.getSearchText());
+            for (int i = 0; i < userArrayList.size(); i++) {
+                UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+                userDTOArrayList.add(actualUserDto);
+            }
+        } else if(Objects.equals(searchDTO.getSearchFilter(), "Admin")){
+            ArrayList<User> userArrayList = userRepository.searchAdmins(searchDTO.getSearchText());
+            for (int i = 0; i < userArrayList.size(); i++) {
+                UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+                userDTOArrayList.add(actualUserDto);
+            }
+        } else if(Objects.equals(searchDTO.getSearchFilter(), "Workgroup")){
+            ArrayList<User> userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
+            for (int i = 0; i < userArrayList.size(); i++) {
+                UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+                userDTOArrayList.add(actualUserDto);
+            }
+        } else if(Objects.equals(searchDTO.getSearchFilter(), "Institution")){
+            ArrayList<User> userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
                 userDTOArrayList.add(actualUserDto);
@@ -179,6 +214,19 @@ public class UserService {
         return userDTOArrayList;
     }
 
+    @Transactional
+    public ArrayList<UserDTO> getUserFromWorkgroup(UserDTO userDTO){
+        ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
+        ArrayList<User> userArrayList = userRepository.getUserFromWorkgroup(userDTO.getId());
+        for (int i = 0; i < userArrayList.size(); i++) {
+            System.out.println(userArrayList.get(i));
+            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+            userDTOArrayList.add(actualUserDto);
+//            System.out.println(userDTOArrayList);
+        }
+
+        return userDTOArrayList;
+    }
 
 
 }
