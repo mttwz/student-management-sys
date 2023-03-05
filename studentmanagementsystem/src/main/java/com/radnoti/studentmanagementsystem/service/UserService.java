@@ -34,13 +34,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final WorkgroupRepository workgroupRepository;
-
-    private final CardService cardService;
-
-
     private final JwtConfig jwtConfig;
-
 
     private final DateFormatUtil dateFormatUtil;
 
@@ -82,11 +76,10 @@ public class UserService {
     @Transactional
     public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(String authHeader, UserDTO userDTO) {
         ArrayList<ArrayList<String>> workgroupScheduleList;
-        if (jwtConfig.getRoleFromJwt(authHeader).equals("admin")) {
-            System.out.println("asd");
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtConfig.getIdFromJwt(authHeader));
-        } else {
+        if (jwtConfig.getRoleFromJwt(authHeader).equals("superadmin")) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
+        } else {
+            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtConfig.getIdFromJwt(authHeader));
         }
 
         ArrayList<WorkgroupscheduleDTO> dtoList = new ArrayList<>();

@@ -30,7 +30,6 @@ public class UserDTO implements Serializable {
     private String phone;
     private Date birth;
     private String email;
-
     private String password;
     private Date registeredAt;
     private String activationCode;
@@ -41,10 +40,7 @@ public class UserDTO implements Serializable {
     private String jwt;
     private String searchText;
 
-    private Integer WorkgroupId;
-    private String workgroup;
 
-    private String institution;
 
 
 
