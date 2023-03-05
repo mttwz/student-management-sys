@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 /**
  *
  * @author matevoros
@@ -20,7 +22,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
-    int register(Integer roleId,String firstName, String lastName, String phone, Date birth, String email, String password);
+    Integer register(Integer roleId,String firstName, String lastName, String phone, Date birth, String email, String password);
 
     @Procedure
     int getUserIdByToken(String token);
@@ -38,7 +40,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     void setUserRole(Integer userId, String roleName);
 
     @Procedure
-    void addUserToWorkgroup(Integer userId, Integer workgroupId);
+    Integer addUserToWorkgroup(Integer userId, Integer workgroupId);
 
     @Procedure
     ArrayList<ArrayList<String>>getWorkgroupScheduleByUserId(Integer userId);

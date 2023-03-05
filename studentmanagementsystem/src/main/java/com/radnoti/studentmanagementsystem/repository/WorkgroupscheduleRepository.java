@@ -8,7 +8,7 @@ import java.util.Date;
 
 public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupschedule, Integer> {
     @Procedure
-    void createWorkgroupSchedule(String name, Date start, Date end, Boolean isOnsite);
+    Integer createWorkgroupSchedule(String name, Date start, Date end, Boolean isOnsite, Integer workgroupId);
 
 
 }

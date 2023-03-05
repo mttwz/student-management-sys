@@ -42,9 +42,6 @@ public class CardService {
         if (optionalCard.isPresent() && Objects.equals(optionalCard.get().getHash(), cardDTO.getHash())){
             return cardId;
         }else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT,"NEMJO");
-
-
-
     }
 
 
