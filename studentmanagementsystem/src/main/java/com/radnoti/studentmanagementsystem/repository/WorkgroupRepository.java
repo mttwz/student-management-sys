@@ -9,6 +9,7 @@ import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 
 /**
@@ -18,9 +19,7 @@ import java.util.ArrayList;
 public interface WorkgroupRepository extends CrudRepository<Workgroup, Integer> {
     
     @Procedure
-    void createWorkgroup(String groupName, String institution);
+    Integer createWorkgroup(String groupName, String institution);
 
-//    @Procedure
-//    ArrayList<Workgroup> getAllUserIdFromWorkgroup(Integer workgroupId);
     
 }

@@ -1,9 +1,11 @@
 package com.radnoti.studentmanagementsystem.controller;
 
+import com.radnoti.studentmanagementsystem.enums.Role;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.service.UserService;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
+import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -21,44 +24,52 @@ import java.util.ArrayList;
 public class UserController {
 
     private final UserService userService;
-    private final WorkgroupService workgroupService;
+    private final ResponseFactory responseFactory;
 
 
-    @RolesAllowed({"SUPERADMIN"})
+
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/registeruser", consumes = {"application/json"})
-    public ResponseEntity<String> adduser(@RequestBody UserDTO userDTO) {
-        userService.adduser(userDTO);
-        return new ResponseEntity<>("{}", HttpStatus.OK);
+    public ResponseEntity<Map> adduser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", userService.adduser(userDTO)));
     }
 
-    @RolesAllowed({"SUPERADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/setuserisactivated", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void setUserIsActivated(@RequestBody UserDTO userDTO) {
-        userService.setUserIsActivated(userDTO);
+    public ResponseEntity<Map> setUserIsActivated(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", userService.setUserIsActivated(userDTO)));
     }
-    @RolesAllowed({"SUPERADMIN","ADMIN"})
+
+    @RolesAllowed({Role.Types.SUPERADMIN, Role.Types.ADMIN})
     @PostMapping(path = "/deleteuser", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void deleteUser(@RequestBody UserDTO userDTO) {
-        userService.deleteUser(userDTO);
+    public ResponseEntity<Map> deleteUser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id",userService.deleteUser(userDTO)));
     }
 
-    @RolesAllowed({"SUPERADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/setuserrole", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void setUserRole(@RequestBody UserDTO userDTO) {
-        userService.setUserRole(userDTO);
+    public ResponseEntity<Map> setUserRole(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", userService.setUserRole(userDTO)));
     }
 
-    @RolesAllowed({"SUPERADMIN","ADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN, Role.Types.ADMIN})
     @PostMapping(path = "/addusertoworkgroup", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
-        userService.addUserToWorkgroup(workgroupmembersDTO);
+    public ResponseEntity<Map> addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", userService.addUserToWorkgroup(workgroupmembersDTO)));
+
     }
 
-    @RolesAllowed({"SUPERADMIN","ADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN, Role.Types.ADMIN})
     @PostMapping(path = "/getworkgroupschedulebyuserid", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDTO userDTO) {
@@ -66,7 +77,7 @@ public class UserController {
     }
 
 
-    @RolesAllowed({"SUPERADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @GetMapping(path = "/getalluser")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ArrayList<UserDTO> getWorkgroupScheduleByUserId() {
@@ -74,14 +85,14 @@ public class UserController {
     }
 
 
-    @RolesAllowed({"SUPERADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/getuserinfo", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody UserDTO getUserInfo(@RequestBody UserDTO userDTO) {
         return userService.getUserInfo(userDTO);
     }
 
-    @RolesAllowed({"SUPERADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/edituserinfo", consumes = {"application/json"})
     public @ResponseBody ResponseEntity<String> editUserInfo(@RequestBody UserDTO userDTO) {
         userService.editUserInfo(userDTO);
@@ -89,14 +100,14 @@ public class UserController {
     }
 
 
-    @RolesAllowed(("SUPERADMIN"))
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/searchsuperadmin")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ArrayList<UserDTO> searchSuperadmin(@RequestBody SearchDTO searchDTO){
         return userService.searchSuperadmin(searchDTO);
     }
 
-    @RolesAllowed(("SUPERADMIN"))
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/getuserfromworkgroup")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ArrayList<UserDTO> getAllUserIdFromWorkgroup(@RequestBody UserDTO userDTO){

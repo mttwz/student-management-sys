@@ -36,6 +36,8 @@ public class WorkgroupscheduleDTO implements Serializable {
 
     private Boolean isOnsite;
 
+    private Integer workgroupId;
+
     private Collection<WorkgroupDTO> workgroupCollection;
 
     public WorkgroupscheduleDTO(Integer id) {
