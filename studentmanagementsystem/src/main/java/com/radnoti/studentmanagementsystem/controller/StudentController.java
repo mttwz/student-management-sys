@@ -34,10 +34,10 @@ public class StudentController {
         studentService.registerStudent(userDTO);
     }
 
-    @RolesAllowed({"SUPERADMIN"})
-    @PostMapping(path = "/connectstudenttouser", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void connectStudentToUser(@RequestBody StudentDTO studentDTO) {
-        studentService.connectStudentToUser(studentDTO);
-    }
+//    @RolesAllowed({"SUPERADMIN"})
+//    @PostMapping(path = "/connectstudenttouser", consumes = {"application/json"})
+//    @ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody void connectStudentToUser(@RequestBody StudentDTO studentDTO) {
+//        studentService.connectStudentToUser(studentDTO);
+//    }
 }

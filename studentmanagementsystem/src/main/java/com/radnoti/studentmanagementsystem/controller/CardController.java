@@ -26,7 +26,6 @@ public class CardController {
 
     @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/connectcardtostudent", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map> connectCardToStudent(@RequestBody StudentDTO studentDTO) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
@@ -34,10 +33,10 @@ public class CardController {
     }
 
 
-    @RolesAllowed({"SUPERADMIN"})
+    @RolesAllowed({Role.Types.SUPERADMIN})
     @PostMapping(path = "/createcard", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map> connectCardToStudent(@RequestBody CardDTO cardDTO) {
+    public ResponseEntity<Map> createCard(@RequestBody CardDTO cardDTO) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
                 .body(responseFactory.createResponse("id", cardService.createCard(cardDTO)));
