@@ -7,11 +7,20 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.entity.Card;
+import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
+import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Objects;
+import java.util.Optional;
 
 
 /**
@@ -24,26 +33,34 @@ public class CardService {
     private final JwtConfig jwtConfig;
 
     private final CardRepository cardRepository;
+    private final StudentRepository studentRepository;
 
     @Transactional
-    public void createCard(CardDTO cardDTO) {
+    public Integer createCard(CardDTO cardDTO) {
+        Integer cardId = cardRepository.createCard(cardDTO.getHash());
+        Optional<Card> optionalCard = cardRepository.findById(cardId);
+        if (optionalCard.isPresent() && Objects.equals(optionalCard.get().getHash(), cardDTO.getHash())){
+            return cardId;
+        }else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT,"NEMJO");
 
-            cardRepository.createCard(cardDTO.getHash());
 
 
     }
 
 
     @Transactional
-    public void connectCardToStudent(StudentDTO studentDTO) {
-
+    public Integer connectCardToStudent(StudentDTO studentDTO) {
 /*            Optional<Student> student = studentRepository.findById(studentDTO.getId());
             if (student.isPresent()){
                 student.get().setCardId(new Card(studentDTO.getCardId()));
                 studentRepository.save(student.get());
             }*/
-            cardRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
 
+        cardRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
+        Optional<Student> optionalStudent = studentRepository.findById(studentDTO.getId());
+        if (optionalStudent.isPresent() && Objects.equals(optionalStudent.get().getCardId().getId(), studentDTO.getCardId())){
+            return optionalStudent.get().getId();
+        }else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT,"NEMJO");
     }
 
 

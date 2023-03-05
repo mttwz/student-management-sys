@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import lombok.*;
 
 import java.io.Serializable;
@@ -32,4 +33,10 @@ public class AttendanceDTO implements Serializable {
     private StudentDTO studentId;
 
 
+    public AttendanceDTO(Attendance attendance) {
+        this.id = attendance.getId();
+        this.arrival = attendance.getArrival();
+        this.leaving = attendance.getLeaving();
+        this.studentId = new StudentDTO(attendance.getStudentId());
+    }
 }

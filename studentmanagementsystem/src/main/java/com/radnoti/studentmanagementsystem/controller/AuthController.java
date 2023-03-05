@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
 import com.radnoti.studentmanagementsystem.service.AuthService;
 import com.radnoti.studentmanagementsystem.security.UserDetailsServiceImp;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +23,17 @@ public class AuthController {
     private final UserDetailsServiceImp userDetailsServiceImp;
 
 
-    @PostMapping(path = "/updatejwt", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void updateJwt(@RequestBody UserDTO userDTO) {
-        authService.updateJwt(userDTO);
-    }
+//    @PostMapping(path = "/updatejwt", consumes = {"application/json"})
+//    @ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody void updateJwt(@RequestBody UserDTO userDTO) {
+//        authService.updateJwt(userDTO);
+//    }
 
 
     @PostMapping(path = "/login", consumes = {"application/json"})
-    public @ResponseBody UserDTO.UserLoginDTO login(@RequestBody UserDTO userDTO){
+    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO){
         return authService.login(userDTO);
     }
-
-
 
     @PostMapping(path = "/validatejwt", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)

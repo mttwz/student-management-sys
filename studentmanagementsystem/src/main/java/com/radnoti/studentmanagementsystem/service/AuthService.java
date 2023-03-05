@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
@@ -37,8 +38,8 @@ public class AuthService {
     }
 
     @Transactional
-    public UserDTO.UserLoginDTO login(UserDTO userDTO){
-        UserDTO.UserLoginDTO userLoginDTO = new UserDTO.UserLoginDTO();
+    public UserLoginDTO login(UserDTO userDTO){
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
         int userId = userRepository.login(userDTO.getEmail(), userDTO.getPassword());
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent() && optionalUser.get().getIsActivated() && !optionalUser.get().getIsDeleted()) {

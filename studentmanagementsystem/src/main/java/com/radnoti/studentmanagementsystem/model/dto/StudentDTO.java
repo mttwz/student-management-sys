@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.radnoti.studentmanagementsystem.model.entity.Student;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +20,6 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class StudentDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,6 +32,22 @@ public class StudentDTO implements Serializable {
 
     private Integer userId;
 
-    private Integer workgroupId;
 
+
+    public StudentDTO(Student student) {
+        this.id = student.getId();
+        this.cardId = student.getCardId().getId();
+        this.userId = student.getUserId().getId();
+
+    }
+
+    @Override
+    public String toString() {
+        return "StudentDTO{" +
+                "id=" + id +
+                ", attendanceCollection=" + attendanceCollection +
+                ", cardId=" + cardId +
+                ", userId=" + userId +
+                '}';
+    }
 }

@@ -16,7 +16,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface CardRepository extends CrudRepository<Card, Integer> {
 
     @Procedure
-    void createCard(String hash);
+    Integer createCard(String hash);
     @Procedure
     void connectCardToStudent(Integer studentId, Integer cardId);
 

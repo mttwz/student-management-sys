@@ -65,23 +65,4 @@ public class UserDTO implements Serializable {
         this.activationCode = null;
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class UserLoginDTO implements Serializable {
-
-        private Integer id;
-
-        private String email;
-
-        private String firstName;
-
-        private String lastName;
-
-        private String jwt;
-
-
-
-    }
 }

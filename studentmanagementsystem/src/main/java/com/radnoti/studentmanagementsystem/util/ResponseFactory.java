@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,9 +13,10 @@ import java.util.Map;
  *
  * @author matevoros
  */
+@Component
 public class ResponseFactory {
-    public Map<String, String> createResponse(String key, String value) {
-        HashMap<String, String> map = new HashMap<>();
+    public Map<String, Integer> createResponse(String key, Integer value) {
+        HashMap<String, Integer> map = new HashMap<>();
         map.put(key, value);
         return map;
     }
