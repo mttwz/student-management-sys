@@ -45,7 +45,7 @@ public class WorkgroupscheduleService {
     @Transactional
     public Integer createWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
         try {
-            Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupscheduleDTO.getWorkgroupId());
+
             Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite(), workgroupscheduleDTO.getWorkgroupId());
             Optional<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId);
             if(optionalWorkgroupschedule.isPresent() && Objects.equals(optionalWorkgroupschedule.get().getName(), workgroupscheduleDTO.getName())){

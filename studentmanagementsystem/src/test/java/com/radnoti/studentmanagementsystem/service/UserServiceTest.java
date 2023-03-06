@@ -1,28 +1,36 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.entity.Role;
-import com.radnoti.studentmanagementsystem.model.entity.User;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
+import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 
-@SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@SpringBootTest
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 public final class UserServiceTest {
 
     @InjectMocks
@@ -43,13 +51,24 @@ public final class UserServiceTest {
         userDTO.setEmail("mate");
         userDTO.setPassword("mate");
 
-        //act
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-        when(userRepository.register(any(Integer.class),any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class))).thenReturn(1);
+        User user = new User();
+        user.setId(1);
+        user.setEmail("mate");
 
+        when(userRepository.findByUsername(any()))
+                .thenReturn(Optional.empty());
+
+        when(userRepository.register(any(Integer.class),any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class)))
+                .thenReturn(1);
+
+        when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.of(user));
+
+        //act
+        int actual = userService.adduser(userDTO);
 
         //assert
-        assertEquals(1,userService.adduser(userDTO));
+        assertEquals(1,actual);
     }
 
     @Test()
@@ -63,11 +82,10 @@ public final class UserServiceTest {
         userDTO.setPhone("123");
         userDTO.setBirth(new Date(1111,11,11));
         userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         //act
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-        when(userRepository.register(any(Integer.class),any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class))).thenReturn(1);
+
 
 
         //assert
@@ -89,10 +107,9 @@ public final class UserServiceTest {
 
         //act
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-        when(userRepository.register(any(Integer.class),any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class))).thenReturn(1);
 
         //assert
-        assertThrows(NullPointerException.class, ()-> userService.adduser(userDTO));
+        assertThrows(ResponseStatusException.class, ()-> userService.adduser(userDTO));
     }
 
     @Test()
@@ -108,16 +125,73 @@ public final class UserServiceTest {
         userDTO.setEmail("mate");
         userDTO.setPassword("mate");
 
-        //act
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User()));
-        when(userRepository.register(any(Integer.class),any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class))).thenReturn(1);
 
-
-        //assert
+        //act & assert
         assertThrows(ResponseStatusException.class, ()-> userService.adduser(userDTO));
     }
 
 
+    @Test
+    public void addUserToWorkgroupTest_valid(){
+        //asert
+        WorkgroupmembersDTO workgroupmembersDTO = new WorkgroupmembersDTO();
+
+        User user = new User();
+
+        Collection<Workgroupmembers> workgroupmembersCollection = new ArrayList<>();
+        workgroupmembersCollection.add(new Workgroupmembers(1));
+        workgroupmembersCollection.add(new Workgroupmembers(2));
+        user.setWorkgroupmembersCollection(workgroupmembersCollection);
+
+
+        when(userRepository.addUserToWorkgroup(any(),any())).thenReturn(1);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        //act
+        int actual = userService.addUserToWorkgroup(workgroupmembersDTO);
+
+        //equals
+        assertEquals(1,actual);
+
+    }
+
+    @Test
+    public void addUserToWorkgroupTest_user_not_exist(){
+        //asert
+        WorkgroupmembersDTO workgroupmembersDTO = new WorkgroupmembersDTO();
+
+        User user = new User();
+
+        Collection<Workgroupmembers> workgroupmembersCollection = new ArrayList<>();
+        workgroupmembersCollection.add(new Workgroupmembers(1));
+        workgroupmembersCollection.add(new Workgroupmembers(2));
+        user.setWorkgroupmembersCollection(workgroupmembersCollection);
+
+
+        when(userRepository.addUserToWorkgroup(any(),any())).thenReturn(1);
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+
+
+        //act & equals
+        assertThrows(ResponseStatusException.class, ()-> userService.addUserToWorkgroup(workgroupmembersDTO));
+
+    }
+
+    @Test
+    public void addUserToWorkgroupTest_workgroup_not_exist(){
+        //asert
+        WorkgroupmembersDTO workgroupmembersDTO = new WorkgroupmembersDTO();
+
+        User user = new User();
+
+        when(userRepository.addUserToWorkgroup(any(),any())).thenReturn(1);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        //act & equals
+        assertThrows(ResponseStatusException.class, ()-> userService.addUserToWorkgroup(workgroupmembersDTO));
+
+    }
 
     @Test
     //@Sql(scripts={"classpath:sqls/asd.sql"})

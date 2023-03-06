@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.NonUniqueResultException;
 import javax.print.DocFlavor;
+import javax.validation.constraints.Null;
 
 /**
  * @author matevoros
@@ -48,9 +49,14 @@ public class UserService {
     public Integer adduser(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
         if (optionalUser.isEmpty()) {
-            if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
+            try {
+                if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
+                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
+                }
+            }catch (NullPointerException e){
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
             }
+
             int roleId;
             if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
                 roleId = RoleEnum.SUPERADMIN.getId();
@@ -62,9 +68,8 @@ public class UserService {
             Optional<User> savedOptionalUser = userRepository.findById(userId);
             if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
                 return userId;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
+        }else throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
 
 
 
@@ -87,6 +92,7 @@ public class UserService {
 
     @Transactional
     public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(String authHeader, UserDTO userDTO) {
+        //TODO: Atkene irni mert jo szar lett.
         ArrayList<ArrayList<String>> workgroupScheduleList;
         if (jwtConfig.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());

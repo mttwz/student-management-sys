@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
+import lombok.AllArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -29,13 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "Workgroup_schedule")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Workgroupschedule.findAll", query = "SELECT w FROM Workgroupschedule w"),
-    @NamedQuery(name = "Workgroupschedule.findById", query = "SELECT w FROM Workgroupschedule w WHERE w.id = :id"),
-    @NamedQuery(name = "Workgroupschedule.findByName", query = "SELECT w FROM Workgroupschedule w WHERE w.name = :name"),
-    @NamedQuery(name = "Workgroupschedule.findByStart", query = "SELECT w FROM Workgroupschedule w WHERE w.start = :start"),
-    @NamedQuery(name = "Workgroupschedule.findByEnd", query = "SELECT w FROM Workgroupschedule w WHERE w.end = :end"),
-    @NamedQuery(name = "Workgroupschedule.findByIsOnsite", query = "SELECT w FROM Workgroupschedule w WHERE w.isOnsite = :isOnsite")})
+@AllArgsConstructor
 public class Workgroupschedule implements Serializable {
 
     private static final long serialVersionUID = 1L;

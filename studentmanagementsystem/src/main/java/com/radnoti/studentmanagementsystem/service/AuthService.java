@@ -28,15 +28,15 @@ public class AuthService {
 
     private final DateFormatUtil dateFormatUtil;
 
-    @Transactional
-    public String updateJwt(UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-        String jwt = "";
-        if (optionalUser.isPresent()) {
-            jwt = jwtConfig.generateJwt(optionalUser.get());
-        }
-        return jwt;
-    }
+//    @Transactional
+//    public String updateJwt(UserDTO userDTO) {
+//        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+//        String jwt = "";
+//        if (optionalUser.isPresent()) {
+//            jwt = jwtConfig.generateJwt(optionalUser.get());
+//        }
+//        return jwt;
+//    }
 
     @Transactional
     public UserLoginDTO login(UserDTO userDTO){
