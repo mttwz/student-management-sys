@@ -1,10 +1,10 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.StudentmanagementsystemApplication;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,7 +35,7 @@ public final class UserServiceTest {
         //arrange
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
-        userDTO.setRoleName("superadmin");
+        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         userDTO.setFirstName("mate");
         userDTO.setLastName("mate");
         userDTO.setPhone("123");
@@ -57,7 +57,7 @@ public final class UserServiceTest {
         //arrange
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
-        userDTO.setRoleName("superadmin");
+        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         userDTO.setFirstName("mate");
         userDTO.setLastName("");
         userDTO.setPhone("123");
@@ -79,7 +79,7 @@ public final class UserServiceTest {
         //arrange
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
-        userDTO.setRoleName("superadmin");
+        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         userDTO.setFirstName("mate");
         userDTO.setLastName(null);
         userDTO.setPhone("123");
@@ -100,7 +100,7 @@ public final class UserServiceTest {
         //arrange
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
-        userDTO.setRoleName("superadmin");
+        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         userDTO.setFirstName("mate");
         userDTO.setLastName("");
         userDTO.setPhone("123");
@@ -125,10 +125,10 @@ public final class UserServiceTest {
         //arrange
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
-        userDTO.setRoleName("superadmin");
+        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
 
         Role role = new Role(1);
-        role.setRoleType("superadmin");
+        role.setRoleType(RoleEnum.Types.SUPERADMIN.toLowerCase());
 
         User user = new User(1);
         user.setRoleId(role);
@@ -145,7 +145,7 @@ public final class UserServiceTest {
         //arrange
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1);
-        userDTO.setRoleName("superadmin");
+        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         //act
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         //assert

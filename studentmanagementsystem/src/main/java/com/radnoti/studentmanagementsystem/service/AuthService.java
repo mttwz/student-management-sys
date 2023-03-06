@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,10 +40,10 @@ public class AuthService {
 
     @Transactional
     public UserLoginDTO login(UserDTO userDTO){
-        UserLoginDTO userLoginDTO = new UserLoginDTO();
         int userId = userRepository.login(userDTO.getEmail(), userDTO.getPassword());
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent() && optionalUser.get().getIsActivated() && !optionalUser.get().getIsDeleted()) {
+            UserLoginDTO userLoginDTO = new UserLoginDTO();
             userLoginDTO.setId(userId);
             userLoginDTO.setEmail(optionalUser.get().getEmail());
             userLoginDTO.setJwt(jwtConfig.generateJwt(optionalUser.get()));
@@ -50,8 +51,7 @@ public class AuthService {
             userLoginDTO.setLastName(optionalUser.get().getLastName());
             return userLoginDTO;
         }
-
-        throw new UsernameNotFoundException("Invalid");
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid username or password");
 
     }
 

@@ -6,7 +6,10 @@ package com.radnoti.studentmanagementsystem.repository;
 
 import java.util.*;
 
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.entity.User;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

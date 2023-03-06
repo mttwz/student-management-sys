@@ -28,6 +28,8 @@ public class WorkgroupscheduleDTO implements Serializable {
 
     private String name;
 
+    private Integer workgroupId;
+
     private String workgroupName;
 
     private Date start;
@@ -36,9 +38,9 @@ public class WorkgroupscheduleDTO implements Serializable {
 
     private Boolean isOnsite;
 
-    private Integer workgroupId;
 
-    private Collection<WorkgroupDTO> workgroupCollection;
+
+    //private Collection<WorkgroupDTO> workgroupCollection;
 
     public WorkgroupscheduleDTO(Integer id) {
         this.id = id;

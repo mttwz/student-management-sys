@@ -9,7 +9,9 @@ import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
 
@@ -30,6 +32,8 @@ import java.util.Optional;
 public class StudentService {
     private final StudentRepository studentRepository;
 
+    private final UserRepository userRepository;
+
     private final JwtConfig jwtConfig;
 
     private final DateFormatUtil dateFormatUtil;
@@ -38,10 +42,14 @@ public class StudentService {
     @Transactional
     public int registerStudent(UserDTO userDTO){
         int studentId = studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
+        if(optionalUser.isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
+        }
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
         if(optionalStudent.isPresent() && Objects.equals(optionalStudent.get().getId(), userDTO.getId())){
             return studentId;
-        }else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
+        }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
     }
 
 //    @Transactional

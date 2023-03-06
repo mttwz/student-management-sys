@@ -1,7 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
-import com.radnoti.studentmanagementsystem.enums.Role;
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.service.CardService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
@@ -24,7 +24,7 @@ public class CardController {
     private final ResponseFactory responseFactory;
 
 
-    @RolesAllowed({Role.Types.SUPERADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/connectcardtostudent", consumes = {"application/json"})
     public ResponseEntity<Map> connectCardToStudent(@RequestBody StudentDTO studentDTO) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -33,7 +33,7 @@ public class CardController {
     }
 
 
-    @RolesAllowed({Role.Types.SUPERADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/createcard", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map> createCard(@RequestBody CardDTO cardDTO) {

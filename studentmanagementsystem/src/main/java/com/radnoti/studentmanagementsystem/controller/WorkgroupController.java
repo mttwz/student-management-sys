@@ -1,8 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.enums.Role;
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class WorkgroupController {
     private final ResponseFactory responseFactory;
 
 
-    @RolesAllowed({Role.Types.SUPERADMIN, Role.Types.ADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/createworkgroup", consumes = {"application/json"})
     public ResponseEntity<Map> createWorkgroup(@RequestBody WorkgroupDTO workgroupDTO) {
         return ResponseEntity.status(HttpStatus.OK)

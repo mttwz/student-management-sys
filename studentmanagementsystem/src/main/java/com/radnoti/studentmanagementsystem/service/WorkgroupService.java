@@ -29,12 +29,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class WorkgroupService {
-
-
     private final WorkgroupRepository workgroupRepository;
-
-    private final  JwtConfig jwtConfig;
-
 
 
     @Transactional
@@ -43,7 +38,7 @@ public class WorkgroupService {
         Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
         if(optionalWorkgroup.isPresent() && Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDTO.getGroupName())){
             return workgroupId;
-        } else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
+        } else throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
     }
 
 

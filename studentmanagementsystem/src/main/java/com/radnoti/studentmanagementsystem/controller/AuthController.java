@@ -6,6 +6,7 @@ import com.radnoti.studentmanagementsystem.service.AuthService;
 import com.radnoti.studentmanagementsystem.security.UserDetailsServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -31,8 +32,9 @@ public class AuthController {
 
 
     @PostMapping(path = "/login", consumes = {"application/json"})
-    public @ResponseBody UserLoginDTO login(@RequestBody UserDTO userDTO){
-        return authService.login(userDTO);
+    public ResponseEntity<UserLoginDTO> login(@RequestBody UserDTO userDTO){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authService.login(userDTO));
     }
 
     @PostMapping(path = "/validatejwt", consumes = {"application/json"})

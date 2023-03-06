@@ -1,6 +1,6 @@
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.enums.Role;
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.service.WorkgroupscheduleService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
@@ -21,7 +21,7 @@ public class WorkgroupScheduleController {
     private final WorkgroupscheduleService workgroupscheduleService;
     private final ResponseFactory responseFactory;
 
-    @RolesAllowed({Role.Types.SUPERADMIN, Role.Types.ADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/createworkgroupschedule", consumes = {"application/json"})
     public ResponseEntity<Map> createWorkgroupSchedule(@RequestBody WorkgroupscheduleDTO workgroupscheduleDTO) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -31,10 +31,10 @@ public class WorkgroupScheduleController {
     }
 
 
-    @PostMapping(path = "/uploadfile", consumes = {"multipart/form-data"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("workgroupscheduleId") Integer workgroupscheduleId) {
-        WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO(workgroupscheduleId);
-        workgroupscheduleService.uploadFile(file,workgroupscheduleDTO);
-    }
+//    @PostMapping(path = "/uploadfile", consumes = {"multipart/form-data"})
+//    @ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody void uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("workgroupscheduleId") Integer workgroupscheduleId) {
+//        WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO(workgroupscheduleId);
+//        workgroupscheduleService.uploadFile(file,workgroupscheduleDTO);
+//    }
 }

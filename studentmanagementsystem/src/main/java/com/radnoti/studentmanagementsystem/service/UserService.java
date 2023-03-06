@@ -5,6 +5,8 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
@@ -18,10 +20,13 @@ import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.NonUniqueResultException;
 import javax.print.DocFlavor;
 
 /**
@@ -47,13 +52,20 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
             }
             int roleId;
-            if (Objects.equals(userDTO.getRoleName(), "superadmin")) {
-                roleId = 1;
-            } else if (Objects.equals(userDTO.getRoleName(), "admin")) {
-                roleId = 2;
-            } else roleId = 3;
-            return userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
-        } else throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
+            if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+                roleId = RoleEnum.SUPERADMIN.getId();
+            } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+                roleId = RoleEnum.ADMIN.getId();
+            } else roleId = RoleEnum.STUDENT.getId();
+
+            int userId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+            Optional<User> savedOptionalUser = userRepository.findById(userId);
+            if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
+                return userId;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+
 
 
 //        Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
@@ -76,20 +88,21 @@ public class UserService {
     @Transactional
     public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(String authHeader, UserDTO userDTO) {
         ArrayList<ArrayList<String>> workgroupScheduleList;
-        if (jwtConfig.getRoleFromJwt(authHeader).equals("superadmin")) {
+        if (jwtConfig.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         } else {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtConfig.getIdFromJwt(authHeader));
         }
-
         ArrayList<WorkgroupscheduleDTO> dtoList = new ArrayList<>();
         for (int i = 0; i < workgroupScheduleList.size(); i++) {
             WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO();
             workgroupscheduleDTO.setId(Integer.parseInt(workgroupScheduleList.get(i).get(0)));
             workgroupscheduleDTO.setName(workgroupScheduleList.get(i).get(1));
-            workgroupscheduleDTO.setStart(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(2)));
-            workgroupscheduleDTO.setEnd(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(3)));
-            workgroupscheduleDTO.setIsOnsite(Boolean.valueOf(workgroupScheduleList.get(i).get(4)));
+            workgroupscheduleDTO.setWorkgroupId(Integer.parseInt(workgroupScheduleList.get(i).get(2)));
+            workgroupscheduleDTO.setWorkgroupName(workgroupScheduleList.get(i).get(3));
+            workgroupscheduleDTO.setStart(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(5)));
+            workgroupscheduleDTO.setEnd(dateFormatUtil.dateFormatter(workgroupScheduleList.get(i).get(6)));
+            workgroupscheduleDTO.setIsOnsite(Boolean.valueOf(workgroupScheduleList.get(i).get(7)));
             dtoList.add(workgroupscheduleDTO);
         }
         return dtoList;
@@ -97,19 +110,23 @@ public class UserService {
 
     @Transactional
     public Integer addUserToWorkgroup(WorkgroupmembersDTO workgroupmembersDTO) {
-        Integer workgroupMembersId = userRepository.addUserToWorkgroup(workgroupmembersDTO.getUserId(), workgroupmembersDTO.getWorkgroupId());
-        Optional<User> optionalUser = userRepository.findById(workgroupmembersDTO.getUserId());
-        if (optionalUser.isPresent() && optionalUser.get().getWorkgroupmembersCollection().contains(new Workgroupmembers(workgroupMembersId))) {
-            return workgroupMembersId;
-        } else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
+        try{
+            Integer workgroupMembersId = userRepository.addUserToWorkgroup(workgroupmembersDTO.getUserId(), workgroupmembersDTO.getWorkgroupId());
+            Optional<User> optionalUser = userRepository.findById(workgroupmembersDTO.getUserId());
+            if (optionalUser.isPresent() && optionalUser.get().getWorkgroupmembersCollection().contains(new Workgroupmembers(workgroupMembersId))) {
+                return workgroupMembersId;
+            } else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not added to workgroup");
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or workgroup does not exist");
+        }
     }
 
 
-    @Transactional
-    public Optional<User> getUserData(UserDTO userDTO) {
-        Optional<User> user = userRepository.findById(userDTO.getId());
-        return user;
-    }
+//    @Transactional
+//    public Optional<User> getUserData(UserDTO userDTO) {
+//        Optional<User> user = userRepository.findById(userDTO.getId());
+//        return user;
+//    }
 
     @Transactional
     public Integer setUserIsActivated(UserDTO userDTO) {
@@ -117,7 +134,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if (optionalUser.isPresent() && Objects.equals(optionalUser.get().getIsActivated(), true)) {
             return userDTO.getId();
-        } else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
     }
 
     @Transactional
@@ -126,7 +143,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if (optionalUser.isPresent() && Objects.equals(optionalUser.get().getIsDeleted(), true)) {
             return userDTO.getId();
-        } else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
     }
 
     @Transactional
@@ -135,23 +152,22 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if (optionalUser.isPresent() && Objects.equals(optionalUser.get().getRoleId().getRoleType(), userDTO.getRoleName())) {
             return userDTO.getId();
-        } else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
     }
 
     @Transactional
-    public ArrayList<UserDTO> getAllUser() {
-
+    public ArrayList<UserInfoDTO> getAllUser() {
         Iterable<User> userIterable = userRepository.findAll();
-        ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
+        ArrayList<UserInfoDTO> userInfoDTOArrayList = new ArrayList<>();
         for (User u : userIterable) {
-            UserDTO userDTO = new UserDTO(u);
-            userDTOArrayList.add(userDTO);
+            UserInfoDTO userInfoDTO = new UserInfoDTO(u);
+            userInfoDTOArrayList.add(userInfoDTO);
         }
-        return userDTOArrayList;
+        return userInfoDTOArrayList;
     }
 
     @Transactional
-    public UserDTO getUserInfo(UserDTO userDTO) {
+    public UserInfoDTO getUserInfo(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if (optionalUser.isPresent()) {
             //if(Objects.equals(optionalUser.get().getRoleId().getRoleType(), "student")){
@@ -160,71 +176,86 @@ public class UserService {
             //    userDTOWithCard.setCardId(cardService.getUserCard(userDTOWithCard).getId());
             //    return userDTOWithCard;
             //}
-            return new UserDTO(optionalUser.get());
-        }
-        return userDTO;
+            return new UserInfoDTO(optionalUser.get());
+        }else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+
 
 
     }
 
     @Transactional
-    public void editUserInfo(UserDTO userDTO) {
+    public Integer editUserInfo(UserDTO userDTO) {
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if (optionalUser.isPresent()) {
-            if (Objects.equals(userDTO.getRoleName(), "superadmin")) {
-                optionalUser.get().setRoleId(new Role(1));
-            } else if (Objects.equals(userDTO.getRoleName(), "admin")) {
-                optionalUser.get().setRoleId(new Role(2));
-            } else optionalUser.get().setRoleId(new Role(3));
-            try {
 
-                optionalUser.get().setFirstName(userDTO.getFirstName());
-                optionalUser.get().setLastName(userDTO.getLastName());
-                optionalUser.get().setBirth(userDTO.getBirth());
-                optionalUser.get().setEmail(userDTO.getEmail());
-                optionalUser.get().setPhone(userDTO.getPhone());
-                userRepository.save(optionalUser.get());
-            } catch (IncorrectResultSizeDataAccessException e) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
-            }
-        }
+            int userId = optionalUser.get().getId();
+            String userName = userDTO.getEmail();
+
+            try {
+                Optional<User> optionalUserByEmail = userRepository.findByUsername(userName);
+                if (optionalUserByEmail.isPresent() && optionalUserByEmail.get().getId() != userId){
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+                }
+            }catch (UsernameNotFoundException e){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+            }catch (NonUniqueResultException e){
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Multiple results");
+            }catch (NoSuchElementException ignored){}
+
+
+            if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+                optionalUser.get().setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
+            } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+                optionalUser.get().setRoleId(new Role(RoleEnum.ADMIN.getId()));
+            } else optionalUser.get().setRoleId(new Role(RoleEnum.STUDENT.getId()));
+
+
+            optionalUser.get().setFirstName(userDTO.getFirstName());
+            optionalUser.get().setLastName(userDTO.getLastName());
+            optionalUser.get().setBirth(userDTO.getBirth());
+            optionalUser.get().setEmail(userDTO.getEmail());
+            optionalUser.get().setPhone(userDTO.getPhone());
+            userRepository.save(optionalUser.get());
+            return userId;
+
+        }else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
     }
 
     @Transactional
     public ArrayList<UserDTO> searchSuperadmin(SearchDTO searchDTO) {
         ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
 
-        if (Objects.equals(searchDTO.getSearchFilter(), "All users")) {
+        if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.ALL_USERS)) {
             ArrayList<User> userArrayList = userRepository.searchAllUser(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
                 userDTOArrayList.add(actualUserDto);
             }
-        } else if (Objects.equals(searchDTO.getSearchFilter(), "Superadmin")) {
+        } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.SUPERADMIN)) {
             ArrayList<User> userArrayList = userRepository.searchSuperadmins(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
                 userDTOArrayList.add(actualUserDto);
             }
-        } else if (Objects.equals(searchDTO.getSearchFilter(), "Student")) {
+        } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.STUDENT)) {
             ArrayList<User> userArrayList = userRepository.searchStudents(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
                 userDTOArrayList.add(actualUserDto);
             }
-        } else if (Objects.equals(searchDTO.getSearchFilter(), "Admin")) {
+        } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.ADMIN)) {
             ArrayList<User> userArrayList = userRepository.searchAdmins(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
                 userDTOArrayList.add(actualUserDto);
             }
-        } else if (Objects.equals(searchDTO.getSearchFilter(), "Workgroup")) {
+        } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.WORKGROUP)) {
             ArrayList<User> userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
                 userDTOArrayList.add(actualUserDto);
             }
-        } else if (Objects.equals(searchDTO.getSearchFilter(), "Institution")) {
+        } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.INSTITUTION)) {
             ArrayList<User> userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
             for (int i = 0; i < userArrayList.size(); i++) {
                 UserDTO actualUserDto = new UserDTO(userArrayList.get(i));

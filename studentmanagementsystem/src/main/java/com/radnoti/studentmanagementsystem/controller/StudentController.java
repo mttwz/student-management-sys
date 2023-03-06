@@ -4,9 +4,6 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.enums.Role;
-import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
-import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.service.StudentService;
 
@@ -16,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.Map;
 
 /**
@@ -32,7 +28,7 @@ public class StudentController {
     private final ResponseFactory responseFactory;
 
 
-    @CrossOrigin(origins = "http://localhost:4200/")
+
     @PostMapping(path = "/registerstudent", consumes = {"application/json"})
     public ResponseEntity<Map> register(@RequestBody UserDTO userDTO){
         return ResponseEntity.status(HttpStatus.OK)

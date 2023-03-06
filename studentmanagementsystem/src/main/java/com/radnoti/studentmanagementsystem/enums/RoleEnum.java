@@ -1,18 +1,21 @@
 package com.radnoti.studentmanagementsystem.enums;
 
-public enum Role {
-    SUPERADMIN(Types.SUPERADMIN),
-    ADMIN(Types.ADMIN),
-    STUDENT(Types.STUDENT);
+public enum RoleEnum {
+    SUPERADMIN(1,Types.SUPERADMIN),
+    ADMIN(2,Types.ADMIN),
+    STUDENT(3,Types.STUDENT);
     public class Types {
         public static final String SUPERADMIN = "SUPERADMIN";
         public static final String ADMIN = "ADMIN";
         public static final String STUDENT = "STUDENT";
     }
-
+    private final Integer id;
     private final String label;
 
-    private Role(String label) {
+
+
+    private RoleEnum(Integer id, String label) {
+        this.id = id;
         this.label = label;
     }
 
@@ -21,5 +24,7 @@ public enum Role {
     }
 
 
-
+    public Integer getId() {
+        return id;
+    }
 }
