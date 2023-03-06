@@ -46,7 +46,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Integer addUserToWorkgroup(Integer userId, Integer workgroupId);
 
     @Procedure
-    ArrayList<ArrayList<String>>getWorkgroupScheduleByUserId(Integer userId);
+    ArrayList<Integer>getWorkgroupScheduleByUserId(Integer userId);
 
     @Procedure
     Optional<User> findByUsername(String email);

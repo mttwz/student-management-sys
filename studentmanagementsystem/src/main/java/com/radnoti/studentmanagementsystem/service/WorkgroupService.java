@@ -36,9 +36,10 @@ public class WorkgroupService {
     public Integer createWorkgroup(WorkgroupDTO workgroupDTO) {
         Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDTO.getGroupName(), workgroupDTO.getInstitution());
         Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
+
         if(optionalWorkgroup.isPresent() && Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDTO.getGroupName())){
             return workgroupId;
-        } else throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
+        } else throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not created");
     }
 
 
