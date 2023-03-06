@@ -21,7 +21,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    private final UserDetailsServiceImp userDetailsServiceImp;
+//    private final UserDetailsServiceImp userDetailsServiceImp;
 
 
 //    @PostMapping(path = "/updatejwt", consumes = {"application/json"})

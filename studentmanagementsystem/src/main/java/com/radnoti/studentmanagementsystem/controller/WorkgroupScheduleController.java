@@ -2,13 +2,12 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
-import com.radnoti.studentmanagementsystem.service.WorkgroupscheduleService;
+import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Map;
@@ -18,7 +17,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200/")
 @RequiredArgsConstructor
 public class WorkgroupScheduleController {
-    private final WorkgroupscheduleService workgroupscheduleService;
+    private final WorkgroupScheduleService workgroupscheduleService;
     private final ResponseFactory responseFactory;
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
