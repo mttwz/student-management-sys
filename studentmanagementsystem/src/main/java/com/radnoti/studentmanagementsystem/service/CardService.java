@@ -39,20 +39,20 @@ public class CardService {
 
     @Transactional
     public Integer createCard(final CardDTO cardDTO) {
-        Integer cardId = cardRepository.createCard(cardDTO.getHash());
-        if(cardId == null){
+        Integer savedCardId = cardRepository.createCard(cardDTO.getHash());
+        if(savedCardId == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
         }
 
-        Optional<Card> optionalCard = cardRepository.findById(cardId);
+        Optional<Card> optionalCard = cardRepository.findById(savedCardId);
         if(optionalCard.isEmpty()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not exist");
         }
 
-        if(!(Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()) && Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()))){
+        if(!(Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()))){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
         }
-        return cardId;
+        return savedCardId;
     }
 
 

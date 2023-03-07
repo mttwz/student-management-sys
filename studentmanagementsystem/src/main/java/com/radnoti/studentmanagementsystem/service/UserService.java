@@ -9,17 +9,14 @@ import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
+import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
 import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
-
-
 import java.util.*;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.NonUniqueResultException;
-import javax.print.DocFlavor;
-import javax.validation.constraints.Null;
+
 
 /**
  * @author matevoros
@@ -43,41 +39,69 @@ public class UserService {
 
     private final WorkgroupscheduleRepository workgroupscheduleRepository;
 
+<<<<<<< HEAD
+=======
+    private final WorkgroupRepository workgroupRepository;
+
+    private final WorkgroupMembersRepository workgroupMembersRepository;
+
+>>>>>>> mate-backend
     private final JwtConfig jwtConfig;
 
-    private final DateFormatUtil dateFormatUtil;
+
+    public User userExistanceCheck(Integer userId){
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not exist");
+        }
+        return optionalUser.get();
+    }
+
 
 
     @Transactional
     public Integer adduser(UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
-        if (optionalUser.isEmpty()) {
-            try {
-                if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
-                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
-                }
-            }catch (NullPointerException e){
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
-            }
 
-            int roleId;
-            if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-                roleId = RoleEnum.SUPERADMIN.getId();
-            } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
-                roleId = RoleEnum.ADMIN.getId();
-            } else roleId = RoleEnum.STUDENT.getId();
+        userExistanceCheck(userDTO.getId());
 
+<<<<<<< HEAD
             int userId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
             Optional<User> savedOptionalUser = userRepository.findById(userId);
             if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
                 return userId;
             }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
         }else throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+=======
+        if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
+        }
+
+        int roleId;
+        if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+            roleId = RoleEnum.SUPERADMIN.getId();
+        } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+            roleId = RoleEnum.ADMIN.getId();
+        } else roleId = RoleEnum.STUDENT.getId();
+
+        Integer savedUserId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        Optional<User> savedOptionalUser = userRepository.findById(savedUserId);
+
+        if (savedOptionalUser.isEmpty() || !Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
+        }
+        return savedUserId;
+>>>>>>> mate-backend
     }
 
     @Transactional
     public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(String authHeader, UserDTO userDTO) {
         ArrayList<Integer> workgroupScheduleList;
+<<<<<<< HEAD
+=======
+
+        userExistanceCheck(userDTO.getId());
+
+>>>>>>> mate-backend
         if (jwtConfig.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         } else {
@@ -93,44 +117,69 @@ public class UserService {
         return workgroupscheduleDTOArrayList;
     }
 
-    @Transactional
-    public Integer addUserToWorkgroup(WorkgroupmembersDTO workgroupmembersDTO) {
-        try{
-            Integer workgroupMembersId = userRepository.addUserToWorkgroup(workgroupmembersDTO.getUserId(), workgroupmembersDTO.getWorkgroupId());
-            Optional<User> optionalUser = userRepository.findById(workgroupmembersDTO.getUserId());
-            if (optionalUser.isPresent() && optionalUser.get().getWorkgroupmembersCollection().contains(new Workgroupmembers(workgroupMembersId))) {
-                return workgroupMembersId;
-            } else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not added to workgroup");
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User or workgroup does not exist");
-        }
-    }
 
     @Transactional
+    public Integer addUserToWorkgroup(WorkgroupmembersDTO workgroupmembersDTO) {
+        userExistanceCheck(workgroupmembersDTO.getUserId());
+
+        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupmembersDTO.getWorkgroupId());
+        if (optionalWorkgroup.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not exist");
+        }
+
+
+        Integer savedWorkgroupMembersId = userRepository.addUserToWorkgroup(workgroupmembersDTO.getUserId(), workgroupmembersDTO.getWorkgroupId());
+        if (savedWorkgroupMembersId == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not added to workgroup");
+        }
+
+        Optional<Workgroupmembers> optionalWorkgroupmembers = workgroupMembersRepository.findById(savedWorkgroupMembersId);
+
+        if (optionalWorkgroupmembers.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not added to workgroup");
+        }
+
+        return savedWorkgroupMembersId;
+
+    }
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> mate-backend
+    @Transactional
     public Integer setUserIsActivated(UserDTO userDTO) {
+        User user = userExistanceCheck(userDTO.getId());
         userRepository.setUserIsActivated(userDTO.getId());
-        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-        if (optionalUser.isPresent() && Objects.equals(optionalUser.get().getIsActivated(), true)) {
-            return userDTO.getId();
-        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+        if (!Objects.equals(user.getIsActivated(), true)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not activated");
+        }
+        return userDTO.getId();
     }
 
     @Transactional
     public Integer deleteUser(UserDTO userDTO) {
+        User user = userExistanceCheck(userDTO.getId());
+
         userRepository.setUserIsDeleted(userDTO.getId());
-        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-        if (optionalUser.isPresent() && Objects.equals(optionalUser.get().getIsDeleted(), true)) {
-            return userDTO.getId();
-        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+
+        if (!Objects.equals(user.getIsDeleted(), true)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not deleted");
+        }
+        return userDTO.getId();
     }
 
     @Transactional
     public Integer setUserRole(UserDTO userDTO) {
+        User user = userExistanceCheck(userDTO.getId());
+
         userRepository.setUserRole(userDTO.getId(), userDTO.getRoleName());
-        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-        if (optionalUser.isPresent() && Objects.equals(optionalUser.get().getRoleId().getRoleType(), userDTO.getRoleName())) {
-            return userDTO.getId();
-        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+
+        if (!Objects.equals(user.getRoleId().getRoleType(), userDTO.getRoleName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User role not set");
+
+        }
+        return userDTO.getId();
     }
 
     @Transactional
@@ -146,6 +195,7 @@ public class UserService {
 
     @Transactional
     public UserInfoDTO getUserInfo(UserDTO userDTO) {
+<<<<<<< HEAD
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
         if (optionalUser.isPresent()) {
             return new UserInfoDTO(optionalUser.get());
@@ -153,44 +203,39 @@ public class UserService {
 
 
 
+=======
+        User user = userExistanceCheck(userDTO.getId());
+        return new UserInfoDTO(user);
+>>>>>>> mate-backend
     }
 
     @Transactional
     public Integer editUserInfo(UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-        if (optionalUser.isPresent()) {
+        User user = userExistanceCheck(userDTO.getId());
 
-            int userId = optionalUser.get().getId();
-            String userName = userDTO.getEmail();
+        int userId = user.getId();
+        String userName = userDTO.getEmail();
 
-            try {
-                Optional<User> optionalUserByEmail = userRepository.findByUsername(userName);
-                if (optionalUserByEmail.isPresent() && optionalUserByEmail.get().getId() != userId){
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
-                }
-            }catch (UsernameNotFoundException e){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
-            }catch (NonUniqueResultException e){
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Multiple results");
-            }catch (NoSuchElementException ignored){}
+        Optional<User> optionalUserByEmail = userRepository.findByUsername(userName);
+
+        if (optionalUserByEmail.isPresent() && optionalUserByEmail.get().getId() != userId) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+        }
 
 
-            if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-                optionalUser.get().setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
-            } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
-                optionalUser.get().setRoleId(new Role(RoleEnum.ADMIN.getId()));
-            } else optionalUser.get().setRoleId(new Role(RoleEnum.STUDENT.getId()));
+        if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+            user.setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
+        } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+            user.setRoleId(new Role(RoleEnum.ADMIN.getId()));
+        } else user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
 
-
-            optionalUser.get().setFirstName(userDTO.getFirstName());
-            optionalUser.get().setLastName(userDTO.getLastName());
-            optionalUser.get().setBirth(userDTO.getBirth());
-            optionalUser.get().setEmail(userDTO.getEmail());
-            optionalUser.get().setPhone(userDTO.getPhone());
-            userRepository.save(optionalUser.get());
-            return userId;
-
-        }else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setBirth(userDTO.getBirth());
+        user.setEmail(userDTO.getEmail());
+        user.setPhone(userDTO.getPhone());
+        userRepository.save(user);
+        return userId;
     }
 
     @Transactional
@@ -210,15 +255,23 @@ public class UserService {
             userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
         } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.INSTITUTION)) {
             userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
+<<<<<<< HEAD
+        }
+
+        for (int i = 0; i < userArrayList.size(); i++) {
+            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+            userDTOArrayList.add(actualUserDto);
+=======
+>>>>>>> mate-backend
         }
 
         for (int i = 0; i < userArrayList.size(); i++) {
             UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
             userDTOArrayList.add(actualUserDto);
         }
-
         return userDTOArrayList;
     }
+
 
     @Transactional
     public ArrayList<UserDTO> getUserFromWorkgroup(UserDTO userDTO) {
