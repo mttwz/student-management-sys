@@ -40,26 +40,20 @@ public class StudentService {
 
 
     @Transactional
-    public int registerStudent(UserDTO userDTO){
-        int studentId = studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+    public Integer registerStudent(UserDTO userDTO){
+
         Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
         if(optionalUser.isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
         }
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
-        if(optionalStudent.isPresent() && Objects.equals(optionalStudent.get().getId(), userDTO.getId())){
-            return studentId;
-        }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
+
+        Integer savedStudentId = studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        Optional<Student> optionalStudent = studentRepository.findById(savedStudentId);
+
+        if(optionalStudent.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
+        }
+
+        return savedStudentId;
     }
-
-//    @Transactional
-//    public void connectStudentToUser(StudentDTO studentDTO) {
-//
-//        studentRepository.connectStudentToUser(studentDTO.getId(), studentDTO.getUserId());
-//
-//    }
-
-
-
-
 }
