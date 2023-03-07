@@ -80,14 +80,34 @@ public class CardServiceTest {
         studentDTO.setCardId(1);
         Student student = new Student(1);
         student.setCardId(new Card(1));
-
+        Card card = new Card();
+        card.setHash("asdasdasdead");
+        card.setId(1);
 
         when(studentRepository.findById(any())).thenReturn(Optional.of(student));
+        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
 
         //act
         int actual = cardService.connectCardToStudent(studentDTO);
         //assert
         assertEquals(1,actual);
+    }
+
+    @Test
+    public void connectCardToStudentTest_card_not_found(){
+        //arrange
+        StudentDTO studentDTO = new StudentDTO();
+
+        when(cardRepository.findById(any())).thenReturn(Optional.empty());
+
+
+        //act & assert
+        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDTO));
+
+        String expectedMessage = "409 CONFLICT \"User not found\"";
+        String actualMessage = ex.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -97,6 +117,11 @@ public class CardServiceTest {
 
         when(studentRepository.findById(any())).thenReturn(Optional.empty());
         //act & assert
-        assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDTO));
+        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDTO));
+
+        String expectedMessage = "409 CONFLICT \"User not found\"";
+        String actualMessage = ex.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 }

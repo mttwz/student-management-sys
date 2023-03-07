@@ -225,7 +225,7 @@ public final class UserServiceTest {
 
     @Test
     public void getWorkgroupScheduleByUserIdTest_valid(){
-        
+
 
     }
 
