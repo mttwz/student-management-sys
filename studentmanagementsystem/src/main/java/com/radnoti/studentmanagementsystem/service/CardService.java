@@ -38,39 +38,41 @@ public class CardService {
     private final StudentRepository studentRepository;
 
     @Transactional
-    public Integer createCard(CardDTO cardDTO) {
+    public Integer createCard(final CardDTO cardDTO) {
         Integer cardId = cardRepository.createCard(cardDTO.getHash());
+        if(cardId == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
+        }
+
         Optional<Card> optionalCard = cardRepository.findById(cardId);
-        if (optionalCard.isPresent() && Objects.equals(optionalCard.get().getHash(), cardDTO.getHash())){
-            return cardId;
-        }else throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
+        if(optionalCard.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not exist");
+        }
+
+        if(!(Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()) && Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()))){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
+        }
+        return cardId;
     }
 
 
     @Transactional
     public Integer connectCardToStudent(StudentDTO studentDTO) {
-        /*            Optional<Student> student = studentRepository.findById(studentDTO.getId());
-            if (student.isPresent()){
-                student.get().setCardId(new Card(studentDTO.getCardId()));
-                studentRepository.save(student.get());
-            }*/
-        try {
-            cardRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
-            Optional<Student> optionalStudent = studentRepository.findById(studentDTO.getId());
-            if (optionalStudent.isPresent() && Objects.equals(optionalStudent.get().getCardId().getId(), studentDTO.getCardId())){
-                return optionalStudent.get().getId();
-            }else throw new ResponseStatusException(HttpStatus.CONFLICT,"User not found");
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Card can not be assigned to the user");
+        cardRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());
+        Optional<Student> optionalStudent = studentRepository.findById(studentDTO.getId());
+        Optional<Card> optionalCard = cardRepository.findById(studentDTO.getCardId());
+
+        if(optionalStudent.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"User not found");
+        }
+        if(optionalCard.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Card not found");
         }
 
+        if(!Objects.equals(optionalStudent.get().getCardId().getId(), studentDTO.getCardId())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Card not assigned successfully");
+        }
 
-
-
+        return optionalStudent.get().getId();
     }
-
-
-//    public CardDTO getUserCard(UserDTO userDTO) {
-//        return new CardDTO(cardRepository.getUserCard(userDTO.getId()));
-//    }
 }

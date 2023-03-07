@@ -31,7 +31,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     int getUserIdByToken(String token);
 
     @Procedure
-    int login(String email, String password);
+    Integer login(String email, String password);
     
     @Procedure
     void setUserIsActivated(Integer userId);
