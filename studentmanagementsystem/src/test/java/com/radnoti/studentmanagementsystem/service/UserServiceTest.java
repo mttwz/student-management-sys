@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
@@ -221,6 +222,14 @@ public final class UserServiceTest {
         assertThrows(ResponseStatusException.class, ()->userService.adduser(userDTO));
     }
 
+
+    @Test
+    public void getWorkgroupScheduleByUserIdTest_valid(){
+        
+
+    }
+
+
     @Test
     public void addUserToWorkgroupTest_valid() {
         //asert
@@ -379,6 +388,8 @@ public final class UserServiceTest {
         //assert
         assertThrows(ResponseStatusException.class, () -> userService.setUserRole(userDTO));
     }
+
+
 
 
 }
