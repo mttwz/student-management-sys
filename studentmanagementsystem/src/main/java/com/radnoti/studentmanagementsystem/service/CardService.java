@@ -49,7 +49,7 @@ public class CardService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not exist");
         }
 
-        if(!(Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()) && Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()))){
+        if(!(Objects.equals(optionalCard.get().getHash(), cardDTO.getHash()))){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
         }
         return savedCardId;

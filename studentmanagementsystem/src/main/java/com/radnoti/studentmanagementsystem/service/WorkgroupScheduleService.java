@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
@@ -20,33 +21,27 @@ import java.util.Optional;
 public class WorkgroupScheduleService {
 
     private final WorkgroupscheduleRepository workgroupscheduleRepository;
-
-    private final JwtConfig jwtConfig;
-
-    private final DateFormatUtil dateFormatUtil;
     private final WorkgroupRepository workgroupRepository;
 
-
-    //    @Transactional
-//    public Integer createWorkgroup(WorkgroupDTO workgroupDTO) {
-//        Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDTO.getGroupName(), workgroupDTO.getInstitution());
-//        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
-//        if(optionalWorkgroup.isPresent() && Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDTO.getGroupName())){
-//            return workgroupId;
-//        } else throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "NEMJO");
-//    }
     @Transactional
     public Integer createWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
-        try {
-
-            Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite(), workgroupscheduleDTO.getWorkgroupId());
-            Optional<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId);
-            if(optionalWorkgroupschedule.isPresent() && Objects.equals(optionalWorkgroupschedule.get().getName(), workgroupscheduleDTO.getName())){
-                return workgroupScheduleId;
-            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
-        }catch (Exception e){
+        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupscheduleDTO.getWorkgroupId());
+        if(optionalWorkgroup.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Workgroup does not exist");
         }
+
+        Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite(), workgroupscheduleDTO.getWorkgroupId());
+        if (workgroupScheduleId == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
+        }
+
+        Optional<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId);
+
+        if (optionalWorkgroupschedule.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
+        }
+
+        return workgroupScheduleId;
     }
 
 //    @Transactional
