@@ -63,14 +63,6 @@ public class UserService {
 
         userExistanceCheck(userDTO.getId());
 
-
-//            int userId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
-//            Optional<User> savedOptionalUser = userRepository.findById(userId);
-//            if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
-//                return userId;
-//            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
-//        else throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
-
         if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
         }

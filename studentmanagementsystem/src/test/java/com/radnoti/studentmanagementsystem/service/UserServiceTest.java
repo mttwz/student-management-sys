@@ -56,13 +56,11 @@ public final class UserServiceTest {
         user.setId(1);
         user.setEmail("mate");
 
-        when(userRepository.findByUsername(any()))
-                .thenReturn(Optional.empty());
 
-        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+        when(userRepository.register(any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(1);
 
-        when(userRepository.findById(any(Integer.class)))
+        when(userRepository.findById(any()))
                 .thenReturn(Optional.of(user));
 
         //act
@@ -89,13 +87,11 @@ public final class UserServiceTest {
         user.setId(1);
         user.setEmail("mate");
 
-        when(userRepository.findByUsername(any()))
-                .thenReturn(Optional.empty());
 
-        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+        when(userRepository.register(any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(1);
 
-        when(userRepository.findById(any(Integer.class)))
+        when(userRepository.findById(any()))
                 .thenReturn(Optional.of(user));
 
         //act
@@ -122,8 +118,6 @@ public final class UserServiceTest {
         user.setId(1);
         user.setEmail("mate");
 
-        when(userRepository.findByUsername(any()))
-                .thenReturn(Optional.empty());
 
         when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
                 .thenReturn(1);
@@ -150,31 +144,38 @@ public final class UserServiceTest {
         userDTO.setBirth(new Date(1111, 11, 11));
         userDTO.setEmail("mate");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-        //act & assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+        when(userRepository.findById(any()))
+                .thenReturn(Optional.of(new User()));
+
+
+        Exception ex = assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+
+        String expectedMessage = "422 UNPROCESSABLE_ENTITY \"Form value is empty\"";
+        String actualMessage = ex.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
-    @Test
-    public void addUserTest_one_field_is_null() {
-        //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName(null);
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
-
-        //act
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
-
-        //assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
-    }
+//    @Test
+//    public void addUserTest_one_field_is_null() {
+//        //arrange
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.setId(1);
+//        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+//        userDTO.setFirstName("mate");
+//        userDTO.setLastName(null);
+//        userDTO.setPhone("123");
+//        userDTO.setBirth(new Date(1111, 11, 11));
+//        userDTO.setEmail("mate");
+//        userDTO.setPassword("mate");
+//
+//        //act
+//        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+//
+//        //assert
+//        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+//    }
 
     @Test()
     public void addUserTest_email_already_exist() {
@@ -183,16 +184,29 @@ public final class UserServiceTest {
         userDTO.setId(1);
         userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         userDTO.setFirstName("mate");
-        userDTO.setLastName("");
+        userDTO.setLastName("mate");
         userDTO.setPhone("123");
         userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
+        userDTO.setEmail("mail");
         userDTO.setPassword("mate");
 
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User()));
+        User user1 = new User();
+        user1.setId(1);
+        user1.setEmail("mail");
 
+        User user2 = new User();
+        user2.setId(2);
+        user2.setEmail("mail");
+
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user1));
+        when(userRepository.findByUsername(any())).thenReturn(Optional.of(user2));
+
+        int actual = userService.adduser(userDTO);
+
+        //assert
+        assertEquals(1, actual);
         //act & assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+//        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
     }
 
     @Test

@@ -67,7 +67,7 @@ public class StudentServiceTest {
     public void registerStudentTest_already_exist(){
         //arrange
         UserDTO userDTO = new UserDTO();
-        
+
         when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.of(new User()));
 
