@@ -82,12 +82,17 @@ public class AuthServiceTest {
 
         when(userRepository.login(any(),any())).thenReturn(1);
 
-        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
 
-        String expectedMessage = "403 FORBIDDEN \"Invalid username or password\"";
-        String actualMessage = ex.getMessage();
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
 
-        assertEquals(expectedMessage, actualMessage);
+
+        assertEquals(403, actuaStatusCode);
+        assertEquals("FORBIDDEN", actualStatusCodeName);
+        assertEquals("Invalid username or password", actualMessage);
+
 
     }
 
