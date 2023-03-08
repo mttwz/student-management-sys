@@ -357,7 +357,7 @@ public final class UserServiceTest {
 
 
     @Test
-    //@Sql(scripts={"classpath:sqls/asd.sql"})
+    //@Sql(scripts={"classpath:sqls/AuthLogin.sql"})
     public void setUserRoleTest_valid() {
         //arrange
         UserDTO userDTO = new UserDTO();

@@ -21,12 +21,6 @@ import java.util.Arrays;
 public class StudentmanagementsystemApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext applicationContext = SpringApplication.run(StudentmanagementsystemApplication.class, args);
-		String[] beanz = applicationContext.getBeanDefinitionNames();
-		Arrays.sort(beanz);
-		for (String s : beanz) {
-			//System.out.println(s);
-		}
+	SpringApplication.run(StudentmanagementsystemApplication.class, args);
 	}
-
 }

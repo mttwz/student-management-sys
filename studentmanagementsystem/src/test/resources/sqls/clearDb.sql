@@ -1,0 +1,11 @@
+set foreign_key_checks = 0;
+delete from Attendance;
+delete from Card;
+delete from Password_reset;
+delete from Role;
+delete from Student;
+delete from User;
+delete from Workgroup;
+delete from Workgroup_members;
+delete from Workgroup_schedule;
+set foreign_key_checks = 1;
