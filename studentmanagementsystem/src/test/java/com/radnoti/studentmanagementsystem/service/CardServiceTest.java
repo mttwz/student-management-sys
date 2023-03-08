@@ -54,6 +54,21 @@ public class CardServiceTest {
 
     }
 
+    @Test
+    public void createCardTest_not_created(){
+        String hash = "hashashahash";
+        CardDTO cardDTO = new CardDTO();
+        cardDTO.setHash(hash);
+
+        Card card = new Card();
+        card.setHash(hash);
+
+        when(cardRepository.createCard(any())).thenReturn(1);
+        when(cardRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDTO));
+    }
+
 
     @Test
     public void createCardTest_empty_card(){

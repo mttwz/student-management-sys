@@ -67,47 +67,32 @@ public class StudentServiceTest {
     public void registerStudentTest_already_exist(){
         //arrange
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("mate");
-        userDTO.setPhone("1234");
-        userDTO.setBirth(new Date(1111,11,11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
-
-
-        when(userRepository.findByUsername(any(String.class)))
+        
+        when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.of(new User()));
-        when(studentRepository.registerStudent(any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class)))
-                .thenReturn(1);
 
-        //assert & act
-        assertThrows(ResponseStatusException.class, ()->studentService.registerStudent(userDTO));
+        Exception ex = assertThrows(ResponseStatusException.class,()->studentService.registerStudent(userDTO));
+        String expectedMessage = "409 CONFLICT \"User already exist\"";
+        String actualMessage = ex.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     public void registerStudentTest_not_save(){
-        //arrange
+
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("mate");
-        userDTO.setPhone("1234");
-        userDTO.setBirth(new Date(1111,11,11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
 
-        Student student = new Student();
-
-        when(studentRepository.registerStudent(any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class)))
+        when(studentRepository.registerStudent(any(),any(),any(),any(),any(),any()))
                 .thenReturn(1);
         when(studentRepository.findById(any()))
-                .thenReturn(Optional.of(student));
+                .thenReturn(Optional.empty());
 
-        //assert & act
-//        int actual = studentService.registerStudent(userDTO);
-//        assertEquals(1,actual);
-        assertThrows(ResponseStatusException.class, ()->studentService.registerStudent(userDTO));
+        Exception ex = assertThrows(ResponseStatusException.class,()->studentService.registerStudent(userDTO));
+        String expectedMessage = "409 CONFLICT \"User not saved\"";
+        String actualMessage = ex.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
 

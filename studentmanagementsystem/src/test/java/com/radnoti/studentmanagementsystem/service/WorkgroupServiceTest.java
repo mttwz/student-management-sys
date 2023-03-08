@@ -56,7 +56,7 @@ public class WorkgroupServiceTest {
     }
 
     @Test
-    public void createWorkgroupTest_cannot_create(){
+    public void createWorkgroupTest_not_create(){
         //arrange
         String worgroupName = "testName";
         WorkgroupDTO workgroupDTO = new WorkgroupDTO();

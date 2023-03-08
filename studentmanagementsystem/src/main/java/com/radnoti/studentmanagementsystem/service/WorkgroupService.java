@@ -36,17 +36,12 @@ public class WorkgroupService {
     public Integer createWorkgroup(WorkgroupDTO workgroupDTO) {
         Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDTO.getGroupName(), workgroupDTO.getInstitution());
         Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
-<<<<<<< HEAD
 
-        if(optionalWorkgroup.isPresent() && Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDTO.getGroupName())){
-            return workgroupId;
-        } else throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not created");
-=======
         if (optionalWorkgroup.isEmpty() || !Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDTO.getGroupName()) || !Objects.equals(optionalWorkgroup.get().getInstitution(), workgroupDTO.getInstitution())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not created");
         }
         return workgroupId;
->>>>>>> mate-backend
+
     }
 
 

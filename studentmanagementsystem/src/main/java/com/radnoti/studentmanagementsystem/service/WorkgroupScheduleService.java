@@ -25,33 +25,25 @@ public class WorkgroupScheduleService {
 
     @Transactional
     public Integer createWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
-<<<<<<< HEAD
-        try {
+
+            Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupscheduleDTO.getWorkgroupId());
+            if (optionalWorkgroup.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Workgroup does not exist");
+            }
+
             Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite(), workgroupscheduleDTO.getWorkgroupId());
+            if (workgroupScheduleId == null) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
+            }
+
             Optional<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId);
-            if(optionalWorkgroupschedule.isPresent() && Objects.equals(optionalWorkgroupschedule.get().getName(), workgroupscheduleDTO.getName())){
-                return workgroupScheduleId;
-            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
-        }catch (Exception e){
-=======
-        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupscheduleDTO.getWorkgroupId());
-        if(optionalWorkgroup.isEmpty()){
->>>>>>> mate-backend
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Workgroup does not exist");
-        }
 
-        Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite(), workgroupscheduleDTO.getWorkgroupId());
-        if (workgroupScheduleId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
-        }
+            if (optionalWorkgroupschedule.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
+            }
 
-        Optional<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId);
+            return workgroupScheduleId;
 
-        if (optionalWorkgroupschedule.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
-        }
-
-        return workgroupScheduleId;
     }
 
 //    @Transactional

@@ -39,13 +39,12 @@ public class UserService {
 
     private final WorkgroupscheduleRepository workgroupscheduleRepository;
 
-<<<<<<< HEAD
-=======
+
     private final WorkgroupRepository workgroupRepository;
 
     private final WorkgroupMembersRepository workgroupMembersRepository;
 
->>>>>>> mate-backend
+
     private final JwtConfig jwtConfig;
 
 
@@ -64,14 +63,14 @@ public class UserService {
 
         userExistanceCheck(userDTO.getId());
 
-<<<<<<< HEAD
-            int userId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
-            Optional<User> savedOptionalUser = userRepository.findById(userId);
-            if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
-                return userId;
-            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
-        }else throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
-=======
+
+//            int userId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+//            Optional<User> savedOptionalUser = userRepository.findById(userId);
+//            if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
+//                return userId;
+//            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
+//        else throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+
         if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
         }
@@ -90,18 +89,16 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
         }
         return savedUserId;
->>>>>>> mate-backend
+
     }
+
 
     @Transactional
     public ArrayList<WorkgroupscheduleDTO> getWorkgroupScheduleByUserId(String authHeader, UserDTO userDTO) {
         ArrayList<Integer> workgroupScheduleList;
-<<<<<<< HEAD
-=======
-
         userExistanceCheck(userDTO.getId());
 
->>>>>>> mate-backend
+
         if (jwtConfig.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         } else {
@@ -143,10 +140,7 @@ public class UserService {
 
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> mate-backend
     @Transactional
     public Integer setUserIsActivated(UserDTO userDTO) {
         User user = userExistanceCheck(userDTO.getId());
@@ -195,18 +189,16 @@ public class UserService {
 
     @Transactional
     public UserInfoDTO getUserInfo(UserDTO userDTO) {
-<<<<<<< HEAD
-        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-        if (optionalUser.isPresent()) {
-            return new UserInfoDTO(optionalUser.get());
-        }else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
+
+//        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+//        if (optionalUser.isPresent()) {
+//            return new UserInfoDTO(optionalUser.get());
+//        }else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
 
 
-
-=======
         User user = userExistanceCheck(userDTO.getId());
         return new UserInfoDTO(user);
->>>>>>> mate-backend
+
     }
 
     @Transactional
@@ -255,15 +247,14 @@ public class UserService {
             userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
         } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.INSTITUTION)) {
             userArrayList = userRepository.searchWorkgroups(searchDTO.getSearchText());
-<<<<<<< HEAD
+
         }
 
-        for (int i = 0; i < userArrayList.size(); i++) {
-            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
-            userDTOArrayList.add(actualUserDto);
-=======
->>>>>>> mate-backend
-        }
+//        for (int i = 0; i < userArrayList.size(); i++) {
+//            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
+//            userDTOArrayList.add(actualUserDto);
+//
+//        }
 
         for (int i = 0; i < userArrayList.size(); i++) {
             UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
