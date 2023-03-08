@@ -51,7 +51,7 @@ public class UserService {
     public User userExistanceCheck(Integer userId){
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not exist");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not exist");
         }
         return optionalUser.get();
     }
@@ -61,17 +61,16 @@ public class UserService {
     @Transactional
     public Integer adduser(UserDTO userDTO) {
 
-        userExistanceCheck(userDTO.getId());
+        if ((userDTO.getRoleName() == null || userDTO.getFirstName() == null || userDTO.getLastName() == null|| userDTO.getPhone() == null|| userDTO.getBirth().toString() == null || userDTO.getEmail() == null || userDTO.getPassword() == null)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
+        }
 
+        Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
+        if(optionalUser.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
+        }
 
-//            int userId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
-//            Optional<User> savedOptionalUser = userRepository.findById(userId);
-//            if (savedOptionalUser.isPresent() && Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){
-//                return userId;
-//            }else throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
-//        else throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
-
-        if ((userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
+        if ((userDTO.getRoleName().isEmpty() || userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
         }
 
