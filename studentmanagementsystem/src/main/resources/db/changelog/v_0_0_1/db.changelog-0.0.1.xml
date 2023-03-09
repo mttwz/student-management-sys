@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+        <changeSet id="role" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/01_role.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="user" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/02_user.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="password-reset" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/03_password-reset.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="card" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/04_card.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="student" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/05_student.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="attendance" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/06_attendance.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="workgroup" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/07_workgroup.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="workgroup-members" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/08_workgroup-members.sql" stripComments="true" />
+        </changeSet>
+
+        <changeSet id="workgroup-schedule" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/schema/09_workgroup-schedule.sql" stripComments="true" />
+        </changeSet>
+
+        <!--                    procedures                      -->
+
+        <changeSet id="add-user-to-workgroup" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/procedures/add-user-to-workgroup.sql" stripComments="true" endDelimiter="$$"/>
+        </changeSet>
+
+        <changeSet id="connect-card-to-student" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/procedures/connect-card-to-student.sql" stripComments="true" endDelimiter="$$"/>
+        </changeSet>
+
+        <changeSet id="login" author="mate">
+                <sqlFile path="db/changelog/v_0_0_1/procedures/login.sql" stripComments="true" endDelimiter="$$"/>
+        </changeSet>
+
+
+</databaseChangeLog>
