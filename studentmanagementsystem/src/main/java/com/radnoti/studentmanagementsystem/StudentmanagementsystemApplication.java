@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import java.util.Arrays;
 
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan
 @SpringBootApplication
 @EnableGlobalMethodSecurity(
 		prePostEnabled = true,

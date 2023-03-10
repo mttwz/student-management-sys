@@ -1,71 +1,11 @@
+--liquibase formatted sql
+--changeset splitStatements:true
 
 
-
-CREATE PROCEDURE `connectStudentToUser` (IN `studentIdIN` INT, IN `userIdIN` INT)  BEGIN
-UPDATE Student SET `student`.`user_id` = userIdIN WHERE `student`.`id` = studentIdIN;
-END $$
-
-CREATE PROCEDURE `createCard` (IN `hashIN` VARCHAR(255), OUT `idOUT` INT)  BEGIN
-INSERT INTO Card SET `card`.`hash` = hashIN;
-SET idOUT = LAST_INSERT_ID();
-END $$
-
-CREATE PROCEDURE `createStudentWithUserId` (IN `userIdIN` INT)  BEGIN
-INSERT INTO `student` (`student`.`user_id`) VALUES (userIdIN);
-END $$
-
-CREATE PROCEDURE `createWorkgroup` (IN `groupNameIN` VARCHAR(255), IN `institutionIN` VARCHAR(255), OUT `idOUT` INT)  BEGIN
-INSERT INTO `Workgroup` (`Workgroup`.`group_name`,`Workgroup`.`institution`)
-VALUES(groupNameIN,institutionIN);
-SET idOUT = LAST_INSERT_ID();
-END $$
-
-CREATE PROCEDURE `createWorkgroupSchedule` (IN `nameIN` VARCHAR(255), IN `startIN` DATETIME, IN `endIN` DATETIME, IN `isOnsiteIN` BOOLEAN, IN `workgroupIdIN` INT, OUT `idOUT` INT)  BEGIN
-INSERT INTO `workgroup_schedule`(`workgroup_schedule`.`name`,`workgroup_schedule`.`workgroup_id`,`workgroup_schedule`.`start`,`workgroup_schedule`.`end`,`workgroup_schedule`.`is_onsite`)
-VALUES(nameIN,workgroupIdIN,startIN,endIN,isOnsiteIN);
-SET idOUT = LAST_INSERT_ID();
-END $$
-
-CREATE PROCEDURE `deleteStudentUserPermanent` (IN `studentIdIN` INT)  BEGIN
-
-DECLARE cardId int;
-DECLARE userId int;
--- SET FOREIGN_KEY_CHECKS=0; -- to disable them
-
-SELECT `Student`.`card_id` INTO cardId from Student WHERE `Student`.`id` = studentIdIN;
-
-SELECT `Student`.`user_id` INTO userId from Student WHERE `Student`.`id` = studentIdIN;
-
-UPDATE `Student` SET `Student`.`card_id` = NULL WHERE `Student`.`id` = studentIdIN;
-
-UPDATE `Student` SET `Student`.`user_id` = NULL WHERE `Student`.`id` = studentIdIN;
-
-
-
-
-
-DELETE FROM `Card` WHERE `Card`.`id` = cardId;
-DELETE FROM `User` WHERE `User`.`id` = userId;
-DELETE FROM `Student` WHERE `Student`.`id` = studentIdIN;
-
--- SET FOREIGN_KEY_CHECKS=1; -- to re-enable them
-
-END $$
-
-CREATE PROCEDURE `findByUsername` (IN `userNameIN` VARCHAR(255))  BEGIN
-SELECT * FROM `user` WHERE `user`.`email` = userNameIN;
-END $$
-
-CREATE PROCEDURE `findUserByEmail` (IN `emailIN` VARCHAR(255), OUT `idOUT` INT)  BEGIN
-SELECT `User`.`id` into idOUT FROM `User` WHERE `User`.`email` = emailIN;
-END $$
 
 CREATE PROCEDURE `generateResetCode` (IN `studentIdIN` INT)  BEGIN
 INSERT INTO `Password_reset`(`Password_reset`.`student_id`,`Password_reset`.`reset_code`,`Password_reset`.`expire_date`)
 VALUES(studentIdIN,(SELECT LEFT(UUID(), 15)),(DATE_ADD(NOW(), INTERVAL 30 MINUTE)));
-
-
-
 END $$
 
 CREATE PROCEDURE `getAllStudent` ()  BEGIN
@@ -88,11 +28,8 @@ END $$
 CREATE PROCEDURE `getLastValidResetCode` (IN `studentIdIN` INT, OUT `resetCodeOUT` VARCHAR(255))  BEGIN
 DECLARE resetCodeExpiracyTime DATETIME;
 DECLARE isUsed TINYINT;
-
 SELECT `Password_reset`.`expire_date` INTO resetCodeExpiracyTime FROM `Password_reset` WHERE `Password_reset`.`student_id` = studentIdIN ORDER BY `Password_reset`.`expire_date` DESC LIMIT 1;
-
 SELECT `Password_reset`.`is_used` INTO isUsed FROM `Password_reset` WHERE `Password_reset`.`student_id` = studentIdIN ORDER BY `Password_reset`.`expire_date` DESC LIMIT 1;
-
 IF resetCodeExpiracyTime > NOW() AND isUsed = 0
 THEN
 SELECT `Password_reset`.`reset_code` INTO resetCodeOUT FROM `Password_reset` WHERE `Password_reset`.`student_id` = studentIdIN ORDER BY `Password_reset`.`expire_date` DESC LIMIT 1;
@@ -116,7 +53,6 @@ ON `Workgroup`.`id` = `Workgroup_members`.`workgroup_id`
 LEFT JOIN `User`
 ON `User`.`id` = `Workgroup_members`.`user_id`
 WHERE `User`.`id` = userIdIn;
-
 END $$
 
 CREATE PROCEDURE `getUserIdByToken` (IN `tokenIN` VARCHAR(255), OUT `userIdOUT` INT)  BEGIN
@@ -130,17 +66,11 @@ CROSS JOIN `Workgroup` on `Workgroup_members`.`workgroup_id` = `Workgroup`.`id`
 WHERE `Workgroup_members`.`user_id` = userIdIN;
 END $$
 
-
-
 CREATE PROCEDURE `logStudent` (IN `studentIdIN` INT)  BEGIN
-
 DECLARE lastArrival DATE;
 DECLARE lastLeaving DATE;
-
 SELECT `Attendance`.`arrival` INTO lastArrival from Attendance WHERE `Attendance`.`student_id` = studentIdIN ORDER BY `Attendance`.`arrival` DESC LIMIT 1;
-
 SELECT `Attendance`.`leaving` INTO lastLeaving from Attendance WHERE `Attendance`.`student_id` = studentIdIN ORDER BY `Attendance`.`arrival` DESC LIMIT 1;
-
 IF lastLeaving IS NULL AND lastArrival = CURDATE()
 THEN
 UPDATE `Attendance` SET `Attendance`.`leaving` = NOW() WHERE `Attendance`.`student_id` = studentIdIN ORDER BY `Attendance`.`arrival` DESC LIMIT 1;
@@ -158,15 +88,12 @@ END $$
 CREATE PROCEDURE `registerStudent` (IN `firstNameIN` VARCHAR(255), IN `lastNameIN` VARCHAR(255), IN `phoneIN` VARCHAR(255), IN `birthIN` DATE, IN `emailIN` VARCHAR(255), IN `passwordIN` VARCHAR(255), OUT `idOUT` INT)  BEGIN
 -- DECLARE studentID int;
 -- DECLARE userID int;
-
 -- INSERT INTO `Student` (`Student`.`first_name`,`Student`.`last_name`,`Student`.`phone`,`Student`.`birth`)
 -- VALUES(firstNameIN,lastNameIN,phoneIN,birthIN);
 -- SET studentID = LAST_INSERT_ID();
-
 -- INSERT INTO `User` (`User`.`email`,`User`.`password`,`User`.`reg_code`,`User`.`is_activated`,`User`.`is_deleted`)
 -- VALUES(emailIN,(SHA2(CONCAT(passwordIN), 256)), (SELECT LEFT(UUID(), 8)),FALSE,FALSE);
 -- SET userID = LAST_INSERT_ID();
-
 CALL register(3,firstNameIN,lastNameIN,phoneIN,birthIN,emailIN,passwordIN,@userId);
 call setUserRole(@userId,"Student");
 call createStudentWithUserId(@userId);
@@ -219,7 +146,6 @@ END $$
 
 CREATE PROCEDURE `validateJwt` (IN `userIdIN` INT, IN `jwtIN` VARCHAR(255), OUT `isValidOUT` TINYINT)  BEGIN
 SELECT `user`.`jwt` into @currentJwt from `user` WHERE `user`.`id` = userIdIN;
-
 IF @currentJwt = jwtIN
 THEN SET isValidOUT = 1;
 ELSE SET isValidOUT = 0;
@@ -228,7 +154,6 @@ END $$
 
 CREATE PROCEDURE `validateRole` (IN `userIdIN` INT, IN `userRoleTypeIN` INT, OUT `isValidOUT` TINYINT)  BEGIN
 SELECT `user`.`role_id` into @currentRole from `user` WHERE `user`.`id` = userIdIN;
-
 IF @currentRole = userRoleTypeIN
 THEN SET isValidOUT = 1;
 ELSE SET isValidOUT = 0;
@@ -236,10 +161,7 @@ END IF;
 END $$
 
 CREATE PROCEDURE `valtozoEltarolasaTeszt` ()  BEGIN
-
 -- DECLARE asd int;
 call createStudent("fn","ln","ph","1999.11.11",@asd);
-
 SELECT @asd;
-
 END $$

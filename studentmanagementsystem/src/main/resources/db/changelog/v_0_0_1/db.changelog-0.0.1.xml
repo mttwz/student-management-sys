@@ -1,55 +1,205 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.6.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-        <changeSet id="role" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/01_role.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="role" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/01_role.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="user" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/02_user.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="user" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/02_user.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="password-reset" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/03_password-reset.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="password-reset" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/03_password-reset.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="card" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/04_card.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="card" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/04_card.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="student" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/05_student.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="student" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/05_student.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="attendance" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/06_attendance.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="attendance" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/06_attendance.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="workgroup" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/07_workgroup.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="workgroup" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/07_workgroup.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="workgroup-members" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/08_workgroup-members.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="workgroup-members" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/08_workgroup-members.sql" stripComments="true"/>
+    </changeSet>
 
-        <changeSet id="workgroup-schedule" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/schema/09_workgroup-schedule.sql" stripComments="true" />
-        </changeSet>
+    <changeSet id="workgroup-schedule" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/schema/09_workgroup-schedule.sql" stripComments="true"/>
+    </changeSet>
 
-        <!--                    procedures                      -->
+    <!--                    procedures                      -->
 
-        <changeSet id="add-user-to-workgroup" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/procedures/add-user-to-workgroup.sql" stripComments="true" endDelimiter="$$"/>
-        </changeSet>
+    <changeSet id="add-user-to-workgroup" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/add-user-to-workgroup.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
 
-        <changeSet id="connect-card-to-student" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/procedures/connect-card-to-student.sql" stripComments="true" endDelimiter="$$"/>
-        </changeSet>
+    <changeSet id="connect-card-to-student" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/connect-card-to-student.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
 
-        <changeSet id="login" author="mate">
-                <sqlFile path="db/changelog/v_0_0_1/procedures/login.sql" stripComments="true" endDelimiter="$$"/>
-        </changeSet>
+    <changeSet id="connect-student-to-user" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/connect-student-to-user.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="create-card" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/create-card.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="create-student-with-userid" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/create-student-with-userid.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="create-workgroup" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/create-workgroup.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="create-workgroup-schedule" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/create-workgroup-schedule.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="delete-student-user-permanent" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/delete-student-user-permanent.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="find-by-username" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/find-by-username.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="generate-resetcode" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/generate-resetcode.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+
+    <changeSet id="login" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/login.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-all-student" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-student.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-all-user" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-user.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-all-usert-id-from-workgroup" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-usert-id-from-workgroup.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-all-workgroup-classes-id-on-date" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-workgroup-classes-id-on-date.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-last-valid-reset-code" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-last-valid-reset-code.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-name" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-name.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-user-card" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-user-card.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-user-from-workgroup" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-user-from-workgroup.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-user-id-by-token" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-user-id-by-token.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-workgroup-schedule-by-user-id" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-workgroup-schedule-by-user-id.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="log-student" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/log-student.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="register" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/register.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="register-student" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/register-student.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="search-admins" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/search-admins.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="search-all-user" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/search-all-user.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="search-students" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/search-students.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="search-superadmins" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/search-superadmins.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="search-workgroups" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/search-workgroups.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="set-user-is-activated" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/set-user-is-activated.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="set-user-is-deleted" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/set-user-is-deleted.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="set-user-role" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/set-user-role.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="update-jwt" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/update-jwt.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="validate-jwt" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/validate-jwt.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="validate-role" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/validate-role.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="valtozo-eltarolasa-teszt" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/valtozo-eltarolasa-teszt.sql" stripComments="true"
+                 endDelimiter="$$"/>
+    </changeSet>
 
 
 </databaseChangeLog>
