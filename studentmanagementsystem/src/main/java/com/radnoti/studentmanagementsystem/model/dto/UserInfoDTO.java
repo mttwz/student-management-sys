@@ -1,6 +1,5 @@
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,20 +25,4 @@ public class UserInfoDTO {
     private Date activatedAt;
     private Boolean isDeleted;
     private Date deletedAt;
-
-
-    public UserInfoDTO(User user) {
-        this.id = user.getId();
-        this.roleName = user.getRoleId().getRoleType();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.phone = user.getPhone();
-        this.birth = user.getBirth();
-        this.email = user.getEmail();
-        this.registeredAt = user.getRegisteredAt();
-        this.isActivated = user.getIsActivated();
-        this.activatedAt = user.getActivatedAt();
-        this.isDeleted = user.getIsDeleted();
-        this.deletedAt = user.getDeletedAt();
-    }
 }

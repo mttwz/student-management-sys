@@ -22,17 +22,17 @@ import static org.aspectj.util.LangUtil.isEmpty;
 @RequiredArgsConstructor
 public class RequestFilter extends OncePerRequestFilter {
 
-    private final JwtConfig jwtConfig;
+    private final JwtUtil jwtUtil;
     private final UserDetailsServiceImp userDetailsServiceImp;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (isEmpty(authHeader) || !authHeader.startsWith("Bearer ") || !jwtConfig.validateJwt(authHeader)) {
+        if (isEmpty(authHeader) || !authHeader.startsWith("Bearer ") || !jwtUtil.validateJwt(authHeader)) {
             filterChain.doFilter(request, response);
             return;
         }
-        UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(jwtConfig.getEmailFromJwt(authHeader));
+        UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(jwtUtil.getEmailFromJwt(authHeader));
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(

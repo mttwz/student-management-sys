@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @author matevoros
  */
 @Component
-public class JwtConfig {
+public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String Secret;

@@ -61,8 +61,8 @@
         <sqlFile path="db/changelog/v_0_0_1/procedures/create-card.sql" stripComments="true" endDelimiter="$$"/>
     </changeSet>
 
-    <changeSet id="create-student-with-userid" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/create-student-with-userid.sql" stripComments="true"
+    <changeSet id="create-student-with-user-id" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/create-student-with-user-id.sql" stripComments="true"
                  endDelimiter="$$"/>
     </changeSet>
 

@@ -4,12 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.radnoti.studentmanagementsystem.model.entity.*;
 import lombok.*;
-
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -21,7 +16,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @ToString
-public class UserDTO implements Serializable {
+public class UserDTO{
 
     private Integer id;
     private String roleName;
@@ -40,25 +35,5 @@ public class UserDTO implements Serializable {
     private String jwt;
     private String searchText;
 
-
-
-
-
-
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.roleName = user.getRoleId().getRoleType();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.phone = user.getPhone();
-        this.birth = user.getBirth();
-        this.email = user.getEmail();
-        this.registeredAt = user.getRegisteredAt();
-        this.isActivated = user.getIsActivated();
-        this.activatedAt = user.getActivatedAt();
-        this.isDeleted = user.getIsDeleted();
-        this.deletedAt = user.getDeletedAt();
-        this.activationCode = null;
-    }
 
 }

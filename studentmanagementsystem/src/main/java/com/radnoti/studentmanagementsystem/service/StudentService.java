@@ -4,16 +4,13 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
-import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
-import com.radnoti.studentmanagementsystem.security.JwtConfig;
+import com.radnoti.studentmanagementsystem.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,26 +31,53 @@ public class StudentService {
 
     private final UserRepository userRepository;
 
-    private final JwtConfig jwtConfig;
+    private final JwtUtil jwtUtil;
 
     private final DateFormatUtil dateFormatUtil;
 
 
+    /**
+     * Registers a new user with student privileges
+     * @param userDTO The details of the user in Json format. eg: {
+     *     "firstName" : "userFirstName",
+     *     "lastName" : "userLastName",
+     *     "phone" : "userPhone",
+     *     "birth": "1111-12-12T00:00:00Z",
+     *     "email" : "qqq",
+     *     "password" : "qqq"
+     * }
+     * @return saved user id
+     */
     @Transactional
     public Integer registerStudent(UserDTO userDTO){
 
+
+
+        if ((userDTO.getFirstName() == null || userDTO.getLastName() == null|| userDTO.getPhone() == null|| userDTO.getBirth().toString() == null || userDTO.getEmail() == null || userDTO.getPassword() == null)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
+        }
+
+        if (( userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
+        }
+
         Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
+
         if(optionalUser.isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
         }
 
-        Integer savedStudentId = studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
-        Optional<Student> optionalStudent = studentRepository.findById(savedStudentId);
+        Integer savedUserId = studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
 
-        if(optionalStudent.isEmpty()){
+        Optional<User> savedOptionalUser = userRepository.findById(savedUserId);
+
+        if(savedOptionalUser.isEmpty()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
         }
 
-        return savedStudentId;
+
+
+
+        return savedUserId;
     }
 }

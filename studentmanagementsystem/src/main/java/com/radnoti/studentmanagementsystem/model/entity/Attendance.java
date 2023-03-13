@@ -28,13 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "Attendance")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Attendance.findAll", query = "SELECT a FROM Attendance a"),
-    @NamedQuery(name = "Attendance.findById", query = "SELECT a FROM Attendance a WHERE a.id = :id"),
-    @NamedQuery(name = "Attendance.findByArrival", query = "SELECT a FROM Attendance a WHERE a.arrival = :arrival"),
-    @NamedQuery(name = "Attendance.findByLeaving", query = "SELECT a FROM Attendance a WHERE a.leaving = :leaving")})
 public class Attendance implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

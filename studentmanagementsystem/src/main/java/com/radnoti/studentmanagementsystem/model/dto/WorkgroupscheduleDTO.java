@@ -4,14 +4,9 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
-import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -41,16 +36,5 @@ public class WorkgroupscheduleDTO implements Serializable {
 
     //private Collection<WorkgroupDTO> workgroupCollection;
 
-    public WorkgroupscheduleDTO(Integer id) {
-        this.id = id;
-    }
 
-    public WorkgroupscheduleDTO(Workgroupschedule workgroupschedule) {
-        this.id = workgroupschedule.getId();
-        this.name = workgroupschedule.getName();
-        this.workgroupId = workgroupschedule.getWorkgroupId().getId();
-        this.start = workgroupschedule.getStart();
-        this.end = workgroupschedule.getEnd();
-        this.isOnsite = workgroupschedule.getIsOnsite();
-    }
 }

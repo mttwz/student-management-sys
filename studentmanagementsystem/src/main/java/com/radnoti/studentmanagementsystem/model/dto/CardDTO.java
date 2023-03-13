@@ -4,12 +4,9 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import com.radnoti.studentmanagementsystem.model.entity.Card;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 /**
  *
@@ -18,20 +15,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CardDTO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class CardDTO{
 
     private Integer id;
 
     private String hash;
 
-    public CardDTO(Card card) {
-        this.id = card.getId();
-        this.hash = card.getHash();
-    }
 
-    public CardDTO(Integer id) {
-        this.id = id;
-    }
 }

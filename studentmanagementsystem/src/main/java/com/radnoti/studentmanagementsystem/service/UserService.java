@@ -7,24 +7,21 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
+import com.radnoti.studentmanagementsystem.mapper.UserMapper;
+import com.radnoti.studentmanagementsystem.mapper.WorkgroupscheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
-import com.radnoti.studentmanagementsystem.util.DateFormatUtil;
-import com.radnoti.studentmanagementsystem.security.JwtConfig;
+import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.persistence.NonUniqueResultException;
 
 
 /**
@@ -45,7 +42,11 @@ public class UserService {
     private final WorkgroupMembersRepository workgroupMembersRepository;
 
 
-    private final JwtConfig jwtConfig;
+    private final JwtUtil jwtUtil;
+
+    private final UserMapper userMapper;
+
+    private final WorkgroupscheduleMapper workgroupscheduleMapper;
 
 
     public User userExistanceCheck(Integer userId){
@@ -98,17 +99,17 @@ public class UserService {
         userExistanceCheck(userDTO.getId());
 
 
-        if (jwtConfig.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDTO.getId());
         } else {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtConfig.getIdFromJwt(authHeader));
+            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
         }
+
         ArrayList<WorkgroupscheduleDTO> workgroupscheduleDTOArrayList = new ArrayList<>();
         Iterable<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findAllById(workgroupScheduleList);
 
         for(Workgroupschedule workgroupschedule : optionalWorkgroupschedule){
-            WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO(workgroupschedule);
-            workgroupscheduleDTOArrayList.add(workgroupscheduleDTO);
+            workgroupscheduleDTOArrayList.add( workgroupscheduleMapper.fromEntityToDto(workgroupschedule));
         }
         return workgroupscheduleDTOArrayList;
     }
@@ -150,12 +151,12 @@ public class UserService {
         return userDTO.getId();
     }
 
+
+
     @Transactional
     public Integer deleteUser(UserDTO userDTO) {
         User user = userExistanceCheck(userDTO.getId());
-
         userRepository.setUserIsDeleted(userDTO.getId());
-
         if (!Objects.equals(user.getIsDeleted(), true)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not deleted");
         }
@@ -179,52 +180,50 @@ public class UserService {
     public ArrayList<UserInfoDTO> getAllUser() {
         Iterable<User> userIterable = userRepository.findAll();
         ArrayList<UserInfoDTO> userInfoDTOArrayList = new ArrayList<>();
-        for (User u : userIterable) {
-            UserInfoDTO userInfoDTO = new UserInfoDTO(u);
-            userInfoDTOArrayList.add(userInfoDTO);
+        for (User user : userIterable) {
+            userInfoDTOArrayList.add(userMapper.fromEntityToInfoDto(user));
         }
         return userInfoDTOArrayList;
     }
 
     @Transactional
     public UserInfoDTO getUserInfo(UserDTO userDTO) {
-
-//        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
-//        if (optionalUser.isPresent()) {
-//            return new UserInfoDTO(optionalUser.get());
-//        }else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
-
-
         User user = userExistanceCheck(userDTO.getId());
-        return new UserInfoDTO(user);
+        return userMapper.fromEntityToInfoDto(user);
 
     }
 
     @Transactional
-    public Integer editUserInfo(UserDTO userDTO) {
-        User user = userExistanceCheck(userDTO.getId());
+    public Integer editUserInfo(String pathVariableUserId, UserInfoDTO userInfoDTO) {
 
-        int userId = user.getId();
-        String userName = userDTO.getEmail();
+        Integer userId;
+        try{
+            userId = Integer.parseInt(pathVariableUserId);
+        }catch (NumberFormatException ex){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid id");
+        }
+        User user = userExistanceCheck(userId);
+
+
+        String userName = userInfoDTO.getEmail();
 
         Optional<User> optionalUserByEmail = userRepository.findByUsername(userName);
 
-        if (optionalUserByEmail.isPresent() && optionalUserByEmail.get().getId() != userId) {
+        if (optionalUserByEmail.isPresent() && !Objects.equals(optionalUserByEmail.get().getId(), userId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
         }
 
-
-        if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+        if (userInfoDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             user.setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
-        } else if (userDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+        } else if (userInfoDTO.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
             user.setRoleId(new Role(RoleEnum.ADMIN.getId()));
         } else user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
 
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setBirth(userDTO.getBirth());
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
+        user.setFirstName(userInfoDTO.getFirstName());
+        user.setLastName(userInfoDTO.getLastName());
+        user.setBirth(userInfoDTO.getBirth());
+        user.setEmail(userInfoDTO.getEmail());
+        user.setPhone(userInfoDTO.getPhone());
         userRepository.save(user);
         return userId;
     }
@@ -235,7 +234,7 @@ public class UserService {
         ArrayList<User> userArrayList = new ArrayList<>();
 
         if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.ALL_USERS)) {
-            userRepository.searchAllUser(searchDTO.getSearchText());
+            userArrayList = userRepository.searchAllUser(searchDTO.getSearchText());
         } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.SUPERADMIN)) {
             userArrayList = userRepository.searchSuperadmins(searchDTO.getSearchText());
         } else if (Objects.equals(searchDTO.getSearchFilter(), SearchFilterEnum.Types.STUDENT)) {
@@ -249,15 +248,8 @@ public class UserService {
 
         }
 
-//        for (int i = 0; i < userArrayList.size(); i++) {
-//            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
-//            userDTOArrayList.add(actualUserDto);
-//
-//        }
-
         for (int i = 0; i < userArrayList.size(); i++) {
-            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
-            userDTOArrayList.add(actualUserDto);
+            userDTOArrayList.add(userMapper.fromEntityToDto(userArrayList.get(i)));
         }
         return userDTOArrayList;
     }
@@ -268,10 +260,7 @@ public class UserService {
         ArrayList<UserDTO> userDTOArrayList = new ArrayList<>();
         ArrayList<User> userArrayList = userRepository.getUserFromWorkgroup(userDTO.getId());
         for (int i = 0; i < userArrayList.size(); i++) {
-            System.out.println(userArrayList.get(i));
-            UserDTO actualUserDto = new UserDTO(userArrayList.get(i));
-            userDTOArrayList.add(actualUserDto);
-//            System.out.println(userDTOArrayList);
+            userDTOArrayList.add(userMapper.fromEntityToDto(userArrayList.get(i)));
         }
 
         return userDTOArrayList;

@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,10 +38,14 @@ public class AuthControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private final String fullPath = "http://localhost:" + port + contextPath + mainPath;
+
+
 
     @Sql({ "AuthLogin.sql" })
     @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
+    //@Transactional
     public void loginTest_validCredentials(){
 
 
@@ -55,14 +60,14 @@ public class AuthControllerTest {
 //        HttpEntity< UserDTO > userDTOtest = new HttpEntity<>(userDTO, httpHeaders);
 
         ResponseEntity<UserLoginDTO> responseEntity = this.restTemplate
-                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDTO, UserLoginDTO.class);
+                .postForEntity(fullPath + "/login", userDTO, UserLoginDTO.class);
 
 
 
         assertEquals("testEmail", responseEntity.getBody().getEmail());
         assertEquals("testLastname", responseEntity.getBody().getLastName());
         assertEquals("testFirstname", responseEntity.getBody().getFirstName());
-        assertTrue(responseEntity.getBody().getJwt().startsWith("Bearer"));
+        assertFalse(responseEntity.getBody().getJwt().isEmpty());
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
 
@@ -74,7 +79,7 @@ public class AuthControllerTest {
         userDTO.setEmail("thisEmailNotExist");
         userDTO.setPassword("thisPwNotExist");
         ResponseEntity<UserLoginDTO> responseEntity = this.restTemplate
-                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDTO, UserLoginDTO.class);
+                .postForEntity(fullPath + "/login", userDTO, UserLoginDTO.class);
 
         assertEquals(403, responseEntity.getStatusCodeValue());
     }

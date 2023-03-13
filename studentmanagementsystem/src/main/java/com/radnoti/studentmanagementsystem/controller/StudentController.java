@@ -36,10 +36,4 @@ public class StudentController {
                 .body(responseFactory.createResponse("id", studentService.registerStudent(userDTO)));
     }
 
-//    @RolesAllowed({Role.Types.SUPERADMIN})
-//    @PostMapping(path = "/connectstudenttouser", consumes = {"application/json"})
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody void connectStudentToUser(@RequestBody StudentDTO studentDTO) {
-//        studentService.connectStudentToUser(studentDTO);
-//    }
 }

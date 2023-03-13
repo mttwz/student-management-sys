@@ -6,21 +6,17 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
-import com.radnoti.studentmanagementsystem.security.JwtConfig;
+import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,10 +28,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CardService {
 
-    private final JwtConfig jwtConfig;
-
     private final CardRepository cardRepository;
     private final StudentRepository studentRepository;
+
+
+    /**
+     *  Creates a card with a custom hash.
+     * @param cardDTO The hash details in Json format. eg: {
+     *     "hash":"veryOriginalHash"
+     * }
+     * @return The saved card id.
+     * @throws ResponseStatusException on failed creation
+     */
 
     @Transactional
     public Integer createCard(final CardDTO cardDTO) {
@@ -55,7 +59,16 @@ public class CardService {
         return savedCardId;
     }
 
-
+    /**
+     * Connects an existing student with an existing card.
+     * @param studentDTO The id of the existing student and the id of the existing card in Json format. eg:
+     * {
+     *     "id" : 1,
+     *     "cardId" : 1
+     * }
+     * @return The id of the connected student
+     * @throws ResponseStatusException on failed connection
+     */
     @Transactional
     public Integer connectCardToStudent(StudentDTO studentDTO) {
         cardRepository.connectCardToStudent(studentDTO.getId(), studentDTO.getCardId());

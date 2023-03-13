@@ -95,11 +95,11 @@ public class UserController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/edituserinfo", consumes = {"application/json"})
-    public @ResponseBody ResponseEntity<Map> editUserInfo(@RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/edituserinfo/{userId}", consumes = {"application/json"})
+    public @ResponseBody ResponseEntity<Map> editUserInfo(@PathVariable String userId, @RequestBody UserInfoDTO userInfoDTO) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", userService.editUserInfo(userDTO)));
+                .body(responseFactory.createResponse("id", userService.editUserInfo(userId,userInfoDTO)));
     }
 
 
