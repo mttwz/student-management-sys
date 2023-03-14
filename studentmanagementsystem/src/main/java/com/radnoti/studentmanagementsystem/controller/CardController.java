@@ -3,6 +3,7 @@ package com.radnoti.studentmanagementsystem.controller;
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.service.CardService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,23 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
                 .body(responseFactory.createResponse("id", cardService.createCard(cardDTO)));
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/getcardbyuserid", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map> getCardByUserId(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", cardService.getCardByUserId(userDTO)));
+    }
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/getcardbystudentid", consumes = {"application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map> getCardByStudentId(@RequestBody StudentDTO studentDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", cardService.getCardByStudentId(studentDTO)));
     }
 
 

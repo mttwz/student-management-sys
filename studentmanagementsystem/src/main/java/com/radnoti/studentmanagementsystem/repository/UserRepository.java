@@ -29,9 +29,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Integer register(Integer roleId,String firstName, String lastName, String phone, Date birth, String email, String password);
 
     @Procedure
-    int getUserIdByToken(String token);
-
-    @Procedure
     Integer login(String email, String password);
     
     @Procedure
@@ -51,9 +48,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
     Optional<User> findByUsername(String email);
-
-    @Procedure
-    ArrayList<User> getAllUser();
 
     @Procedure
     ArrayList<User> searchAllUser(String string);

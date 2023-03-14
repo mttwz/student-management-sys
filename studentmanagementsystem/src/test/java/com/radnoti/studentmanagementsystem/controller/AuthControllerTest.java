@@ -17,9 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")

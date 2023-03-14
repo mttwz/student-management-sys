@@ -21,8 +21,8 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     void connectCardToStudent(Integer studentId, Integer cardId);
 
     @Procedure
-    Integer getUserCard(Integer userId);
+    Integer getCardByStudentId(Integer studentId);
 
-
-    
+    @Procedure
+    Integer getCardByUserId(Integer userId);
 }

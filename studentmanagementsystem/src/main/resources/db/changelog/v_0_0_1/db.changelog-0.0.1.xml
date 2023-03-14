@@ -120,8 +120,12 @@
         <sqlFile path="db/changelog/v_0_0_1/procedures/get-name.sql" stripComments="true" endDelimiter="$$"/>
     </changeSet>
 
-    <changeSet id="get-user-card" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/get-user-card.sql" stripComments="true" endDelimiter="$$"/>
+    <changeSet id="get-card-by-user-id" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-card-by-user-id.sql" stripComments="true" endDelimiter="$$"/>
+    </changeSet>
+
+    <changeSet id="get-card-by-student-id" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-card-by-student-id.sql" stripComments="true" endDelimiter="$$"/>
     </changeSet>
 
     <changeSet id="get-user-from-workgroup" author="mate">
@@ -201,5 +205,15 @@
                  endDelimiter="$$"/>
     </changeSet>
 
+
+
+
+
+
+
+
+    <changeSet id="test" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/data/someData.sql" stripComments="true"/>
+    </changeSet>
 
 </databaseChangeLog>

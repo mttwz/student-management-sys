@@ -6,10 +6,13 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,8 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final StudentRepository studentRepository;
+
+    private final UserRepository userRepository;
 
 
     /**
@@ -87,5 +92,35 @@ public class CardService {
         }
 
         return optionalStudent.get().getId();
+    }
+
+    @Transactional
+    public Integer getCardByUserId(UserDTO userDTO){
+        if(userDTO.getId() == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"User id is null");
+        }
+        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+
+        if(optionalUser.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"User not exist");
+        }
+
+        Integer cardId = cardRepository.getCardByUserId(userDTO.getId());
+        return cardId;
+    }
+
+
+    @Transactional
+    public Integer getCardByStudentId(StudentDTO studentDTO){
+        if(studentDTO.getId() == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Student id is null");
+        }
+        Optional<Student> optionalStudent = studentRepository.findById(studentDTO.getId());
+
+        if(optionalStudent.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Student not exist");
+        }
+        Integer cardId = cardRepository.getCardByStudentId(studentDTO.getId());
+        return cardId;
     }
 }
