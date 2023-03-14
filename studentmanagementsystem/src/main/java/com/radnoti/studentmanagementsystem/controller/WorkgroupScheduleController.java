@@ -8,8 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 @RestController
@@ -29,11 +32,19 @@ public class WorkgroupScheduleController {
 
     }
 
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @PostMapping(path = "/deleteworkgroupschedule", consumes = {"application/json"})
+    public ResponseEntity<Map> deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDTO workgroupscheduleDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "application/json")
+                .body(responseFactory.createResponse("id", workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDTO)));
 
-//    @PostMapping(path = "/uploadfile", consumes = {"multipart/form-data"})
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody void uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("workgroupscheduleId") Integer workgroupscheduleId) {
-//        WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO(workgroupscheduleId);
-//        workgroupscheduleService.uploadFile(file,workgroupscheduleDTO);
-//    }
+    }
+
+
+    @PostMapping(path = "/uploadfile/{workgroupscheduleId}", consumes = {"multipart/form-data"})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody void uploadFile(@PathVariable String workgroupscheduleId,@RequestParam("file") MultipartFile file) throws URISyntaxException, FileNotFoundException {
+        workgroupscheduleService.uploadFile(workgroupscheduleId,file);
+    }
 }

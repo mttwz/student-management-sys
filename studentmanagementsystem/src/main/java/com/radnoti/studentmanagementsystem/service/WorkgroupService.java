@@ -6,6 +6,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,14 @@ import java.util.Optional;
 public class WorkgroupService {
     private final WorkgroupRepository workgroupRepository;
 
+
+    public Workgroup WorkgroupExistanceCheck(Integer workgroupId){
+        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
+        if(optionalWorkgroup.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not exist");
+        }
+        return optionalWorkgroup.get();
+    }
 
     @Transactional
     public Integer createWorkgroup(WorkgroupDTO workgroupDTO) {

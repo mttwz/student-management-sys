@@ -35,7 +35,7 @@ public class AuthControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private final String fullPath = "http://localhost:" + port + contextPath + mainPath;
+
 
 
 
@@ -44,9 +44,6 @@ public class AuthControllerTest {
     @Test
     //@Transactional
     public void loginTest_validCredentials(){
-
-
-
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("testEmail");
@@ -57,7 +54,7 @@ public class AuthControllerTest {
 //        HttpEntity< UserDTO > userDTOtest = new HttpEntity<>(userDTO, httpHeaders);
 
         ResponseEntity<UserLoginDTO> responseEntity = this.restTemplate
-                .postForEntity(fullPath + "/login", userDTO, UserLoginDTO.class);
+                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDTO, UserLoginDTO.class);
 
 
 
@@ -76,7 +73,7 @@ public class AuthControllerTest {
         userDTO.setEmail("thisEmailNotExist");
         userDTO.setPassword("thisPwNotExist");
         ResponseEntity<UserLoginDTO> responseEntity = this.restTemplate
-                .postForEntity(fullPath + "/login", userDTO, UserLoginDTO.class);
+                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDTO, UserLoginDTO.class);
 
         assertEquals(403, responseEntity.getStatusCodeValue());
     }

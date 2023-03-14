@@ -101,8 +101,8 @@
         <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-user.sql" stripComments="true" endDelimiter="$$"/>
     </changeSet>
 
-    <changeSet id="get-all-usert-id-from-workgroup" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-usert-id-from-workgroup.sql" stripComments="true"
+    <changeSet id="get-all-user-id-from-workgroup" author="mate">
+        <sqlFile path="db/changelog/v_0_0_1/procedures/get-all-user-id-from-workgroup.sql" stripComments="true"
                  endDelimiter="$$"/>
     </changeSet>
 
