@@ -4,27 +4,22 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import lombok.*;
-import java.util.Date;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author matevoros
  */
-
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@Data
-public class AttendanceDTO{
+public class CardDto {
 
     private Integer id;
 
-    private Date arrival;
+    private String hash;
 
-    private Date leaving;
-
-    private StudentDTO studentId;
 
 }

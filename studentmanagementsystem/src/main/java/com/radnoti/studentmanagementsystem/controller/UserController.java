@@ -27,58 +27,58 @@ public class UserController {
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/registeruser", consumes = {"application/json"})
-    public ResponseEntity<Map> adduser(@RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/register-user", consumes = {"application/json"})
+    public ResponseEntity<Map> adduser(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", userService.adduser(userDTO)));
+                .body(responseFactory.createResponse("id", userService.adduser(userDto)));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/setuserisactivated", consumes = {"application/json"})
-    public ResponseEntity<Map> setUserIsActivated(@RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/set-user-is-activated", consumes = {"application/json"})
+    public ResponseEntity<Map> setUserIsActivated(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", userService.setUserIsActivated(userDTO)));
+                .body(responseFactory.createResponse("id", userService.setUserIsActivated(userDto)));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/deleteuser", consumes = {"application/json"})
-    public ResponseEntity<Map> deleteUser(@RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/delete-user", consumes = {"application/json"})
+    public ResponseEntity<Map> deleteUser(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id",userService.deleteUser(userDTO)));
+                .body(responseFactory.createResponse("id",userService.deleteUser(userDto)));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/setuserrole", consumes = {"application/json"})
-    public ResponseEntity<Map> setUserRole(@RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/set-user-role", consumes = {"application/json"})
+    public ResponseEntity<Map> setUserRole(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", userService.setUserRole(userDTO)));
+                .body(responseFactory.createResponse("id", userService.setUserRole(userDto)));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/addusertoworkgroup", consumes = {"application/json"})
-    public ResponseEntity<Map> addUserToWorkgroup(@RequestBody WorkgroupmembersDTO workgroupmembersDTO) {
+    @PostMapping(path = "/add-user-to-workgroup", consumes = {"application/json"})
+    public ResponseEntity<Map> addUserToWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", userService.addUserToWorkgroup(workgroupmembersDTO)));
+                .body(responseFactory.createResponse("id", userService.addUserToWorkgroup(workgroupmembersDto)));
 
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/getworkgroupschedulebyuserid", consumes = {"application/json"})
-    public ResponseEntity<ArrayList<WorkgroupscheduleDTO>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"})
+    public ResponseEntity<ArrayList<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(userService.getWorkgroupScheduleByUserId(authHeader,userDTO));
+                .body(userService.getWorkgroupScheduleByUserId(authHeader,userDto));
     }
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @GetMapping(path = "/getalluser")
-    public  ResponseEntity<ArrayList<UserInfoDTO>> getWorkgroupScheduleByUserId() {
+    @GetMapping(path = "/get-all-user")
+    public  ResponseEntity<ArrayList<UserInfoDto>> getWorkgroupScheduleByUserId() {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
                 .body(userService.getAllUser());
@@ -87,34 +87,34 @@ public class UserController {
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/getuserinfo", consumes = {"application/json"})
-    public ResponseEntity<UserInfoDTO> getUserInfo(@RequestBody UserDTO userDTO) {
+    @PostMapping(path = "/get-user-info", consumes = {"application/json"})
+    public ResponseEntity<UserInfoDto> getUserInfo(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(userService.getUserInfo(userDTO));
+                .body(userService.getUserInfo(userDto));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/edituserinfo/{userId}", consumes = {"application/json"})
-    public @ResponseBody ResponseEntity<Map> editUserInfo(@PathVariable String userId, @RequestBody UserInfoDTO userInfoDTO) {
+    @PostMapping(path = "/edit-user-info/{userId}", consumes = {"application/json"})
+    public @ResponseBody ResponseEntity<Map> editUserInfo(@PathVariable String userId, @RequestBody UserInfoDto userInfoDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", userService.editUserInfo(userId,userInfoDTO)));
+                .body(responseFactory.createResponse("id", userService.editUserInfo(userId,userInfoDto)));
     }
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/searchsuperadmin")
+    @PostMapping(path = "/search-super-admin")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ArrayList<UserDTO> searchSuperadmin(@RequestBody SearchDTO searchDTO){
-        return userService.searchSuperadmin(searchDTO);
+    public @ResponseBody ArrayList<UserDto> searchSuperadmin(@RequestBody SearchDto searchDto){
+        return userService.searchSuperadmin(searchDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/getuserfromworkgroup")
+    @PostMapping(path = "/get-user-from-workgroup")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ArrayList<UserDTO> getAllUserIdFromWorkgroup(@RequestBody UserDTO userDTO){
-        return userService.getUserFromWorkgroup(userDTO);
+    public @ResponseBody ArrayList<UserDto> getAllUserIdFromWorkgroup(@RequestBody UserDto userDto){
+        return userService.getUserFromWorkgroup(userDto);
     }
 
 

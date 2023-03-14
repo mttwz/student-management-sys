@@ -1,8 +1,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
@@ -42,15 +41,15 @@ public final class UserServiceTest {
     @Test()
     public void addUserTest_valid_superadmin() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("mate");
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("mate");
+        userDto.setLastName("mate");
+        userDto.setPhone("123");
+        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setEmail("mate");
+        userDto.setPassword("mate");
 
         User user = new User();
         user.setId(1);
@@ -66,7 +65,7 @@ public final class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         //act
-        int actual = userService.adduser(userDTO);
+        int actual = userService.adduser(userDto);
 
         //assert
         assertEquals(1, actual);
@@ -75,15 +74,15 @@ public final class UserServiceTest {
     @Test
     public void addUserTest_valid_admin() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.ADMIN.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("mate");
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.ADMIN.toLowerCase());
+        userDto.setFirstName("mate");
+        userDto.setLastName("mate");
+        userDto.setPhone("123");
+        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setEmail("mate");
+        userDto.setPassword("mate");
 
         User user = new User();
         user.setId(1);
@@ -99,7 +98,7 @@ public final class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         //act
-        int actual = userService.adduser(userDTO);
+        int actual = userService.adduser(userDto);
 
         //assert
         assertEquals(1, actual);
@@ -108,15 +107,15 @@ public final class UserServiceTest {
     @Test
     public void addUserTest_valid_student() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.STUDENT.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("mate");
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.STUDENT.toLowerCase());
+        userDto.setFirstName("mate");
+        userDto.setLastName("mate");
+        userDto.setPhone("123");
+        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setEmail("mate");
+        userDto.setPassword("mate");
 
         User user = new User();
         user.setId(1);
@@ -132,7 +131,7 @@ public final class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         //act
-        int actual = userService.adduser(userDTO);
+        int actual = userService.adduser(userDto);
 
         //assert
         assertEquals(1, actual);
@@ -141,72 +140,72 @@ public final class UserServiceTest {
     @Test()
     public void addUserTest_one_field_is_empty() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("");
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("mate");
+        userDto.setLastName("");
+        userDto.setPhone("123");
+        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setEmail("mate");
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         //act & assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDto));
     }
 
     @Test
     public void addUserTest_one_field_is_null() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName(null);
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("mate");
+        userDto.setLastName(null);
+        userDto.setPhone("123");
+        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setEmail("mate");
+        userDto.setPassword("mate");
 
         //act
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         //assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDto));
     }
 
     @Test()
     public void addUserTest_email_already_exist() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("");
-        userDTO.setPhone("123");
-        userDTO.setBirth(new Date(1111, 11, 11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("mate");
+        userDto.setLastName("");
+        userDto.setPhone("123");
+        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setEmail("mate");
+        userDto.setPassword("mate");
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User()));
 
         //act & assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDto));
     }
 
     @Test
     public void addUserTest_not_save(){
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN);
-        userDTO.setFirstName("mate");
-        userDTO.setLastName("mate");
-        userDTO.setPhone("1234");
-        userDTO.setBirth(new Date(1111,11,11));
-        userDTO.setEmail("mate");
-        userDTO.setPassword("mate");
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN);
+        userDto.setFirstName("mate");
+        userDto.setLastName("mate");
+        userDto.setPhone("1234");
+        userDto.setBirth(new Date(1111,11,11));
+        userDto.setEmail("mate");
+        userDto.setPassword("mate");
 
         User user = new User();
 
@@ -217,9 +216,9 @@ public final class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         //assert & act
-//        int actual = userService.adduser(userDTO);
+//        int actual = userService.adduser(userDto);
 //        assertEquals(1,actual);
-        assertThrows(ResponseStatusException.class, ()->userService.adduser(userDTO));
+        assertThrows(ResponseStatusException.class, ()->userService.adduser(userDto));
     }
 
 
@@ -233,7 +232,7 @@ public final class UserServiceTest {
     @Test
     public void addUserToWorkgroupTest_valid() {
         //asert
-        WorkgroupmembersDTO workgroupmembersDTO = new WorkgroupmembersDTO();
+        WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
 
         User user = new User();
 
@@ -247,7 +246,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
         //act
-        int actual = userService.addUserToWorkgroup(workgroupmembersDTO);
+        int actual = userService.addUserToWorkgroup(workgroupmembersDto);
 
         //equals
         assertEquals(1, actual);
@@ -257,7 +256,7 @@ public final class UserServiceTest {
     @Test
     public void addUserToWorkgroupTest_user_not_exist() {
         //asert
-        WorkgroupmembersDTO workgroupmembersDTO = new WorkgroupmembersDTO();
+        WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
 
         User user = new User();
 
@@ -272,14 +271,14 @@ public final class UserServiceTest {
 
 
         //act & equals
-        assertThrows(ResponseStatusException.class, () -> userService.addUserToWorkgroup(workgroupmembersDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
     @Test
     public void addUserToWorkgroupTest_workgroup_not_exist() {
         //asert
-        WorkgroupmembersDTO workgroupmembersDTO = new WorkgroupmembersDTO();
+        WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
 
         User user = new User();
 
@@ -287,15 +286,15 @@ public final class UserServiceTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
         //act & equals
-        assertThrows(ResponseStatusException.class, () -> userService.addUserToWorkgroup(workgroupmembersDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
     @Test
     public void setUserIsActivatedTest_valid(){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setIsActivated(true);
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsActivated(true);
 
         User user = new User();
         user.setIsActivated(true);
@@ -303,14 +302,14 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.of(user));
 
-        assertEquals(1,userService.setUserIsActivated(userDTO));
+        assertEquals(1,userService.setUserIsActivated(userDto));
     }
 
     @Test
     public void setUserIsActivatedTest_user_not_exist(){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setIsActivated(true);
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsActivated(true);
 
         User user = new User();
         user.setIsActivated(true);
@@ -318,7 +317,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, ()-> userService.setUserIsActivated(userDTO));
+        assertThrows(ResponseStatusException.class, ()-> userService.setUserIsActivated(userDto));
 
     }
 
@@ -326,9 +325,9 @@ public final class UserServiceTest {
 
     @Test
     public void deleteUserTest_valid(){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setIsDeleted(true);
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsDeleted(true);
 
         User user = new User();
         user.setIsDeleted(true);
@@ -336,14 +335,14 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.of(user));
 
-        assertEquals(1,userService.deleteUser(userDTO));
+        assertEquals(1,userService.deleteUser(userDto));
     }
 
     @Test
     public void deleteUserTest_user_not_exist(){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setIsDeleted(true);
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsDeleted(true);
 
         User user = new User();
         user.setIsDeleted(true);
@@ -351,7 +350,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, ()-> userService.deleteUser(userDTO));
+        assertThrows(ResponseStatusException.class, ()-> userService.deleteUser(userDto));
 
     }
 
@@ -360,9 +359,9 @@ public final class UserServiceTest {
     //@Sql(scripts={"classpath:sqls/AuthLogin.sql"})
     public void setUserRoleTest_valid() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
 
         Role role = new Role(1);
         role.setRoleType(RoleEnum.Types.SUPERADMIN.toLowerCase());
@@ -374,19 +373,19 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(user));
 
         //assert
-        assertEquals(1, userService.setUserRole(userDTO));
+        assertEquals(1, userService.setUserRole(userDto));
     }
 
     @Test()
     public void setUserRoleTest_empty() {
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1);
-        userDTO.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
         //act
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         //assert
-        assertThrows(ResponseStatusException.class, () -> userService.setUserRole(userDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.setUserRole(userDto));
     }
 
 

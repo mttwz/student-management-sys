@@ -7,7 +7,7 @@ package com.radnoti.studentmanagementsystem.model.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.io.Serializable;
+import java.util.Collection;
 
 /**
  *
@@ -16,18 +16,14 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class WorkgroupDTO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class StudentDto {
 
     private Integer id;
 
-    private String groupName;
+    private Collection<AttendanceDto> attendanceCollection;
 
-    private String institution;
+    private Integer cardId;
 
-    private UserDTO userId;
-
-    private WorkgroupscheduleDTO scheduleId;
+    private Integer userId;
 
 }

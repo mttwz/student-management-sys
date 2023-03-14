@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class WorkgroupmembersDTO {
+public class WorkgroupmembersDto {
 
     private Integer id;
 

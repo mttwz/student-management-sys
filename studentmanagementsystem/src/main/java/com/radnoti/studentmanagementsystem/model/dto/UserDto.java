@@ -1,17 +1,22 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ *
+ * @author matevoros
+ */
+
 @Getter
 @Setter
-public class UserInfoDTO {
+@NoArgsConstructor
+@ToString
+public class UserDto {
 
     private Integer id;
     private String roleName;
@@ -20,9 +25,15 @@ public class UserInfoDTO {
     private String phone;
     private Date birth;
     private String email;
+    private String password;
     private Date registeredAt;
+    private String activationCode;
     private Boolean isActivated;
     private Date activatedAt;
     private Boolean isDeleted;
     private Date deletedAt;
+    private String jwt;
+    private String searchText;
+
+
 }

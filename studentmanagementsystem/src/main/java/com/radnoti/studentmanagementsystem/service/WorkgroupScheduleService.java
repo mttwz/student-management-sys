@@ -1,6 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
@@ -37,22 +37,22 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public Integer createWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
-        if(workgroupscheduleDTO.getName() == null || workgroupscheduleDTO.getWorkgroupId() == null || workgroupscheduleDTO.getStart() == null || workgroupscheduleDTO.getEnd() == null || workgroupscheduleDTO.getIsOnsite() == null){
+    public Integer createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
+        if(workgroupscheduleDto.getName() == null || workgroupscheduleDto.getWorkgroupId() == null || workgroupscheduleDto.getStart() == null || workgroupscheduleDto.getEnd() == null || workgroupscheduleDto.getIsOnsite() == null){
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
         }
 
-        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupscheduleDTO.getWorkgroupId());
+        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupscheduleDto.getWorkgroupId());
         if (optionalWorkgroup.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup does not exist");
         }
 
-        if(workgroupscheduleDTO.getName().isEmpty()){
+        if(workgroupscheduleDto.getName().isEmpty()){
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
         }
 
 
-        Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDTO.getName(), workgroupscheduleDTO.getStart(), workgroupscheduleDTO.getEnd(), workgroupscheduleDTO.getIsOnsite(), workgroupscheduleDTO.getWorkgroupId());
+        Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDto.getName(), workgroupscheduleDto.getStart(), workgroupscheduleDto.getEnd(), workgroupscheduleDto.getIsOnsite(), workgroupscheduleDto.getWorkgroupId());
 
         if (workgroupScheduleId == null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not created");
@@ -65,13 +65,13 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public Integer deleteWorkgroupSchedule(WorkgroupscheduleDTO workgroupscheduleDTO) {
-        Workgroupschedule workgroupschedule = workgroupscheduleExistanceCheck(workgroupscheduleDTO.getId());
+    public Integer deleteWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
+        Workgroupschedule workgroupschedule = workgroupscheduleExistanceCheck(workgroupscheduleDto.getId());
         workgroupscheduleRepository.delete(workgroupschedule);
-        if(workgroupscheduleRepository.existsById(workgroupscheduleDTO.getId())){
+        if(workgroupscheduleRepository.existsById(workgroupscheduleDto.getId())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not deleted");
         }
-        return workgroupscheduleDTO.getId();
+        return workgroupscheduleDto.getId();
 
     }
 

@@ -4,9 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
-import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,11 +34,11 @@ public class WorkgroupService {
     }
 
     @Transactional
-    public Integer createWorkgroup(WorkgroupDTO workgroupDTO) {
-        Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDTO.getGroupName(), workgroupDTO.getInstitution());
+    public Integer createWorkgroup(WorkgroupDto workgroupDto) {
+        Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDto.getGroupName(), workgroupDto.getInstitution());
         Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
 
-        if (optionalWorkgroup.isEmpty() || !Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDTO.getGroupName()) || !Objects.equals(optionalWorkgroup.get().getInstitution(), workgroupDTO.getInstitution())){
+        if (optionalWorkgroup.isEmpty() || !Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDto.getGroupName()) || !Objects.equals(optionalWorkgroup.get().getInstitution(), workgroupDto.getInstitution())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not created");
         }
         return workgroupId;

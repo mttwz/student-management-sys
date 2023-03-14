@@ -1,8 +1,8 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
@@ -42,7 +42,7 @@ public class AuthServiceTest {
     @Test
     public void loginTest_valid(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
         user.setId(1);
@@ -52,21 +52,21 @@ public class AuthServiceTest {
         user.setFirstName("testFirstName");
         user.setLastName("testLastName");
 
-        UserLoginDTO userLoginDTO = new UserLoginDTO();
-        userLoginDTO.setId(1);
-        userLoginDTO.setEmail("testEmail");
-        userLoginDTO.setFirstName("testFirstName");
-        userLoginDTO.setLastName("testLastName");
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setId(1);
+        userLoginDto.setEmail("testEmail");
+        userLoginDto.setFirstName("testFirstName");
+        userLoginDto.setLastName("testLastName");
 
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(jwtUtil.generateJwt(any())).thenReturn("veryVerySecretJwt");
-        when(userMapper.fromEntityToLoginDto(any())).thenReturn(userLoginDTO);
+        when(userMapper.fromEntityToLoginDto(any())).thenReturn(userLoginDto);
 
 
         //act
 
-        UserLoginDTO actual = authService.login(userDTO);
+        UserLoginDto actual = authService.login(userDto);
 
         //assert
 
@@ -81,14 +81,14 @@ public class AuthServiceTest {
     @Test
     public void loginTest_invalid(){
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("mate");
+        UserDto userDto = new UserDto();
+        userDto.setEmail("mate");
 
         when(userRepository.login(any(),any())).thenReturn(1);
 
         //act & assert
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         Integer actuaStatusCode = responseStatusException.getRawStatusCode();
         String actualMessage = responseStatusException.getReason();
@@ -108,12 +108,12 @@ public class AuthServiceTest {
     @Test
     public void loginTest_empty_username(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         Integer actuaStatusCode = responseStatusException.getRawStatusCode();
         String actualMessage = responseStatusException.getReason();
@@ -129,7 +129,7 @@ public class AuthServiceTest {
     @Test
     public void loginTest_null_userId(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
         user.setId(null);
@@ -137,7 +137,7 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(null);
 
 
-        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         String expectedMessage = "403 FORBIDDEN \"Invalid username or password\"";
         String actualMessage = ex.getMessage();
@@ -149,18 +149,18 @@ public class AuthServiceTest {
     @Test
     public void loginTest_user_does_not_exist(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.empty());
         //act & assert
-        assertThrows(ResponseStatusException.class,()->authService.login(userDTO));
+        assertThrows(ResponseStatusException.class,()->authService.login(userDto));
 
     }
 
 
     @Test
     public void loginTest_user_not_activated(){
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
         user.setId(1);
@@ -170,7 +170,7 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         Integer actuaStatusCode = responseStatusException.getRawStatusCode();
         String actualMessage = responseStatusException.getReason();
@@ -185,7 +185,7 @@ public class AuthServiceTest {
 
     @Test
     public void loginTest_user_is_deleted(){
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
         user.setId(1);
@@ -195,7 +195,7 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         Integer actuaStatusCode = responseStatusException.getRawStatusCode();
         String actualMessage = responseStatusException.getReason();
@@ -211,13 +211,13 @@ public class AuthServiceTest {
     @Test
     public void validateJwtTest_valid(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
         when(jwtUtil.validateJwt(any())).thenReturn(true);
         Map expected = new HashMap<>();
         expected.put("valid",true);
 
         //act
-        Map actual = authService.validateJwt(userDTO);
+        Map actual = authService.validateJwt(userDto);
         //assert
         assertEquals(expected, actual);
     }

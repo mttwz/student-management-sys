@@ -9,7 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserLoginDTO implements Serializable {
+public class UserLoginDto implements Serializable {
 
     private Integer id;
 

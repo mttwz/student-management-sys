@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collection;
+
 /**
  *
  * @author matevoros
@@ -15,11 +17,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CardDTO{
+public class RoleDto {
 
     private Integer id;
 
-    private String hash;
+    private String roleType;
 
+    private Collection<UserDto> userCollection;
 
 }

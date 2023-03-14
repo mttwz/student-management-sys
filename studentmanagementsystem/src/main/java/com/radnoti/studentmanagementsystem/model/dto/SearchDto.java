@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SearchDTO {
+public class SearchDto {
     private String searchText;
 
     private String searchFilter;

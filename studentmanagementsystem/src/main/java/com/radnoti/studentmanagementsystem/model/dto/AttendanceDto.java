@@ -4,29 +4,27 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 import java.util.Date;
 
 /**
  *
  * @author matevoros
  */
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class PasswordresetDTO{
+@ToString
+@Data
+public class AttendanceDto {
 
     private Integer id;
 
-    private String resetCode;
+    private Date arrival;
 
-    private Date expireDate;
+    private Date leaving;
 
-    private boolean isUsed;
-
-    private UserDTO userDTO;
+    private StudentDto studentId;
 
 }

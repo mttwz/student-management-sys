@@ -1,7 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +24,25 @@ public class WorkgroupScheduleController {
     private final ResponseFactory responseFactory;
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/createworkgroupschedule", consumes = {"application/json"})
-    public ResponseEntity<Map> createWorkgroupSchedule(@RequestBody WorkgroupscheduleDTO workgroupscheduleDTO) {
+    @PostMapping(path = "/create-workgroup-schedule", consumes = {"application/json"})
+    public ResponseEntity<Map> createWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDTO)));
+                .body(responseFactory.createResponse("id", workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDto)));
 
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/deleteworkgroupschedule", consumes = {"application/json"})
-    public ResponseEntity<Map> deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDTO workgroupscheduleDTO) {
+    @PostMapping(path = "/delete-workgroup-schedule", consumes = {"application/json"})
+    public ResponseEntity<Map> deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDTO)));
+                .body(responseFactory.createResponse("id", workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDto)));
 
     }
 
 
-    @PostMapping(path = "/uploadfile/{workgroupscheduleId}", consumes = {"multipart/form-data"})
+    @PostMapping(path = "/upload-file/{workgroupscheduleId}", consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody void uploadFile(@PathVariable String workgroupscheduleId,@RequestParam("file") MultipartFile file) throws URISyntaxException, FileNotFoundException {
         workgroupscheduleService.uploadFile(workgroupscheduleId,file);

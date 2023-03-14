@@ -4,9 +4,10 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,25 +17,16 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
-@AllArgsConstructor
-public class WorkgroupscheduleDTO implements Serializable {
+public class PasswordResetDto {
 
     private Integer id;
 
-    private String name;
+    private String resetCode;
 
-    private Integer workgroupId;
+    private Date expireDate;
 
-    private Date start;
+    private boolean isUsed;
 
-    private Date end;
-
-    private Boolean isOnsite;
-
-
-
-    //private Collection<WorkgroupDTO> workgroupCollection;
-
+    private UserDto userDto;
 
 }

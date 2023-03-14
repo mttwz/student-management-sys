@@ -2,8 +2,8 @@ package com.radnoti.studentmanagementsystem.service;
 
 
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
@@ -28,14 +28,14 @@ public class AuthService {
 
     /**
      * Generates a JWT token for the authenticated user
-     * @param userDTO The login credentials for the user in Json format
+     * @param userDto The login credentials for the user in Json format
      * @return The authenticated user details in Json format.
      * @throws ResponseStatusException on failed login
      */
 
     @Transactional
-    public UserLoginDTO login(UserDTO userDTO){
-        Integer userId = userRepository.login(userDTO.getEmail(), userDTO.getPassword());
+    public UserLoginDto login(UserDto userDto){
+        Integer userId = userRepository.login(userDto.getEmail(), userDto.getPassword());
 
         if(userId == null){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid username or password");
@@ -53,17 +53,17 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is deleted");
         }
 
-        UserLoginDTO userLoginDTO = userMapper.fromEntityToLoginDto(optionalUser.get());
-        userLoginDTO.setJwt(jwtUtil.generateJwt(optionalUser.get()));
+        UserLoginDto userLoginDto = userMapper.fromEntityToLoginDto(optionalUser.get());
+        userLoginDto.setJwt(jwtUtil.generateJwt(optionalUser.get()));
 
-        return userLoginDTO;
+        return userLoginDto;
     }
 
 
     @Transactional
-    public Map validateJwt(UserDTO userDTO) {
+    public Map validateJwt(UserDto userDto) {
         HashMap<String, Boolean> map = new HashMap<>();
-        boolean isValid = jwtUtil.validateJwt(userDTO.getJwt());
+        boolean isValid = jwtUtil.validateJwt(userDto.getJwt());
         map.put("valid", isValid);
         return map;
     }

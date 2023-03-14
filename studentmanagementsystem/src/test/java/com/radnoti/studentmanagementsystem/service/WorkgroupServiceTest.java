@@ -33,15 +33,15 @@ public class WorkgroupServiceTest {
     public void createWorkgroupTest_valid(){
         //arrange
         String worgroupName = "testName";
-        WorkgroupDTO workgroupDTO = new WorkgroupDTO();
+        WorkgroupDto workgroupDto = new WorkgroupDto();
         Workgroup workgroup = new Workgroup();
         workgroup.setGroupName(worgroupName);
-        workgroupDTO.setGroupName(worgroupName);
+        workgroupDto.setGroupName(worgroupName);
 
         when(workgroupRepository.createWorkgroup(any(),any())).thenReturn(1);
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
         //act
-        int actual = workgroupService.createWorkgroup(workgroupDTO);
+        int actual = workgroupService.createWorkgroup(workgroupDto);
         //assert
         assertEquals(1,actual);
     }
@@ -50,16 +50,16 @@ public class WorkgroupServiceTest {
     public void createWorkgroupTest_not_create(){
         //arrange
         String worgroupName = "testName";
-        WorkgroupDTO workgroupDTO = new WorkgroupDTO();
+        WorkgroupDto workgroupDto = new WorkgroupDto();
         Workgroup workgroup = new Workgroup();
         workgroup.setGroupName(worgroupName);
-        workgroupDTO.setGroupName(worgroupName);
+        workgroupDto.setGroupName(worgroupName);
 
         when(workgroupRepository.createWorkgroup(any(),any())).thenReturn(1);
         when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
         //act & assert
-        assertThrows(ResponseStatusException.class,()->workgroupService.createWorkgroup(workgroupDTO));
+        assertThrows(ResponseStatusException.class,()->workgroupService.createWorkgroup(workgroupDto));
     }
 
 

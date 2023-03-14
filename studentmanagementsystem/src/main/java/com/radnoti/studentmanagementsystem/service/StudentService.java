@@ -4,8 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,7 +38,7 @@ public class StudentService {
 
     /**
      * Registers a new user with student privileges
-     * @param userDTO The details of the user in Json format. eg: {
+     * @param userDto The details of the user in Json format. eg: {
      *     "firstName" : "userFirstName",
      *     "lastName" : "userLastName",
      *     "phone" : "userPhone",
@@ -50,22 +49,22 @@ public class StudentService {
      * @return saved user id
      */
     @Transactional
-    public Integer registerStudent(UserDTO userDTO){
-        if ((userDTO.getFirstName() == null || userDTO.getLastName() == null|| userDTO.getPhone() == null|| userDTO.getBirth().toString() == null || userDTO.getEmail() == null || userDTO.getPassword() == null)) {
+    public Integer registerStudent(UserDto userDto){
+        if ((userDto.getFirstName() == null || userDto.getLastName() == null|| userDto.getPhone() == null|| userDto.getBirth().toString() == null || userDto.getEmail() == null || userDto.getPassword() == null)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
         }
 
-        if (( userDTO.getFirstName().isEmpty() || userDTO.getLastName().isEmpty() || userDTO.getPhone().isEmpty() || userDTO.getBirth().toString().isEmpty() || userDTO.getEmail().isEmpty() || userDTO.getPassword().isEmpty())) {
+        if ((userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getPhone().isEmpty() || userDto.getBirth().toString().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
         }
 
-        Optional<User> optionalUser = userRepository.findByUsername(userDTO.getEmail());
+        Optional<User> optionalUser = userRepository.findByUsername(userDto.getEmail());
 
         if(optionalUser.isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
         }
 
-        Integer savedUserId = studentRepository.registerStudent(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+        Integer savedUserId = studentRepository.registerStudent(userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
 
         Optional<User> savedOptionalUser = userRepository.findById(savedUserId);
 
@@ -76,9 +75,9 @@ public class StudentService {
     }
 
     @Transactional
-    public Integer logStudent(StudentDTO studentDTO){
+    public Integer logStudent(StudentDto studentDto){
         // TODO: 2023. 03. 14.  ezt nemtudom meg hogyan :(
-        Integer studentId = studentDTO.getId();
+        Integer studentId = studentDto.getId();
         if(studentId == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Value is null");
         }

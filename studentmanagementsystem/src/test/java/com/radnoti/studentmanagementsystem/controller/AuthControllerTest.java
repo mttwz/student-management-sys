@@ -1,17 +1,14 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.StudentmanagementsystemApplication;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
-import org.junit.jupiter.api.Assertions;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -45,16 +42,12 @@ public class AuthControllerTest {
     //@Transactional
     public void loginTest_validCredentials(){
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("testEmail");
-        userDTO.setPassword("testPw");
+        UserDto userDto = new UserDto();
+        userDto.setEmail("testEmail");
+        userDto.setPassword("testPw");
 
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer ");
-//        HttpEntity< UserDTO > userDTOtest = new HttpEntity<>(userDTO, httpHeaders);
-
-        ResponseEntity<UserLoginDTO> responseEntity = this.restTemplate
-                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDTO, UserLoginDTO.class);
+        ResponseEntity<UserLoginDto> responseEntity = this.restTemplate
+                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDto, UserLoginDto.class);
 
 
 
@@ -69,11 +62,11 @@ public class AuthControllerTest {
     @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     public void loginTest_invalidCredentials(){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("thisEmailNotExist");
-        userDTO.setPassword("thisPwNotExist");
-        ResponseEntity<UserLoginDTO> responseEntity = this.restTemplate
-                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDTO, UserLoginDTO.class);
+        UserDto userDto = new UserDto();
+        userDto.setEmail("thisEmailNotExist");
+        userDto.setPassword("thisPwNotExist");
+        ResponseEntity<UserLoginDto> responseEntity = this.restTemplate
+                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDto, UserLoginDto.class);
 
         assertEquals(403, responseEntity.getStatusCodeValue());
     }
