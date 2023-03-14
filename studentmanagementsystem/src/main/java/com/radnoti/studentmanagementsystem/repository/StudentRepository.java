@@ -21,11 +21,6 @@ public interface StudentRepository extends CrudRepository<Student, Integer>  {
     Integer registerStudent(String firstName, String lastName, String phone, Date birth, String email, String password);
 
     @Procedure
-    void logStudent(Integer studentId);
+    Integer logStudent(Integer studentId);
 
-    @Procedure
-    void connectStudentToUser(Integer studentId, Integer userId);
-
-
-    
 }

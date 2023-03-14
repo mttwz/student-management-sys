@@ -1,7 +1,7 @@
 --liquibase formatted sql
 --changeset splitStatements:true
 
-CREATE PROCEDURE `logStudent` (IN `studentIdIN` INT)  BEGIN
+CREATE PROCEDURE `logStudent` (IN `studentIdIN` INT, OUT `idOUT` INT)  BEGIN
 DECLARE lastArrival DATE;
 DECLARE lastLeaving DATE;
 SELECT `Attendance`.`arrival` INTO lastArrival from Attendance WHERE `Attendance`.`student_id` = studentIdIN ORDER BY `Attendance`.`arrival` DESC LIMIT 1;
@@ -11,5 +11,6 @@ THEN
 UPDATE `Attendance` SET `Attendance`.`leaving` = NOW() WHERE `Attendance`.`student_id` = studentIdIN ORDER BY `Attendance`.`arrival` DESC LIMIT 1;
 ELSE
 INSERT INTO `Attendance` (`Attendance`.`student_id`,`Attendance`.`arrival`) VALUES(studentIdIN,NOW());
+SELECT `Attendance`.`id` INTO idOUT from `Attendance` WHERE `Attendance`.`student_id` = studentIdIN ORDER BY `Attendance`.`id` DESC LIMIT 1;
 END IF;
 END $$

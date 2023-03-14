@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.model.entity.User;
@@ -50,9 +51,6 @@ public class StudentService {
      */
     @Transactional
     public Integer registerStudent(UserDTO userDTO){
-
-
-
         if ((userDTO.getFirstName() == null || userDTO.getLastName() == null|| userDTO.getPhone() == null|| userDTO.getBirth().toString() == null || userDTO.getEmail() == null || userDTO.getPassword() == null)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
         }
@@ -74,10 +72,28 @@ public class StudentService {
         if(savedOptionalUser.isEmpty()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
         }
-
-
-
-
         return savedUserId;
+    }
+
+    @Transactional
+    public Integer logStudent(StudentDTO studentDTO){
+        // TODO: 2023. 03. 14.  ezt nemtudom meg hogyan :(
+        Integer studentId = studentDTO.getId();
+        if(studentId == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Value is null");
+        }
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        if (optionalStudent.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Student not exist");
+        }
+
+        Integer connectionId = studentRepository.logStudent(studentId);
+
+        if(connectionId == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Log not saved");
+        }
+
+        return connectionId;
     }
 }

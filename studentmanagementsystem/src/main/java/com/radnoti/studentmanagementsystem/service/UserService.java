@@ -83,6 +83,7 @@ public class UserService {
         } else roleId = RoleEnum.STUDENT.getId();
 
         Integer savedUserId = userRepository.register(roleId, userDTO.getFirstName(), userDTO.getLastName(), userDTO.getPhone(), userDTO.getBirth(), userDTO.getEmail(), userDTO.getPassword());
+
         Optional<User> savedOptionalUser = userRepository.findById(savedUserId);
 
         if (savedOptionalUser.isEmpty() || !Objects.equals(savedOptionalUser.get().getEmail(), userDTO.getEmail())){

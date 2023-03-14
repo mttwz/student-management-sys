@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
+import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.service.StudentService;
 
@@ -34,6 +35,13 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type","application/json")
                 .body(responseFactory.createResponse("id", studentService.registerStudent(userDTO)));
+    }
+
+    @PostMapping(path = "/logstudent", consumes = {"application/json"})
+    public ResponseEntity<Map> logStudent(@RequestBody StudentDTO studentDTO){
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type","application/json")
+                .body(responseFactory.createResponse("id", studentService.logStudent(studentDTO)));
     }
 
 }

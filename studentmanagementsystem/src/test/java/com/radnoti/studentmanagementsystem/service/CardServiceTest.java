@@ -163,7 +163,6 @@ public class CardServiceTest {
 
         when(cardRepository.findById(any())).thenReturn(Optional.empty());
 
-
         //act & assert
         Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDTO));
 
