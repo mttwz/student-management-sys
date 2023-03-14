@@ -1,5 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
 import com.radnoti.studentmanagementsystem.model.entity.User;
@@ -35,6 +36,9 @@ public class AuthServiceTest {
     @Mock
     JwtUtil jwtUtil;
 
+    @Mock
+    UserMapper userMapper;
+
     @Test
     public void loginTest_valid(){
         //arrange
@@ -48,9 +52,16 @@ public class AuthServiceTest {
         user.setFirstName("testFirstName");
         user.setLastName("testLastName");
 
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setId(1);
+        userLoginDTO.setEmail("testEmail");
+        userLoginDTO.setFirstName("testFirstName");
+        userLoginDTO.setLastName("testLastName");
+
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(jwtUtil.generateJwt(any())).thenReturn("veryVerySecretJwt");
+        when(userMapper.fromEntityToLoginDto(any())).thenReturn(userLoginDTO);
 
 
         //act
