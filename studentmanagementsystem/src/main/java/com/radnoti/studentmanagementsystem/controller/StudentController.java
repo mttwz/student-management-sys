@@ -37,11 +37,6 @@ public class StudentController {
                 .body(responseFactory.createResponse("id", studentService.registerStudent(userDto)));
     }
 
-    @PostMapping(path = "/log-student", consumes = {"application/json"})
-    public ResponseEntity<Map> logStudent(@RequestBody StudentDto studentDto){
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Content-Type","application/json")
-                .body(responseFactory.createResponse("id", studentService.logStudent(studentDto)));
-    }
+
 
 }

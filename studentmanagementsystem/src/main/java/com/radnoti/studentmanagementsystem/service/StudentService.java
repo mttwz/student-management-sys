@@ -74,25 +74,5 @@ public class StudentService {
         return savedUserId;
     }
 
-    @Transactional
-    public Integer logStudent(StudentDto studentDto){
-        // TODO: 2023. 03. 14.  ezt nemtudom meg hogyan :(
-        Integer studentId = studentDto.getId();
-        if(studentId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Value is null");
-        }
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
-        if (optionalStudent.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Student not exist");
-        }
-
-        Integer connectionId = studentRepository.logStudent(studentId);
-
-        if(connectionId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Log not saved");
-        }
-
-        return connectionId;
-    }
 }

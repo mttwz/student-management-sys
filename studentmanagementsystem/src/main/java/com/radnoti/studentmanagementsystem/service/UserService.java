@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
+import com.radnoti.studentmanagementsystem.exception.UserException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
@@ -52,7 +53,7 @@ public class UserService {
     public User userExistanceCheck(Integer userId){
         Optional<User> optionalUser = userRepository.findById(userId);
         if(optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not exist");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, UserException.NOT_FOUND.getException());
         }
         return optionalUser.get();
     }
@@ -68,7 +69,7 @@ public class UserService {
 
         Optional<User> optionalUser = userRepository.findByUsername(userDto.getEmail());
         if(optionalUser.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, UserException.EXIST.getException());
         }
 
         if ((userDto.getRoleName().isEmpty() || userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getPhone().isEmpty() || userDto.getBirth().toString().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty())) {
