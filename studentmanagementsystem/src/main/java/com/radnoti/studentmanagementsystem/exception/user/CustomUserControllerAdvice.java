@@ -75,5 +75,11 @@ public class CustomUserControllerAdvice {
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "user08"), status);
     }
 
+    @ExceptionHandler(UserAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleException(UserAlreadyDeletedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "user09"), status);
+    }
+
 
 }

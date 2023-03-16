@@ -72,7 +72,7 @@ public class User implements Serializable {
     private Role roleId;
     @OneToMany(mappedBy = "userId")
     private Collection<Workgroupmembers> workgroupmembersCollection;
-    @OneToOne(mappedBy = "userId")
+    @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
     private Student student;
     @OneToMany(mappedBy = "userId")
     private Collection<Passwordreset> passwordresetCollection;

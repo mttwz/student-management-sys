@@ -152,8 +152,8 @@ public class UserService {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
 
-        if (!user.getIsDeleted()) {
-            throw new UserNotDeletedException();
+        if (user.getIsDeleted()) {
+            throw new UserAlreadyDeletedException();
         }
         userRepository.setUserIsDeleted(userDto.getId());
         return userDto.getId();
