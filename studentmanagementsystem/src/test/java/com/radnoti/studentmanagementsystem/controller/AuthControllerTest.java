@@ -1,61 +1,76 @@
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.enums.RoleEnum;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
-import com.radnoti.studentmanagementsystem.service.AuthService;
-import junit.framework.Assert;
+import com.radnoti.studentmanagementsystem.StudentmanagementsystemApplication;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 
-@ExtendWith(MockitoExtension.class)
+import static org.junit.jupiter.api.Assertions.*;
+
+@ActiveProfiles("test")
+@SpringBootTest(classes = StudentmanagementsystemApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AuthControllerTest {
 
-    @InjectMocks
-    AuthController authController;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
-    @Mock
-    AuthService authService;
+    private String mainPath = "/auth";
 
-    //@WithMockUser(roles = {RoleEnum.Types.SUPERADMIN})
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+
+
+
+
+    @Sql({ "AuthLogin.sql" })
+    @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
-    public void loginTest(){
-        //arrange
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-        UserDTO userDTO = new UserDTO();
-        when(authService.login(any(UserDTO.class))).thenReturn(new UserLoginDTO());
+    //@Transactional
+    public void loginTest_validCredentials(){
 
-        //act
-        ResponseEntity<UserLoginDTO> responseEntity = authController.login(userDTO);
-        //assert
+        UserDto userDto = new UserDto();
+        userDto.setEmail("testEmail");
+        userDto.setPassword("testPw");
 
-        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
-        assertTrue(responseEntity.hasBody());
+        ResponseEntity<UserLoginDto> responseEntity = this.restTemplate
+                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDto, UserLoginDto.class);
+
+
+
+        assertEquals("testEmail", responseEntity.getBody().getEmail());
+        assertEquals("testLastname", responseEntity.getBody().getLastName());
+        assertEquals("testFirstname", responseEntity.getBody().getFirstName());
+        assertFalse(responseEntity.getBody().getJwt().isEmpty());
         assertEquals(200, responseEntity.getStatusCodeValue());
+    }
 
+    @Sql({ "AuthLogin.sql" })
+    @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Test
+    public void loginTest_invalidCredentials(){
+        UserDto userDto = new UserDto();
+        userDto.setEmail("thisEmailNotExist");
+        userDto.setPassword("thisPwNotExist");
+        ResponseEntity<UserLoginDto> responseEntity = this.restTemplate
+                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDto, UserLoginDto.class);
+
+        assertEquals(403, responseEntity.getStatusCodeValue());
     }
 
 
-    }
+
+}

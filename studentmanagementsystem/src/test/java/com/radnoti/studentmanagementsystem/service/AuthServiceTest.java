@@ -1,11 +1,11 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
+import com.radnoti.studentmanagementsystem.mapper.UserMapper;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
-import com.radnoti.studentmanagementsystem.security.JwtConfig;
-import org.aspectj.apache.bcel.classfile.Module;
+import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,57 +34,61 @@ public class AuthServiceTest {
     UserRepository userRepository;
 
     @Mock
-    JwtConfig jwtConfig;
+    JwtUtil jwtUtil;
+
+    @Mock
+    UserMapper userMapper;
 
     @Test
     public void loginTest_valid(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
         user.setId(1);
         user.setIsActivated(true);
         user.setIsDeleted(false);
-        user.setEmail("mate");
-        user.setFirstName("mate");
-        user.setLastName("mate");
+        user.setEmail("testEmail");
+        user.setFirstName("testFirstName");
+        user.setLastName("testLastName");
+
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setId(1);
+        userLoginDto.setEmail("testEmail");
+        userLoginDto.setFirstName("testFirstName");
+        userLoginDto.setLastName("testLastName");
 
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        when(jwtConfig.generateJwt(any())).thenReturn("veryVerySecretJwt");
-        UserLoginDTO userLoginDTO = new UserLoginDTO(1,"mate","mate","mate","veryVerySecretJwt");
+        when(jwtUtil.generateJwt(any())).thenReturn("veryVerySecretJwt");
+        when(userMapper.fromEntityToLoginDto(any())).thenReturn(userLoginDto);
+
 
         //act
 
-        UserLoginDTO actual = authService.login(userDTO);
+        UserLoginDto actual = authService.login(userDto);
 
         //assert
 
-        assertEquals(userLoginDTO.getId(),actual.getId());
-        assertEquals(userLoginDTO.getFirstName(),actual.getFirstName());
-        assertEquals(userLoginDTO.getLastName(),actual.getLastName());
-        assertEquals(userLoginDTO.getEmail(),actual.getEmail());
-        assertEquals(userLoginDTO.getJwt(),actual.getJwt());
+        assertEquals(1,actual.getId());
+        assertEquals("testFirstName",actual.getFirstName());
+        assertEquals("testLastName",actual.getLastName());
+        assertEquals("testEmail",actual.getEmail());
+        assertEquals("veryVerySecretJwt",actual.getJwt());
 
     }
 
     @Test
     public void loginTest_invalid(){
         //arrange
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("mate");
-
-        User user = new User();
-        user.setId(1);
-        user.setIsActivated(true);
-        user.setIsDeleted(false);
-        user.setEmail("mateee");
-        user.setFirstName("mate");
-        user.setLastName("mate");
+        UserDto userDto = new UserDto();
+        userDto.setEmail("mate");
 
         when(userRepository.login(any(),any())).thenReturn(1);
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        //act & assert
+
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         Integer actuaStatusCode = responseStatusException.getRawStatusCode();
         String actualMessage = responseStatusException.getReason();
@@ -102,35 +108,36 @@ public class AuthServiceTest {
     @Test
     public void loginTest_empty_username(){
         //arrange
-        UserDTO userDTO = new UserDTO();
-
-        User user = new User();
-        user.setEmail("");
-
+        UserDto userDto = new UserDto();
 
         when(userRepository.login(any(),any())).thenReturn(1);
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
-        String expectedMessage = "403 FORBIDDEN \"Invalid username or password\"";
-        String actualMessage = ex.getMessage();
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
 
-        assertEquals(expectedMessage, actualMessage);
+
+        assertEquals(403, actuaStatusCode);
+        assertEquals("FORBIDDEN", actualStatusCodeName);
+        assertEquals("Invalid username or password", actualMessage);
 
     }
 
     @Test
     public void loginTest_null_userId(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
         user.setId(null);
 
-        when(userRepository.login(any(),any())).thenReturn(1);
-        when(userRepository.findById(any())).thenReturn(Optional.empty());
+        when(userRepository.login(any(),any())).thenReturn(null);
 
-        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDTO));
+
+        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
 
         String expectedMessage = "403 FORBIDDEN \"Invalid username or password\"";
         String actualMessage = ex.getMessage();
@@ -142,41 +149,78 @@ public class AuthServiceTest {
     @Test
     public void loginTest_user_does_not_exist(){
         //arrange
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.empty());
         //act & assert
-        assertThrows(ResponseStatusException.class,()->authService.login(userDTO));
+        assertThrows(ResponseStatusException.class,()->authService.login(userDto));
 
     }
 
 
     @Test
     public void loginTest_user_not_activated(){
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
-        user.setIsActivated(false);
         user.setId(1);
+        user.setIsActivated(false);
+        user.setIsDeleted(false);
 
         when(userRepository.login(any(),any())).thenReturn(1);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        assertThrows(ResponseStatusException.class, ()->authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
+
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
+
+
+        assertEquals(403, actuaStatusCode);
+        assertEquals("FORBIDDEN", actualStatusCodeName);
+        assertEquals("User not activated", actualMessage);
 
     }
 
     @Test
     public void loginTest_user_is_deleted(){
-        UserDTO userDTO = new UserDTO();
+        UserDto userDto = new UserDto();
 
         User user = new User();
-        user.setIsDeleted(true);
         user.setId(1);
+        user.setIsActivated(true);
+        user.setIsDeleted(true);
 
         when(userRepository.login(any(),any())).thenReturn(1);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        assertThrows(ResponseStatusException.class, ()->authService.login(userDTO));
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
+
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
+
+
+        assertEquals(403, actuaStatusCode);
+        assertEquals("User is deleted", actualMessage);
 
     }
+
+
+    @Test
+    public void validateJwtTest_valid(){
+        //arrange
+        UserDto userDto = new UserDto();
+        when(jwtUtil.validateJwt(any())).thenReturn(true);
+        Map expected = new HashMap<>();
+        expected.put("valid",true);
+
+        //act
+        Map actual = authService.validateJwt(userDto);
+        //assert
+        assertEquals(expected, actual);
+    }
+
 
 }

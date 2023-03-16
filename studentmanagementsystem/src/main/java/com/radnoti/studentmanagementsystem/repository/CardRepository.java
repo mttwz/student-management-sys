@@ -4,7 +4,6 @@
  */
 package com.radnoti.studentmanagementsystem.repository;
 
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
@@ -21,8 +20,8 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     void connectCardToStudent(Integer studentId, Integer cardId);
 
     @Procedure
-    Integer getUserCard(Integer userId);
+    Integer getCardByStudentId(Integer studentId);
 
-
-    
+    @Procedure
+    Integer getCardByUserId(Integer userId);
 }

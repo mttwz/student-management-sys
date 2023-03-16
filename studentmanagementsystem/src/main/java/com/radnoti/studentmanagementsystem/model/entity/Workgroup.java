@@ -4,10 +4,9 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
         @NamedQuery(name = "Workgroup.findById", query = "SELECT w FROM Workgroup w WHERE w.id = :id"),
         @NamedQuery(name = "Workgroup.findByGroupName", query = "SELECT w FROM Workgroup w WHERE w.groupName = :groupName"),
         @NamedQuery(name = "Workgroup.findByInstitution", query = "SELECT w FROM Workgroup w WHERE w.institution = :institution")})
-public class Workgroup extends UserDTO implements Serializable {
+public class Workgroup extends UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id

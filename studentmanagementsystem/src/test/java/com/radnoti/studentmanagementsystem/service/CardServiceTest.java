@@ -1,16 +1,11 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.CardDTO;
-import com.radnoti.studentmanagementsystem.model.dto.StudentDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
-import com.radnoti.studentmanagementsystem.model.dto.UserLoginDTO;
+import com.radnoti.studentmanagementsystem.model.dto.CardDto;
+import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
-import com.radnoti.studentmanagementsystem.repository.UserRepository;
-import com.radnoti.studentmanagementsystem.security.JwtConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,59 +35,96 @@ public class CardServiceTest {
     public void createCardTest_valid(){
         //arrange
         String hash = "hashPipe";
-        CardDTO cardDTO = new CardDTO();
-        cardDTO.setHash(hash);
+        CardDto cardDto = new CardDto();
+        cardDto.setHash(hash);
         Card card = new Card();
         card.setHash(hash);
 
         when(cardRepository.createCard(any())).thenReturn(1);
         when(cardRepository.findById(any())).thenReturn(Optional.of(card));
         //act
-        int actual = cardService.createCard(cardDTO);
+        int actual = cardService.createCard(cardDto);
         //assert
         assertEquals(1,actual);
 
     }
 
     @Test
-    public void createCardTest_not_created(){
+    public void createCardTest_notCreatedBecauseCardIdIsNull(){
         String hash = "hashashahash";
-        CardDTO cardDTO = new CardDTO();
-        cardDTO.setHash(hash);
+        CardDto cardDto = new CardDto();
+        when(cardRepository.createCard(any())).thenReturn(null);
 
-        Card card = new Card();
-        card.setHash(hash);
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDto));
 
-        when(cardRepository.createCard(any())).thenReturn(1);
-        when(cardRepository.findById(any())).thenReturn(Optional.empty());
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
 
-        assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDTO));
+
+        assertEquals(409, actuaStatusCode);
+        assertEquals("CONFLICT", actualStatusCodeName);
+        assertEquals("Card not created", actualMessage);
     }
 
 
     @Test
-    public void createCardTest_empty_card(){
+    public void createCardTest_not_exist(){
         //arrange
         String hash = "hashPipe";
-        CardDTO cardDTO = new CardDTO();
-        cardDTO.setHash(hash);
-        Card card = new Card();
-        card.setHash(hash);
+        CardDto cardDto = new CardDto();
+        cardDto.setHash(hash);
         when(cardRepository.createCard(any())).thenReturn(1);
         when(cardRepository.findById(any())).thenReturn(Optional.empty());
 
-        //act & assert
-        assertThrows(ResponseStatusException.class,()-> cardService.createCard(cardDTO));
+        //act
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDto));
+
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
+
+        //assert
+        assertEquals(409, actuaStatusCode);
+        assertEquals("CONFLICT", actualStatusCodeName);
+        assertEquals("Card not exist", actualMessage);
 
 
     }
+
+
+    @Test
+    public void createCardTest_notCreatedBecauseNotEquals(){
+        String hash = "hashPipe";
+        CardDto cardDto = new CardDto();
+        cardDto.setHash(hash);
+        Card card = new Card();
+        card.setHash(hash+"randomString");
+
+        when(cardRepository.createCard(any())).thenReturn(1);
+        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
+
+        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDto));
+
+        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
+        String actualMessage = responseStatusException.getReason();
+        String actualStatusCodeName = responseStatusException.getStatus().name();
+
+
+        assertEquals(409, actuaStatusCode);
+        assertEquals("CONFLICT", actualStatusCodeName);
+        assertEquals("Card not created", actualMessage);
+    }
+
+
+
 
     @Test
     public void connectCardToStudentTest_valid(){
         //arrange
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setId(1);
-        studentDTO.setCardId(1);
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(1);
+        studentDto.setCardId(1);
         Student student = new Student(1);
         student.setCardId(new Card(1));
         Card card = new Card();
@@ -103,21 +135,36 @@ public class CardServiceTest {
         when(cardRepository.findById(any())).thenReturn(Optional.of(card));
 
         //act
-        int actual = cardService.connectCardToStudent(studentDTO);
+        int actual = cardService.connectCardToStudent(studentDto);
         //assert
         assertEquals(1,actual);
+    }
+
+
+    @Test
+    public void connectCardToStudentTest_userNotFound(){
+        //arrange
+        StudentDto studentDto = new StudentDto();
+
+        when(studentRepository.findById(any())).thenReturn(Optional.empty());
+        //act & assert
+        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDto));
+
+        String expectedMessage = "409 CONFLICT \"User not found\"";
+        String actualMessage = ex.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     public void connectCardToStudentTest_card_not_found(){
         //arrange
-        StudentDTO studentDTO = new StudentDTO();
+        StudentDto studentDto = new StudentDto();
 
         when(cardRepository.findById(any())).thenReturn(Optional.empty());
 
-
         //act & assert
-        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDTO));
+        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDto));
 
         String expectedMessage = "409 CONFLICT \"User not found\"";
         String actualMessage = ex.getMessage();
@@ -125,18 +172,5 @@ public class CardServiceTest {
         assertEquals(expectedMessage, actualMessage);
     }
 
-    @Test
-    public void connectCardToStudentTest_user_not_found(){
-        //arrange
-        StudentDTO studentDTO = new StudentDTO();
 
-        when(studentRepository.findById(any())).thenReturn(Optional.empty());
-        //act & assert
-        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDTO));
-
-        String expectedMessage = "409 CONFLICT \"User not found\"";
-        String actualMessage = ex.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
-    }
 }

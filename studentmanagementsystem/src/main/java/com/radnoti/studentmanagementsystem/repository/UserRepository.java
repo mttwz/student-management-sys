@@ -6,15 +6,10 @@ package com.radnoti.studentmanagementsystem.repository;
 
 import java.util.*;
 
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
 import com.radnoti.studentmanagementsystem.model.entity.User;
-import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
-import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 /**
  *
@@ -26,9 +21,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
     Integer register(Integer roleId,String firstName, String lastName, String phone, Date birth, String email, String password);
-
-    @Procedure
-    int getUserIdByToken(String token);
 
     @Procedure
     Integer login(String email, String password);
@@ -50,9 +42,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Procedure
     Optional<User> findByUsername(String email);
-
-    @Procedure
-    ArrayList<User> getAllUser();
 
     @Procedure
     ArrayList<User> searchAllUser(String string);

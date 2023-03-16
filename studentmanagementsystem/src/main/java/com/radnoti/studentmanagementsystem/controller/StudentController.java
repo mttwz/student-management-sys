@@ -4,7 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.model.dto.UserDTO;
+import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.StudentService;
 
 import com.radnoti.studentmanagementsystem.util.ResponseFactory;
@@ -29,17 +30,13 @@ public class StudentController {
 
 
 
-    @PostMapping(path = "/registerstudent", consumes = {"application/json"})
-    public ResponseEntity<Map> register(@RequestBody UserDTO userDTO){
+    @PostMapping(path = "/register-student", consumes = {"application/json"})
+    public ResponseEntity<Map> register(@RequestBody UserDto userDto){
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type","application/json")
-                .body(responseFactory.createResponse("id", studentService.registerStudent(userDTO)));
+                .body(responseFactory.createResponse("id", studentService.registerStudent(userDto)));
     }
 
-//    @RolesAllowed({Role.Types.SUPERADMIN})
-//    @PostMapping(path = "/connectstudenttouser", consumes = {"application/json"})
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody void connectStudentToUser(@RequestBody StudentDTO studentDTO) {
-//        studentService.connectStudentToUser(studentDTO);
-//    }
+
+
 }

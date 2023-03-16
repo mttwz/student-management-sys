@@ -1,7 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDTO;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDTO;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
@@ -38,10 +37,10 @@ public class WorkgroupscheduleServiceTest {
     public void createWorkgroupScheduleTest_valid(){
         //arrage
         String name = "Test";
-        WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO();
-        workgroupscheduleDTO.setName(name);
-        workgroupscheduleDTO.setId(1);
-        workgroupscheduleDTO.setWorkgroupId(1);
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setName(name);
+        workgroupscheduleDto.setId(1);
+        workgroupscheduleDto.setWorkgroupId(1);
 
         Workgroupschedule workgroupschedule = new Workgroupschedule();
         workgroupschedule.setName(name);
@@ -56,7 +55,7 @@ public class WorkgroupscheduleServiceTest {
         when(workgroupscheduleRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroupschedule));
 
         //act
-        int actual = workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDTO);
+        int actual = workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto);
 
         //assert
         assertEquals(1,actual);
@@ -68,14 +67,14 @@ public class WorkgroupscheduleServiceTest {
     @Test
     public void createWorkgroupScheduleTest_not_created(){
         String name = "Test";
-        WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO();
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
         Workgroup workgroup = new Workgroup(1);
 
         when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any())).thenReturn(1);
         when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.empty());
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
 
-        Exception ex = assertThrows(ResponseStatusException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDTO));
+        Exception ex = assertThrows(ResponseStatusException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
         String expectedMessage = "409 CONFLICT \"Schedule not created\"";
         String actualMessage = ex.getMessage();
 
@@ -85,10 +84,10 @@ public class WorkgroupscheduleServiceTest {
     @Test
     public void createWorkgroupScheduleTest_workgroup_does_not_exist(){
         String name = "Test";
-        WorkgroupscheduleDTO workgroupscheduleDTO = new WorkgroupscheduleDTO();
-        workgroupscheduleDTO.setName(name);
-        workgroupscheduleDTO.setId(1);
-        workgroupscheduleDTO.setWorkgroupId(1);
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setName(name);
+        workgroupscheduleDto.setId(1);
+        workgroupscheduleDto.setWorkgroupId(1);
 
         Workgroupschedule workgroupschedule = new Workgroupschedule();
         workgroupschedule.setName(name);
@@ -97,7 +96,7 @@ public class WorkgroupscheduleServiceTest {
 
         when(workgroupRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(ResponseStatusException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDTO));
+        Exception ex = assertThrows(ResponseStatusException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
         String expectedMessage = "400 BAD_REQUEST \"Workgroup does not exist\"";
         String actualMessage = ex.getMessage();
 
