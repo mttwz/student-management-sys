@@ -5,10 +5,12 @@
 package com.radnoti.studentmanagementsystem.repository;
 
 import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  *

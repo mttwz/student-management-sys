@@ -4,6 +4,12 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.student.StudentNotSavedException;
+import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotSavedException;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
@@ -51,26 +57,21 @@ public class StudentService {
     @Transactional
     public Integer registerStudent(UserDto userDto){
         if ((userDto.getFirstName() == null || userDto.getLastName() == null|| userDto.getPhone() == null|| userDto.getBirth().toString() == null || userDto.getEmail() == null || userDto.getPassword() == null)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
+            throw new NullFormValueException();
         }
 
         if ((userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getPhone().isEmpty() || userDto.getBirth().toString().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty())) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
+            throw new EmptyFormValueException();
         }
 
-        Optional<User> optionalUser = userRepository.findByUsername(userDto.getEmail());
-
-        if(optionalUser.isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exist");
-        }
+        userRepository.findByUsername(userDto.getEmail())
+                .ifPresent(u -> {throw new UserAlreadyExistException();});
 
         Integer savedUserId = studentRepository.registerStudent(userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
 
-        Optional<User> savedOptionalUser = userRepository.findById(savedUserId);
+        userRepository.findById(savedUserId)
+                .orElseThrow(UserNotSavedException::new);
 
-        if(savedOptionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
-        }
         return savedUserId;
     }
 

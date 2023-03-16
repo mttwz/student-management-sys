@@ -4,9 +4,13 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 /**
@@ -17,6 +21,7 @@ import java.util.Collection;
 @Setter
 @NoArgsConstructor
 public class StudentDto {
+
 
     private Integer id;
 

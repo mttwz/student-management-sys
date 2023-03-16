@@ -1,5 +1,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
@@ -22,17 +24,13 @@ public class AttendanceService {
     @Transactional
     public Integer logStudent(StudentDto studentDto){
         // TODO: 2023. 03. 14.  ezt nemtudom meg hogyan :(
-        Integer studentId = studentDto.getId();
-        if(studentId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Value is null");
-        }
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
-        if (optionalStudent.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Student not exist");
+        if(studentDto.getId() == null){
+            throw new NullFormValueException();
         }
+        studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
+        Integer connectionId = studentRepository.logStudent(studentDto.getId());
 
-        Integer connectionId = studentRepository.logStudent(studentId);
 
         if(connectionId == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Log not saved");

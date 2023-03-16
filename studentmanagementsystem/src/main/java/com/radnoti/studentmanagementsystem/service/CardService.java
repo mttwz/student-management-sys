@@ -4,6 +4,10 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
@@ -51,15 +55,7 @@ public class CardService {
         if(savedCardId == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
         }
-
-        Optional<Card> optionalCard = cardRepository.findById(savedCardId);
-        if(optionalCard.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not exist");
-        }
-
-        if(!(Objects.equals(optionalCard.get().getHash(), cardDto.getHash()))){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
-        }
+        cardRepository.findById(savedCardId).orElseThrow(CardNotExistException::new);
         return savedCardId;
     }
 
@@ -75,36 +71,33 @@ public class CardService {
      */
     @Transactional
     public Integer connectCardToStudent(StudentDto studentDto) {
+        if (studentDto.getId()==null || studentDto.getCardId() == null){
+            throw new NullFormValueException();
+        }
         cardRepository.connectCardToStudent(studentDto.getId(), studentDto.getCardId());
-        Optional<Student> optionalStudent = studentRepository.findById(studentDto.getId());
-        Optional<Card> optionalCard = cardRepository.findById(studentDto.getCardId());
 
-        if(optionalStudent.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"User not found");
-        }
-        if(optionalCard.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Card not found");
-        }
+        Student student = studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
 
-        if(!Objects.equals(optionalStudent.get().getCardId().getId(), studentDto.getCardId())){
+        cardRepository.findById(studentDto.getCardId()).orElseThrow(CardNotExistException::new);
+
+        if(!Objects.equals(student.getCardId().getId(), studentDto.getCardId())){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Card not assigned successfully");
         }
 
-        return optionalStudent.get().getId();
+        return student.getId();
     }
 
     @Transactional
     public Integer getCardByUserId(UserDto userDto){
         if(userDto.getId() == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"User id is null");
+            throw new NullFormValueException();
         }
-        Optional<User> optionalUser = userRepository.findById(userDto.getId());
-
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"User not exist");
-        }
+        userRepository.findById(userDto.getId()).orElseThrow(UserNotExistException::new);
 
         Integer cardId = cardRepository.getCardByUserId(userDto.getId());
+        if (cardId == null){
+            throw new CardNotExistException();
+        }
         return cardId;
     }
 
@@ -112,14 +105,14 @@ public class CardService {
     @Transactional
     public Integer getCardByStudentId(StudentDto studentDto){
         if(studentDto.getId() == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Student id is null");
+            throw new NullFormValueException();
         }
-        Optional<Student> optionalStudent = studentRepository.findById(studentDto.getId());
+        studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
 
-        if(optionalStudent.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Student not exist");
-        }
         Integer cardId = cardRepository.getCardByStudentId(studentDto.getId());
+        if (cardId == null){
+            throw new CardNotExistException();
+        }
         return cardId;
     }
 }

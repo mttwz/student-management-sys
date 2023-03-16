@@ -50,8 +50,8 @@ public class StudentServiceTest {
 
         when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.empty());
-        when(studentRepository.registerStudent(any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class)))
-                .thenReturn(1);
+//        when(studentRepository.registerStudent(any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class)))
+//                .thenReturn(1);
         when(studentRepository.findById(any()))
                 .thenReturn(Optional.of(student));
         //act
@@ -81,8 +81,8 @@ public class StudentServiceTest {
 
         UserDto userDto = new UserDto();
 
-        when(studentRepository.registerStudent(any(),any(),any(),any(),any(),any()))
-                .thenReturn(1);
+//        when(studentRepository.registerStudent(any(),any(),any(),any(),any(),any()))
+//                .thenReturn(1);
         when(studentRepository.findById(any()))
                 .thenReturn(Optional.empty());
 

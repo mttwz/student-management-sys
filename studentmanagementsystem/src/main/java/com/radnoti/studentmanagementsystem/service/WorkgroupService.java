@@ -4,6 +4,10 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
+import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
@@ -25,22 +29,19 @@ public class WorkgroupService {
     private final WorkgroupRepository workgroupRepository;
 
 
-    public Workgroup WorkgroupExistanceCheck(Integer workgroupId){
-        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
-        if(optionalWorkgroup.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule not exist");
-        }
-        return optionalWorkgroup.get();
-    }
-
     @Transactional
     public Integer createWorkgroup(WorkgroupDto workgroupDto) {
-        Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDto.getGroupName(), workgroupDto.getInstitution());
-        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupId);
 
-        if (optionalWorkgroup.isEmpty() || !Objects.equals(optionalWorkgroup.get().getGroupName(), workgroupDto.getGroupName()) || !Objects.equals(optionalWorkgroup.get().getInstitution(), workgroupDto.getInstitution())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not created");
+        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null){
+            throw new NullFormValueException();
         }
+        if(workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
+            throw new EmptyFormValueException();
+        }
+
+        Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDto.getGroupName(), workgroupDto.getInstitution());
+        workgroupRepository.findById(workgroupId).orElseThrow(WorkgroupNotCreatedException::new);
+
         return workgroupId;
 
     }

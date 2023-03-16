@@ -7,7 +7,12 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
-import com.radnoti.studentmanagementsystem.exception.UserException;
+import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.user.*;
+import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
@@ -18,11 +23,10 @@ import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepositor
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import java.util.*;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 
 /**
@@ -42,7 +46,6 @@ public class UserService {
 
     private final WorkgroupMembersRepository workgroupMembersRepository;
 
-
     private final JwtUtil jwtUtil;
 
     private final UserMapper userMapper;
@@ -50,33 +53,23 @@ public class UserService {
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
 
 
-    public User userExistanceCheck(Integer userId){
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if(optionalUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, UserException.NOT_FOUND.getException());
-        }
-        return optionalUser.get();
-    }
-
-
-
     @Transactional
     public Integer adduser(UserDto userDto) {
 
         if ((userDto.getRoleName() == null || userDto.getFirstName() == null || userDto.getLastName() == null|| userDto.getPhone() == null|| userDto.getBirth().toString() == null || userDto.getEmail() == null || userDto.getPassword() == null)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is null");
+            throw new NullFormValueException();
         }
 
-        Optional<User> optionalUser = userRepository.findByUsername(userDto.getEmail());
-        if(optionalUser.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, UserException.EXIST.getException());
-        }
+        userRepository.findByUsername(userDto.getEmail())
+                .ifPresent(u -> {throw new UserAlreadyExistException();});
+
 
         if ((userDto.getRoleName().isEmpty() || userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getPhone().isEmpty() || userDto.getBirth().toString().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty())) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Form value is empty");
+            throw new EmptyFormValueException();
         }
 
         int roleId;
+
         if (userDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             roleId = RoleEnum.SUPERADMIN.getId();
         } else if (userDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
@@ -85,11 +78,10 @@ public class UserService {
 
         Integer savedUserId = userRepository.register(roleId, userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
 
-        Optional<User> savedOptionalUser = userRepository.findById(savedUserId);
+        userRepository.findById(savedUserId)
+                .orElseThrow(UserNotSavedException::new);
 
-        if (savedOptionalUser.isEmpty() || !Objects.equals(savedOptionalUser.get().getEmail(), userDto.getEmail())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not saved");
-        }
+
         return savedUserId;
 
     }
@@ -98,7 +90,8 @@ public class UserService {
     @Transactional
     public ArrayList<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, UserDto userDto) {
         ArrayList<Integer> workgroupScheduleList;
-        userExistanceCheck(userDto.getId());
+        userRepository.findById(userDto.getId())
+                .orElseThrow(UserNotExistException::new);
 
 
         if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
@@ -119,24 +112,20 @@ public class UserService {
 
     @Transactional
     public Integer addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
-        userExistanceCheck(workgroupmembersDto.getUserId());
+        userRepository.findById(workgroupmembersDto.getUserId())
+                .orElseThrow(UserNotExistException::new);
 
-        Optional<Workgroup> optionalWorkgroup = workgroupRepository.findById(workgroupmembersDto.getWorkgroupId());
-        if (optionalWorkgroup.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Workgroup not exist");
-        }
-
+        workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
+                .orElseThrow(WorkgroupNotExistException::new);
 
         Integer savedWorkgroupMembersId = userRepository.addUserToWorkgroup(workgroupmembersDto.getUserId(), workgroupmembersDto.getWorkgroupId());
         if (savedWorkgroupMembersId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not added to workgroup");
+            throw new UserNotAddedToWorkgroupException();
         }
 
-        Optional<Workgroupmembers> optionalWorkgroupmembers = workgroupMembersRepository.findById(savedWorkgroupMembersId);
+        workgroupMembersRepository.findById(savedWorkgroupMembersId)
+                .orElseThrow(UserNotAddedToWorkgroupException::new);
 
-        if (optionalWorkgroupmembers.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User not added to workgroup");
-        }
 
         return savedWorkgroupMembersId;
 
@@ -145,11 +134,14 @@ public class UserService {
 
     @Transactional
     public Integer setUserIsActivated(UserDto userDto) {
-        User user = userExistanceCheck(userDto.getId());
-        userRepository.setUserIsActivated(userDto.getId());
-        if (!Objects.equals(user.getIsActivated(), true)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not activated");
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(UserNotExistException::new);
+
+        if (user.getIsActivated()){
+            throw  new UserAlreadyActivatedException();
         }
+
+        userRepository.setUserIsActivated(userDto.getId());
         return userDto.getId();
     }
 
@@ -157,24 +149,21 @@ public class UserService {
 
     @Transactional
     public Integer deleteUser(UserDto userDto) {
-        User user = userExistanceCheck(userDto.getId());
-        userRepository.setUserIsDeleted(userDto.getId());
-        if (!Objects.equals(user.getIsDeleted(), true)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not deleted");
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(UserNotExistException::new);
+
+        if (!user.getIsDeleted()) {
+            throw new UserNotDeletedException();
         }
+        userRepository.setUserIsDeleted(userDto.getId());
         return userDto.getId();
     }
 
     @Transactional
     public Integer setUserRole(UserDto userDto) {
-        User user = userExistanceCheck(userDto.getId());
-
+        userRepository.findById(userDto.getId())
+                .orElseThrow(UserNotExistException::new);
         userRepository.setUserRole(userDto.getId(), userDto.getRoleName());
-
-        if (!Objects.equals(user.getRoleId().getRoleType(), userDto.getRoleName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User role not set");
-
-        }
         return userDto.getId();
     }
 
@@ -190,7 +179,8 @@ public class UserService {
 
     @Transactional
     public UserInfoDto getUserInfo(UserDto userDto) {
-        User user = userExistanceCheck(userDto.getId());
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(UserNotExistException::new);
         return userMapper.fromEntityToInfoDto(user);
 
     }
@@ -202,9 +192,10 @@ public class UserService {
         try{
             userId = Integer.parseInt(pathVariableUserId);
         }catch (NumberFormatException ex){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid id");
+            throw new InvalidIdException();
         }
-        User user = userExistanceCheck(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotExistException::new);
 
 
         String userName = userInfoDto.getEmail();
@@ -212,7 +203,7 @@ public class UserService {
         Optional<User> optionalUserByEmail = userRepository.findByUsername(userName);
 
         if (optionalUserByEmail.isPresent() && !Objects.equals(optionalUserByEmail.get().getId(), userId)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+            throw new UserAlreadyExistException();
         }
 
         if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {

@@ -1,6 +1,9 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
+import com.radnoti.studentmanagementsystem.exception.user.InvalidCredentialsException;
+import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
@@ -38,23 +41,21 @@ public class AuthService {
         Integer userId = userRepository.login(userDto.getEmail(), userDto.getPassword());
 
         if(userId == null){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid username or password");
+            throw new InvalidCredentialsException();
         }
 
-        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(InvalidCredentialsException::new);
 
-        if(optionalUser.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid username or password");
+
+        if (!user.getIsActivated()){
+            throw new UserNotActivatedException();
         }
-        if (!optionalUser.get().getIsActivated()){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not activated");
-        }
-        if(optionalUser.get().getIsDeleted()){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is deleted");
+        if(user.getIsDeleted()){
+            throw new UserDeletedException();
         }
 
-        UserLoginDto userLoginDto = userMapper.fromEntityToLoginDto(optionalUser.get());
-        userLoginDto.setJwt(jwtUtil.generateJwt(optionalUser.get()));
+        UserLoginDto userLoginDto = userMapper.fromEntityToLoginDto(user);
+        userLoginDto.setJwt(jwtUtil.generateJwt(user));
 
         return userLoginDto;
     }

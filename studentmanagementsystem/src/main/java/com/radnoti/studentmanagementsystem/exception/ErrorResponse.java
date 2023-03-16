@@ -22,7 +22,7 @@ public class ErrorResponse {
 
     private String stackTrace;
 
-    private Map<Integer,String> data;
+    private String apiError;
 
     public ErrorResponse() {
         timestamp = new Date();
@@ -41,8 +41,8 @@ public class ErrorResponse {
         this.stackTrace = stackTrace;
     }
 
-    public ErrorResponse(HttpStatus httpStatus, String message, String stackTrace, Map<Integer,String> data) {
+    public ErrorResponse(HttpStatus httpStatus, String message, String stackTrace, String apiError) {
         this(httpStatus, message, stackTrace);
-        this.data = data;
+        this.apiError = apiError;
     }
 }

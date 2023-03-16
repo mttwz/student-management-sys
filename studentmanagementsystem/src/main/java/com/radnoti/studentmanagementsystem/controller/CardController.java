@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -47,6 +48,7 @@ public class CardController {
     @PostMapping(path = "/get-card-by-user-id", consumes = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map> getCardByUserId(@RequestBody UserDto userDto) {
+        System.err.println("asd");
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
                 .body(responseFactory.createResponse("id", cardService.getCardByUserId(userDto)));
