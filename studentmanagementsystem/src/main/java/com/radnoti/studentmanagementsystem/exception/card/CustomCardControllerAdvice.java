@@ -39,4 +39,10 @@ public class CustomCardControllerAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card02"), status);
     }
+
+    @ExceptionHandler(CardNotAssignedException.class)
+    public ResponseEntity<ErrorResponse> handleException(CardNotAssignedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card03"), status);
+    }
 }

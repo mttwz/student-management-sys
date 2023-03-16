@@ -44,8 +44,6 @@ public class UserService {
 
     private final WorkgroupRepository workgroupRepository;
 
-    private final WorkgroupMembersRepository workgroupMembersRepository;
-
     private final JwtUtil jwtUtil;
 
     private final UserMapper userMapper;
@@ -88,7 +86,7 @@ public class UserService {
         ArrayList<Integer> workgroupScheduleList;
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
-        
+
         if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDto.getId());
         } else {
