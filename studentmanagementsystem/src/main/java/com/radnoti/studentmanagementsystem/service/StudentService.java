@@ -69,9 +69,6 @@ public class StudentService {
 
         Integer savedUserId = studentRepository.registerStudent(userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
 
-        userRepository.findById(savedUserId)
-                .orElseThrow(UserNotSavedException::new);
-
         return savedUserId;
     }
 

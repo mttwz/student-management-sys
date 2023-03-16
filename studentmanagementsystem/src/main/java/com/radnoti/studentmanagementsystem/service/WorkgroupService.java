@@ -40,8 +40,6 @@ public class WorkgroupService {
         }
 
         Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDto.getGroupName(), workgroupDto.getInstitution());
-        workgroupRepository.findById(workgroupId).orElseThrow(WorkgroupNotCreatedException::new);
-
         return workgroupId;
 
     }

@@ -78,10 +78,6 @@ public class UserService {
 
         Integer savedUserId = userRepository.register(roleId, userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
 
-        userRepository.findById(savedUserId)
-                .orElseThrow(UserNotSavedException::new);
-
-
         return savedUserId;
 
     }
@@ -92,8 +88,7 @@ public class UserService {
         ArrayList<Integer> workgroupScheduleList;
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
-
-
+        
         if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDto.getId());
         } else {
@@ -122,11 +117,6 @@ public class UserService {
         if (savedWorkgroupMembersId == null){
             throw new UserNotAddedToWorkgroupException();
         }
-
-        workgroupMembersRepository.findById(savedWorkgroupMembersId)
-                .orElseThrow(UserNotAddedToWorkgroupException::new);
-
-
         return savedWorkgroupMembersId;
 
     }

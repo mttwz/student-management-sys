@@ -48,9 +48,6 @@ public class WorkgroupScheduleService {
 
         Integer workgroupScheduleId = workgroupscheduleRepository.createWorkgroupSchedule(workgroupscheduleDto.getName(), workgroupscheduleDto.getStart(), workgroupscheduleDto.getEnd(), workgroupscheduleDto.getIsOnsite(), workgroupscheduleDto.getWorkgroupId());
 
-        workgroupscheduleRepository.findById(workgroupScheduleId)
-                .orElseThrow(WorkgroupScheduleNotCreatedException::new);
-
         return workgroupScheduleId;
 
     }
@@ -62,10 +59,6 @@ public class WorkgroupScheduleService {
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
 
         workgroupscheduleRepository.delete(workgroupschedule);
-
-        if(workgroupscheduleRepository.existsById(workgroupscheduleDto.getId())){
-            throw new WorkgroupScheduleNotDeletedException();
-        }
         return workgroupscheduleDto.getId();
 
     }
