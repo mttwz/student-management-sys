@@ -30,7 +30,7 @@ public class CustomUserControllerAdvice {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleException(InvalidCredentialsException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "user01"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "kiscisdasjkndfjkhwed"), status);
     }
 
     @ExceptionHandler(UserAlreadyActivatedException.class)

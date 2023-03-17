@@ -1,10 +1,16 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.user.*;
+import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +44,9 @@ public final class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    WorkgroupRepository workgroupRepository;
+
     @Test()
     public void addUserTest_valid_superadmin() {
         //arrange
@@ -58,11 +67,9 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.empty());
 
-        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+        when(userRepository.register(any(), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
                 .thenReturn(1);
 
-        when(userRepository.findById(any(Integer.class)))
-                .thenReturn(Optional.of(user));
 
         //act
         int actual = userService.adduser(userDto);
@@ -94,8 +101,6 @@ public final class UserServiceTest {
         when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
                 .thenReturn(1);
 
-        when(userRepository.findById(any(Integer.class)))
-                .thenReturn(Optional.of(user));
 
         //act
         int actual = userService.adduser(userDto);
@@ -127,8 +132,7 @@ public final class UserServiceTest {
         when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
                 .thenReturn(1);
 
-        when(userRepository.findById(any(Integer.class)))
-                .thenReturn(Optional.of(user));
+
 
         //act
         int actual = userService.adduser(userDto);
@@ -148,11 +152,12 @@ public final class UserServiceTest {
         userDto.setPhone("123");
         userDto.setBirth(new Date(1111, 11, 11));
         userDto.setEmail("mate");
+        userDto.setPassword("password");
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         //act & assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDto));
+        assertThrows(EmptyFormValueException.class, () -> userService.adduser(userDto));
     }
 
     @Test
@@ -169,10 +174,10 @@ public final class UserServiceTest {
         userDto.setPassword("mate");
 
         //act
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+//        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         //assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDto));
+        assertThrows(NullFormValueException.class, () -> userService.adduser(userDto));
     }
 
     @Test()
@@ -191,7 +196,7 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(new User()));
 
         //act & assert
-        assertThrows(ResponseStatusException.class, () -> userService.adduser(userDto));
+        assertThrows(UserAlreadyExistException.class, () -> userService.adduser(userDto));
     }
 
     @Test
@@ -207,18 +212,15 @@ public final class UserServiceTest {
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
-        User user = new User();
-
 
         when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
-                .thenReturn(1);
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(null);
+        when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         //assert & act
 //        int actual = userService.adduser(userDto);
 //        assertEquals(1,actual);
-        assertThrows(ResponseStatusException.class, ()->userService.adduser(userDto));
+        assertThrows(UserNotSavedException.class, ()->userService.adduser(userDto));
     }
 
 
@@ -235,6 +237,7 @@ public final class UserServiceTest {
         WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
 
         User user = new User();
+        Workgroup workgroup = new Workgroup();
 
         Collection<Workgroupmembers> workgroupmembersCollection = new ArrayList<>();
         workgroupmembersCollection.add(new Workgroupmembers(1));
@@ -244,7 +247,7 @@ public final class UserServiceTest {
 
         when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
-
+        when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
         //act
         int actual = userService.addUserToWorkgroup(workgroupmembersDto);
 
@@ -259,19 +262,17 @@ public final class UserServiceTest {
         WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
 
         User user = new User();
+        Workgroup workgroup = new Workgroup();
 
         Collection<Workgroupmembers> workgroupmembersCollection = new ArrayList<>();
         workgroupmembersCollection.add(new Workgroupmembers(1));
         workgroupmembersCollection.add(new Workgroupmembers(2));
         user.setWorkgroupmembersCollection(workgroupmembersCollection);
 
-
-        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-
         //act & equals
-        assertThrows(ResponseStatusException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
+        assertThrows(UserNotExistException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
@@ -282,11 +283,26 @@ public final class UserServiceTest {
 
         User user = new User();
 
-        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
         //act & equals
-        assertThrows(ResponseStatusException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
+        assertThrows(WorkgroupNotExistException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
+
+    }
+
+    @Test
+    public void addUserToWorkgroupTest_user_not_added_to_workgroup(){
+        WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
+
+        User user = new User();
+        Workgroup workgroup = new Workgroup();
+
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
+        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(null);
+        //act & equals
+        assertThrows(UserNotAddedToWorkgroupException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
@@ -294,10 +310,10 @@ public final class UserServiceTest {
     public void setUserIsActivatedTest_valid(){
         UserDto userDto = new UserDto();
         userDto.setId(1);
-        userDto.setIsActivated(true);
+        userDto.setIsActivated(false);
 
         User user = new User();
-        user.setIsActivated(true);
+        user.setIsActivated(false);
 
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.of(user));
@@ -317,8 +333,23 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, ()-> userService.setUserIsActivated(userDto));
+        assertThrows(UserNotExistException.class, ()-> userService.setUserIsActivated(userDto));
 
+    }
+
+    @Test
+    public void setUserIsActivatedTest_user_already_activated(){
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsActivated(true);
+
+        User user = new User();
+        user.setIsActivated(true);
+
+        when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.of(user));
+
+        assertThrows(UserAlreadyActivatedException.class, ()-> userService.setUserIsActivated(userDto));
     }
 
 
@@ -327,10 +358,10 @@ public final class UserServiceTest {
     public void deleteUserTest_valid(){
         UserDto userDto = new UserDto();
         userDto.setId(1);
-        userDto.setIsDeleted(true);
+        userDto.setIsDeleted(false);
 
         User user = new User();
-        user.setIsDeleted(true);
+        user.setIsDeleted(false);
 
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.of(user));
@@ -350,8 +381,23 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, ()-> userService.deleteUser(userDto));
+        assertThrows(UserNotExistException.class, ()-> userService.deleteUser(userDto));
 
+    }
+
+    @Test
+    public void deleteUserTest_user_already_deleted(){
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsDeleted(true);
+
+        User user = new User();
+        user.setIsDeleted(true);
+
+        when(userRepository.findById(any(Integer.class)))
+                .thenReturn(Optional.of(user));
+
+        assertThrows(UserAlreadyDeletedException.class, ()-> userService.deleteUser(userDto));
     }
 
 
@@ -385,7 +431,7 @@ public final class UserServiceTest {
         //act
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         //assert
-        assertThrows(ResponseStatusException.class, () -> userService.setUserRole(userDto));
+        assertThrows(UserNotExistException.class, () -> userService.setUserRole(userDto));
     }
 
 

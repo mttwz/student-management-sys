@@ -76,6 +76,9 @@ public class UserService {
 
         Integer savedUserId = userRepository.register(roleId, userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
 
+        if(savedUserId == null){
+            throw new UserNotSavedException();
+        }
         return savedUserId;
 
     }
@@ -119,12 +122,10 @@ public class UserService {
 
     }
 
-
     @Transactional
     public Integer setUserIsActivated(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
-
         if (user.getIsActivated()){
             throw  new UserAlreadyActivatedException();
         }
