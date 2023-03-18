@@ -20,16 +20,14 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping(path = "/login", consumes = {"application/json"})
+    @PostMapping(path = "/login", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<UserLoginDto> login(@RequestBody UserDto userDto){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(authService.login(userDto));
+        return ResponseEntity.ok(authService.login(userDto));
     }
 
-    @PostMapping(path = "/validate-jwt", consumes = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody Map validateJwt(@RequestBody UserDto userDto) {
-        return authService.validateJwt(userDto);
+    @PostMapping(path = "/validate-jwt", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<Map> validateJwt(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(authService.validateJwt(userDto));
     }
 
 }

@@ -23,8 +23,8 @@ public class AttendanceController {
 
     @PostMapping(path = "/log-student", consumes = {"application/json"})
     public ResponseEntity<Map> logStudent(@RequestBody StudentDto studentDto){
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .header("Content-Type","application/json")
-                .body(responseFactory.createResponse("id", attendanceService.logStudent(studentDto)));
+                .body(Map.of("id", attendanceService.logStudent(studentDto)));
     }
 }

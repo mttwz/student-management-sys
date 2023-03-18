@@ -126,10 +126,11 @@ public class UserService {
                 .orElseThrow(UserNotExistException::new);
 
         if (user.getIsActivated()){
-            throw  new UserAlreadyActivatedException();
+            throw new UserAlreadyActivatedException();
         }
 
-        userRepository.setUserIsActivated(userDto.getId());
+        user.setIsActivated(true);
+
         return userDto.getId();
     }
 

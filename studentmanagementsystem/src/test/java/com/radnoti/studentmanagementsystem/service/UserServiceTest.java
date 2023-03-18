@@ -311,9 +311,6 @@ public final class UserServiceTest {
         userDto.setId(1);
         userDto.setIsActivated(true);
 
-        User user = new User();
-        user.setIsActivated(true);
-
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());
 
