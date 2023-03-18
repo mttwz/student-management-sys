@@ -20,8 +20,12 @@ import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
+import com.radnoti.studentmanagementsystem.security.HashUtil;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
+
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
@@ -46,25 +50,25 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
+    private final HashUtil hashUtil;
+
     private final UserMapper userMapper;
 
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
 
 
     @Transactional
-    public Integer adduser(UserDto userDto) {
-
+    public Integer adduser(UserDto userDto) throws NoSuchAlgorithmException {
         if ((userDto.getRoleName() == null || userDto.getFirstName() == null || userDto.getLastName() == null|| userDto.getPhone() == null|| userDto.getBirth().toString() == null || userDto.getEmail() == null || userDto.getPassword() == null)) {
             throw new NullFormValueException();
         }
 
-        userRepository.findByUsername(userDto.getEmail())
-                .ifPresent(u -> {throw new UserAlreadyExistException();});
-
-
         if ((userDto.getRoleName().isEmpty() || userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getPhone().isEmpty() || userDto.getBirth().toString().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty())) {
             throw new EmptyFormValueException();
         }
+
+        userRepository.findByUsername(userDto.getEmail())
+                .ifPresent(u -> {throw new UserAlreadyExistException();});
 
         int roleId;
 
@@ -74,12 +78,17 @@ public class UserService {
             roleId = RoleEnum.ADMIN.getId();
         } else roleId = RoleEnum.STUDENT.getId();
 
-        Integer savedUserId = userRepository.register(roleId, userDto.getFirstName(), userDto.getLastName(), userDto.getPhone(), userDto.getBirth(), userDto.getEmail(), userDto.getPassword());
+        User user = userMapper.fromDtoToEntity(userDto);
+        user.setPassword(hashUtil.getSHA256Hash(userDto.getPassword()));
+        user.setActivationCode(hashUtil.generateRandomString(8));
+        user.setIsActivated(false);
+        user.setIsDeleted(false);
+        user.setRoleId(new Role(roleId));
+        user.setRegisteredAt(Date.from(Instant.now()));
 
-        if(savedUserId == null){
-            throw new UserNotSavedException();
-        }
-        return savedUserId;
+        User savedUser = userRepository.save(user);
+
+        return savedUser.getId();
 
     }
 

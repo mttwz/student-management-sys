@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -48,7 +49,7 @@ public final class UserServiceTest {
     WorkgroupRepository workgroupRepository;
 
     @Test()
-    public void addUserTest_valid_superadmin() {
+    public void addUserTest_valid_superadmin() throws NoSuchAlgorithmException {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);
@@ -79,7 +80,7 @@ public final class UserServiceTest {
     }
 
     @Test
-    public void addUserTest_valid_admin() {
+    public void addUserTest_valid_admin() throws NoSuchAlgorithmException {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);
@@ -110,7 +111,7 @@ public final class UserServiceTest {
     }
 
     @Test
-    public void addUserTest_valid_student() {
+    public void addUserTest_valid_student() throws NoSuchAlgorithmException {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);

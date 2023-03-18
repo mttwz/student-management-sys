@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/register-user", consumes = {"application/json"})
-    public ResponseEntity<Map> adduser(@RequestBody UserDto userDto) {
+    public ResponseEntity<Map> adduser(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
                 .body(responseFactory.createResponse("id", userService.adduser(userDto)));

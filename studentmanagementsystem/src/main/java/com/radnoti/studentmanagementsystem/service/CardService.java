@@ -7,9 +7,11 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
+import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
@@ -38,65 +40,65 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final StudentRepository studentRepository;
-
     private final UserRepository userRepository;
 
+    private final CardMapper cardMapper;
 
     /**
-     *  Creates a card with a custom hash.
+     * Creates a card with a custom hash.
+     *
      * @param cardDto The hash details in Json format. eg: {
-     *     "hash":"veryOriginalHash"
-     * }
+     *                "hash":"veryOriginalHash"
+     *                }
      * @return The saved card id.
      * @throws ResponseStatusException on failed creation
      */
 
     @Transactional
     public Integer createCard(final CardDto cardDto) {
-        Integer savedCardId = cardRepository.createCard(cardDto.getHash());
-        if(savedCardId == null){
-            throw new CardNotCreatedException();
+        if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
+            throw new InvalidFormValueException();
         }
-        return savedCardId;
+        Card card = cardMapper.fromDtoToEntity(cardDto);
+        cardRepository.save(card);
+        return card.getId();
     }
 
     /**
      * Connects an existing student with an existing card.
+     *
      * @param studentDto The id of the existing student and the id of the existing card in Json format. eg:
-     * {
-     *     "id" : 1,
-     *     "cardId" : 1
-     * }
+     *                   {
+     *                   "id" : 1,
+     *                   "cardId" : 1
+     *                   }
      * @return The id of the connected student
      * @throws ResponseStatusException on failed connection
      */
     @Transactional
-    public Integer connectCardToStudent(StudentDto studentDto) {
-        if (studentDto.getId()==null || studentDto.getCardId() == null){
-            throw new NullFormValueException();
+    public void connectCardToStudent(StudentDto studentDto) {
+        if (studentDto.getId() == null || studentDto.getCardId() == null) {
+            throw new InvalidFormValueException();
         }
         cardRepository.connectCardToStudent(studentDto.getId(), studentDto.getCardId());
 
-        Student student = studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
+        studentRepository.findById(studentDto.getId())
+                .orElseThrow(StudentNotExistException::new);
 
-        cardRepository.findById(studentDto.getCardId()).orElseThrow(CardNotExistException::new);
+        cardRepository.findById(studentDto.getCardId())
+                .orElseThrow(CardNotExistException::new);
 
-        if(!Objects.equals(student.getCardId().getId(), studentDto.getCardId())){
-            throw new CardNotAssignedException();
-        }
-
-        return student.getId();
     }
 
     @Transactional
-    public Integer getCardByUserId(UserDto userDto){
-        if(userDto.getId() == null){
+    public Integer getCardByUserId(UserDto userDto) {
+        if (userDto.getId() == null) {
             throw new NullFormValueException();
         }
         userRepository.findById(userDto.getId()).orElseThrow(UserNotExistException::new);
 
         Integer cardId = cardRepository.getCardByUserId(userDto.getId());
-        if (cardId == null){
+        if (cardId == null) {
             throw new CardNotExistException();
         }
         return cardId;
@@ -104,16 +106,19 @@ public class CardService {
 
 
     @Transactional
-    public Integer getCardByStudentId(StudentDto studentDto){
-        if(studentDto.getId() == null){
+    public Integer getCardByStudentId(StudentDto studentDto) {
+        if (studentDto.getId() == null) {
             throw new NullFormValueException();
         }
-        studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
+        Student student = studentRepository.findById(studentDto.getId())
+                .orElseThrow(StudentNotExistException::new);
+        Integer cardId = student.getCardId().getId();
 
-        Integer cardId = cardRepository.getCardByStudentId(studentDto.getId());
-        if (cardId == null){
+        if (cardId == null) {
             throw new CardNotExistException();
         }
         return cardId;
     }
+
+
 }

@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class StudentServiceTest {
 
 
     @Test
-    public void registerStudentTest_valid(){
+    public void registerStudentTest_valid() throws NoSuchAlgorithmException {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);

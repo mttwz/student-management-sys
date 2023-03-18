@@ -46,4 +46,10 @@ public class CustomFormAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "form03"), status);
     }
+
+    @ExceptionHandler(InvalidFormValueException.class)
+    public ResponseEntity<ErrorResponse> handleException(InvalidFormValueException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "form03"), status);
+    }
 }

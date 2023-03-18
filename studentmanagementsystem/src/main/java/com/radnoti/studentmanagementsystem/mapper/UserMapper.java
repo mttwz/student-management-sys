@@ -14,6 +14,9 @@ public interface UserMapper {
     @Mapping(source = "roleId.roleType",target = "roleName")
     UserDto fromEntityToDto(User user);
 
+    @Mapping(source = "roleName",target = "roleId.roleType")
+    User fromDtoToEntity(UserDto userDto);
+
     @Mapping(target = "jwt", ignore = true)
     UserLoginDto fromEntityToLoginDto(User user);
     @Mapping(source = "roleId.roleType", target = "roleName")

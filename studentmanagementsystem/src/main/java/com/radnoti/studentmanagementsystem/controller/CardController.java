@@ -28,8 +28,9 @@ public class CardController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/connect-card-to-student", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> connectCardToStudent(@RequestBody StudentDto studentDto) {
-        return ResponseEntity.ok(responseFactory.createResponse("id",cardService.connectCardToStudent(studentDto)));
+    public ResponseEntity<Void> connectCardToStudent(@RequestBody StudentDto studentDto) {
+        cardService.connectCardToStudent(studentDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 

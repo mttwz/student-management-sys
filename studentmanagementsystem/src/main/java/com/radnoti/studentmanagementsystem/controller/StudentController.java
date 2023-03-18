@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public class StudentController {
 
 
     @PostMapping(path = "/register-student", consumes = {"application/json"})
-    public ResponseEntity<Map> register(@RequestBody UserDto userDto){
+    public ResponseEntity<Map> register(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type","application/json")
                 .body(responseFactory.createResponse("id", studentService.registerStudent(userDto)));
