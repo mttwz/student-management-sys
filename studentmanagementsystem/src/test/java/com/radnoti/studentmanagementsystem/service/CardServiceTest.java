@@ -1,5 +1,9 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
+import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
+import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
@@ -41,7 +45,6 @@ public class CardServiceTest {
         card.setHash(hash);
 
         when(cardRepository.createCard(any())).thenReturn(1);
-        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
         //act
         int actual = cardService.createCard(cardDto);
         //assert
@@ -50,21 +53,12 @@ public class CardServiceTest {
     }
 
     @Test
-    public void createCardTest_notCreatedBecauseCardIdIsNull(){
-        String hash = "hashashahash";
+    public void createCardTest_not_created_because_card_id_is_null(){
         CardDto cardDto = new CardDto();
         when(cardRepository.createCard(any())).thenReturn(null);
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDto));
+        assertThrows(CardNotCreatedException.class, ()-> cardService.createCard(cardDto));
 
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-
-        assertEquals(409, actuaStatusCode);
-        assertEquals("CONFLICT", actualStatusCodeName);
-        assertEquals("Card not created", actualMessage);
     }
 
 
@@ -74,48 +68,15 @@ public class CardServiceTest {
         String hash = "hashPipe";
         CardDto cardDto = new CardDto();
         cardDto.setHash(hash);
-        when(cardRepository.createCard(any())).thenReturn(1);
-        when(cardRepository.findById(any())).thenReturn(Optional.empty());
+
+        when(cardRepository.createCard(any())).thenReturn(null);
 
         //act
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDto));
+        assertThrows(CardNotCreatedException.class, ()-> cardService.createCard(cardDto));
 
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-        //assert
-        assertEquals(409, actuaStatusCode);
-        assertEquals("CONFLICT", actualStatusCodeName);
-        assertEquals("Card not exist", actualMessage);
 
 
     }
-
-
-    @Test
-    public void createCardTest_notCreatedBecauseNotEquals(){
-        String hash = "hashPipe";
-        CardDto cardDto = new CardDto();
-        cardDto.setHash(hash);
-        Card card = new Card();
-        card.setHash(hash+"randomString");
-
-        when(cardRepository.createCard(any())).thenReturn(1);
-        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
-
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> cardService.createCard(cardDto));
-
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-
-        assertEquals(409, actuaStatusCode);
-        assertEquals("CONFLICT", actualStatusCodeName);
-        assertEquals("Card not created", actualMessage);
-    }
-
 
 
 
@@ -142,18 +103,13 @@ public class CardServiceTest {
 
 
     @Test
-    public void connectCardToStudentTest_userNotFound(){
+    public void connectCardToStudentTest_user_not_found(){
         //arrange
         StudentDto studentDto = new StudentDto();
 
-        when(studentRepository.findById(any())).thenReturn(Optional.empty());
         //act & assert
-        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDto));
+        assertThrows(NullFormValueException.class,()->cardService.connectCardToStudent(studentDto));
 
-        String expectedMessage = "409 CONFLICT \"User not found\"";
-        String actualMessage = ex.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -161,15 +117,10 @@ public class CardServiceTest {
         //arrange
         StudentDto studentDto = new StudentDto();
 
-        when(cardRepository.findById(any())).thenReturn(Optional.empty());
 
         //act & assert
-        Exception ex = assertThrows(ResponseStatusException.class,()->cardService.connectCardToStudent(studentDto));
+       assertThrows(NullFormValueException.class,()->cardService.connectCardToStudent(studentDto));
 
-        String expectedMessage = "409 CONFLICT \"User not found\"";
-        String actualMessage = ex.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
     }
 
 

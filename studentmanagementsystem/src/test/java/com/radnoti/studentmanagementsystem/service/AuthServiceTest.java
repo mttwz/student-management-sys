@@ -1,5 +1,8 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.user.InvalidCredentialsException;
+import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
@@ -86,18 +89,8 @@ public class AuthServiceTest {
 
         when(userRepository.login(any(),any())).thenReturn(1);
 
-        //act & assert
+       assertThrows(InvalidCredentialsException.class, ()-> authService.login(userDto));
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
-
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-
-        assertEquals(403, actuaStatusCode);
-        assertEquals("FORBIDDEN", actualStatusCodeName);
-        assertEquals("Invalid username or password", actualMessage);
 
 
     }
@@ -113,16 +106,7 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
-
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-
-        assertEquals(403, actuaStatusCode);
-        assertEquals("FORBIDDEN", actualStatusCodeName);
-        assertEquals("Invalid username or password", actualMessage);
+        assertThrows(InvalidCredentialsException.class, ()-> authService.login(userDto));
 
     }
 
@@ -137,12 +121,7 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(null);
 
 
-        Exception ex = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
-
-        String expectedMessage = "403 FORBIDDEN \"Invalid username or password\"";
-        String actualMessage = ex.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+       assertThrows(InvalidCredentialsException.class, ()-> authService.login(userDto));
 
     }
 
@@ -153,7 +132,7 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.empty());
         //act & assert
-        assertThrows(ResponseStatusException.class,()->authService.login(userDto));
+        assertThrows(InvalidCredentialsException.class,()->authService.login(userDto));
 
     }
 
@@ -170,16 +149,8 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
+        assertThrows(UserNotActivatedException.class, ()-> authService.login(userDto));
 
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-
-        assertEquals(403, actuaStatusCode);
-        assertEquals("FORBIDDEN", actualStatusCodeName);
-        assertEquals("User not activated", actualMessage);
 
     }
 
@@ -195,15 +166,8 @@ public class AuthServiceTest {
         when(userRepository.login(any(),any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        ResponseStatusException responseStatusException = assertThrows(ResponseStatusException.class, ()-> authService.login(userDto));
+        assertThrows(UserDeletedException.class, ()-> authService.login(userDto));
 
-        Integer actuaStatusCode = responseStatusException.getRawStatusCode();
-        String actualMessage = responseStatusException.getReason();
-        String actualStatusCodeName = responseStatusException.getStatus().name();
-
-
-        assertEquals(403, actuaStatusCode);
-        assertEquals("User is deleted", actualMessage);
 
     }
 

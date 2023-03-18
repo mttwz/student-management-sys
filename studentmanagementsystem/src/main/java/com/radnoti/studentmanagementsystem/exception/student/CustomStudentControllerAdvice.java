@@ -4,6 +4,7 @@ import com.radnoti.studentmanagementsystem.exception.ErrorResponse;
 import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyActivatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

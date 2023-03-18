@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
+import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
@@ -54,7 +55,7 @@ public class CardService {
     public Integer createCard(final CardDto cardDto) {
         Integer savedCardId = cardRepository.createCard(cardDto.getHash());
         if(savedCardId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Card not created");
+            throw new CardNotCreatedException();
         }
         return savedCardId;
     }

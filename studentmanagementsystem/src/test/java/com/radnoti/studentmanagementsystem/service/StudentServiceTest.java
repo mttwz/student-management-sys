@@ -1,5 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.model.entity.User;
@@ -16,8 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
@@ -48,12 +48,8 @@ public class StudentServiceTest {
 
         Student student = new Student(1);
 
-        when(userRepository.findByUsername(any()))
-                .thenReturn(Optional.empty());
-//        when(studentRepository.registerStudent(any(String.class),any(String.class),any(String.class),any(Date.class),any(String.class),any(String.class)))
-//                .thenReturn(1);
-        when(studentRepository.findById(any()))
-                .thenReturn(Optional.of(student));
+
+        when(studentRepository.registerStudent(any(),any(),any(),any(),any(),any())).thenReturn(1);
         //act
         int actual = studentService.registerStudent(userDto);
 
@@ -65,15 +61,14 @@ public class StudentServiceTest {
     public void registerStudentTest_already_exist(){
         //arrange
         UserDto userDto = new UserDto();
+
+        User user = new User();
         
         when(userRepository.findByUsername(any()))
-                .thenReturn(Optional.of(new User()));
+                .thenReturn(Optional.of(user));
 
-        Exception ex = assertThrows(ResponseStatusException.class,()->studentService.registerStudent(userDto));
-        String expectedMessage = "409 CONFLICT \"User already exist\"";
-        String actualMessage = ex.getMessage();
+        assertThrows(UserAlreadyExistException.class,()->studentService.registerStudent(userDto));
 
-        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
