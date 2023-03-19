@@ -8,12 +8,14 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
 import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
 import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
+import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
@@ -40,11 +42,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private static final int ACTIVATION_CODE_LENGTH = 8;
 
     private final UserRepository userRepository;
 
     private final WorkgroupscheduleRepository workgroupscheduleRepository;
 
+    private final WorkgroupMembersRepository workgroupMembersRepository;
 
     private final WorkgroupRepository workgroupRepository;
 
@@ -55,16 +59,26 @@ public class UserService {
     private final UserMapper userMapper;
 
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
+    private final WorkgroupMembersMapper workgroupMembersMapper;
 
 
     @Transactional
     public Integer adduser(UserDto userDto) throws NoSuchAlgorithmException {
-        if ((userDto.getRoleName() == null || userDto.getFirstName() == null || userDto.getLastName() == null|| userDto.getPhone() == null|| userDto.getBirth().toString() == null || userDto.getEmail() == null || userDto.getPassword() == null)) {
-            throw new NullFormValueException();
-        }
-
-        if ((userDto.getRoleName().isEmpty() || userDto.getFirstName().isEmpty() || userDto.getLastName().isEmpty() || userDto.getPhone().isEmpty() || userDto.getBirth().toString().isEmpty() || userDto.getEmail().isEmpty() || userDto.getPassword().isEmpty())) {
-            throw new EmptyFormValueException();
+        if ((userDto.getRoleName() == null ||
+                userDto.getFirstName() == null ||
+                userDto.getLastName() == null||
+                userDto.getPhone() == null||
+                userDto.getBirth().toString() == null ||
+                userDto.getEmail() == null ||
+                userDto.getPassword() == null ||
+                userDto.getRoleName().isEmpty() ||
+                userDto.getFirstName().isEmpty() ||
+                userDto.getLastName().isEmpty() ||
+                userDto.getPhone().isEmpty() ||
+                userDto.getBirth().toString().isEmpty() ||
+                userDto.getEmail().isEmpty() ||
+                userDto.getPassword().isEmpty())) {
+            throw new InvalidFormValueException();
         }
 
         userRepository.findByUsername(userDto.getEmail())
@@ -80,7 +94,7 @@ public class UserService {
 
         User user = userMapper.fromDtoToEntity(userDto);
         user.setPassword(hashUtil.getSHA256Hash(userDto.getPassword()));
-        user.setActivationCode(hashUtil.generateRandomString(8));
+        user.setActivationCode(hashUtil.generateRandomString(ACTIVATION_CODE_LENGTH));
         user.setIsActivated(false);
         user.setIsDeleted(false);
         user.setRoleId(new Role(roleId));
@@ -93,26 +107,7 @@ public class UserService {
     }
 
 
-    @Transactional
-    public ArrayList<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, UserDto userDto) {
-        ArrayList<Integer> workgroupScheduleList;
-        userRepository.findById(userDto.getId())
-                .orElseThrow(UserNotExistException::new);
 
-        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userDto.getId());
-        } else {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
-        }
-
-        ArrayList<WorkgroupscheduleDto> workgroupscheduleDtoArrayList = new ArrayList<>();
-        Iterable<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findAllById(workgroupScheduleList);
-
-        for(Workgroupschedule workgroupschedule : optionalWorkgroupschedule){
-            workgroupscheduleDtoArrayList.add(workgroupScheduleMapper.fromEntityToDto(workgroupschedule));
-        }
-        return workgroupscheduleDtoArrayList;
-    }
 
 
     @Transactional
@@ -123,11 +118,9 @@ public class UserService {
         workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
                 .orElseThrow(WorkgroupNotExistException::new);
 
-        Integer savedWorkgroupMembersId = userRepository.addUserToWorkgroup(workgroupmembersDto.getUserId(), workgroupmembersDto.getWorkgroupId());
-        if (savedWorkgroupMembersId == null){
-            throw new UserNotAddedToWorkgroupException();
-        }
-        return savedWorkgroupMembersId;
+        Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
+        workgroupMembersRepository.save(workgroupmembers);
+        return workgroupmembers.getId();
 
     }
 
@@ -138,7 +131,6 @@ public class UserService {
         if (user.getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
-
         user.setIsActivated(true);
 
         return userDto.getId();
@@ -154,7 +146,7 @@ public class UserService {
         if (user.getIsDeleted()) {
             throw new UserAlreadyDeletedException();
         }
-        userRepository.setUserIsDeleted(userDto.getId());
+        user.setIsDeleted(true);
         return userDto.getId();
     }
 
@@ -191,7 +183,7 @@ public class UserService {
         try{
             userId = Integer.parseInt(pathVariableUserId);
         }catch (NumberFormatException ex){
-            throw new InvalidIdException();
+            throw new InvalidFormValueException();
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);

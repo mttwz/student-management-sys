@@ -1,6 +1,8 @@
 package com.radnoti.studentmanagementsystem.mapper;
 
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -8,11 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper(
         componentModel = "spring"
 )
-public interface WorkgroupScheduleMapper {
+public interface WorkgroupMembersMapper {
 
-    @Mapping(source = "workgroupId.id",target = "workgroupId")
-    WorkgroupscheduleDto fromEntityToDto(Workgroupschedule workgroupschedule);
-
+    @Mapping(source = "userId",target = "userId.id")
     @Mapping(source = "workgroupId",target = "workgroupId.id")
-    Workgroupschedule fromDtoToEntity(WorkgroupscheduleDto workgroupscheduleDto);
+    Workgroupmembers fromDtoToEntity(WorkgroupmembersDto workgroupmembersDto);
 }

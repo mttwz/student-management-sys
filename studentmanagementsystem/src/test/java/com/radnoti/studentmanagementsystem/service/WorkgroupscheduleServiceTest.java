@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.text.ParseException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +35,7 @@ public class WorkgroupscheduleServiceTest {
 
 
     @Test
-    public void createWorkgroupScheduleTest_valid(){
+    public void createWorkgroupScheduleTest_valid() throws ParseException {
         //arrage
         String name = "Test";
         WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();

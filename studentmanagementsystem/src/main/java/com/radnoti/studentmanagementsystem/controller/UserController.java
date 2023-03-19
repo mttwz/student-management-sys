@@ -68,14 +68,6 @@ public class UserController {
 
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"})
-    public ResponseEntity<ArrayList<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDto userDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Content-Type", "application/json")
-                .body(userService.getWorkgroupScheduleByUserId(authHeader,userDto));
-    }
-
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @GetMapping(path = "/get-all-user")
