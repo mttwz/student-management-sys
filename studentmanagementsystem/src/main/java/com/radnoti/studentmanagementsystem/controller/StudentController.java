@@ -8,7 +8,6 @@ import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.StudentService;
 
-import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,6 @@ import java.util.Map;
 public class StudentController {
 
     private final StudentService studentService;
-    private final ResponseFactory responseFactory;
-
 
 
     @PostMapping(path = "/register-student", consumes = {"application/json"}, produces = {"application/json"})

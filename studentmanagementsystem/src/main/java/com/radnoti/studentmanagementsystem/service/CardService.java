@@ -44,16 +44,14 @@ public class CardService {
 
     private final CardMapper cardMapper;
 
-    /**
-     * Creates a card with a custom hash.
-     *
-     * @param cardDto The hash details in Json format. eg: {
-     *                "hash":"veryOriginalHash"
-     *                }
-     * @return The saved card id.
-     * @throws ResponseStatusException on failed creation
-     */
 
+    /**
+     * Creates a new card in the database based on the provided DTO object.
+     *
+     * @param cardDto The DTO object representing the new card.
+     * @return The ID of the newly created card.
+     * @throws InvalidFormValueException if the provided DTO object is null or its hash value is null or empty.
+     */
     @Transactional
     public Integer createCard(final CardDto cardDto) {
         if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
@@ -65,15 +63,12 @@ public class CardService {
     }
 
     /**
-     * Connects an existing student with an existing card.
+     * Connects a card to a student in the database based on the provided DTO object.
      *
-     * @param studentDto The id of the existing student and the id of the existing card in Json format. eg:
-     *                   {
-     *                   "id" : 1,
-     *                   "cardId" : 1
-     *                   }
-     * @return The id of the connected student
-     * @throws ResponseStatusException on failed connection
+     * @param studentDto The DTO object containing the student's id and the card's id.
+     * @throws InvalidFormValueException if the provided ID or card ID value is null.
+     * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
+     * @throws CardNotExistException if the card with the provided card ID does not exist in the database.
      */
     @Transactional
     public void connectCardToStudent(StudentDto studentDto) {
@@ -90,6 +85,15 @@ public class CardService {
         student.setCardId(card);
     }
 
+    /**
+     * Retrieves the ID of the card assigned to the user with the provided ID.
+     *
+     * @param userDto The DTO object containing the user's id.
+     * @return The ID of the card assigned to the user.
+     * @throws NullFormValueException if the provided ID value is null.
+     * @throws UserNotExistException if the user with the provided ID does not exist in the database.
+     * @throws CardNotAssignedException if the user with the provided ID does not have a card assigned to them.
+     */
     @Transactional
     public Integer getCardByUserId(UserDto userDto) {
         if (userDto.getId() == null) {
@@ -104,7 +108,15 @@ public class CardService {
         return cardId;
     }
 
-
+    /**
+     * Retrieves the ID of the card assigned to the student with the provided ID.
+     *
+     * @param studentDto The DTO object containing the student's id.
+     * @return The ID of the card assigned to the student.
+     * @throws NullFormValueException if the provided ID value is null.
+     * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
+     * @throws CardNotAssignedException if the student with the provided ID does not have a card assigned to them.
+     */
     @Transactional
     public Integer getCardByStudentId(StudentDto studentDto) {
         if (studentDto.getId() == null) {

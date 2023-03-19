@@ -4,7 +4,6 @@ import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
-import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WorkgroupScheduleController {
     private final WorkgroupScheduleService workgroupscheduleService;
-    private final ResponseFactory responseFactory;
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"}, produces = {"application/json"})

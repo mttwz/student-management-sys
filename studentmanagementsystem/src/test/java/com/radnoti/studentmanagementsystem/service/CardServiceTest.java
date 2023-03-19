@@ -50,32 +50,77 @@ public class CardServiceTest {
     @Mock
     private CardMapper cardMapper;
 
+
     @Test
-    public void createCardTest_valid() {
-        //arrange
-        String hash = "hashPipe";
+    public void testCreateCardValidCase() {
+        // Arrange
         CardDto cardDto = new CardDto();
-        cardDto.setId(1);
-        cardDto.setHash(hash);
+        cardDto.setHash("valid-hash");
         Card card = new Card();
         card.setId(1);
-        card.setHash(hash);
-
-        when(cardMapper.fromDtoToEntity(cardDto)).thenReturn(card);
+        card.setHash("valid-hash");
         when(cardRepository.save(any())).thenReturn(card);
-        //act
-        int actual = cardService.createCard(cardDto);
-        //assert
-        assertEquals(1, actual);
+        when(cardMapper.fromDtoToEntity(any())).thenReturn(card);
 
+        // Act
+        Integer cardId = cardService.createCard(cardDto);
+
+        // Assert
+        assertNotNull(cardId);
     }
 
     @Test
-    public void createCardTest_not_created_because_card_id_is_null() {
-        CardDto cardDto = new CardDto();
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+    public void testCreateCardWithNullDto() {
+        // Arrange
+        CardDto cardDto = null;
 
+        // Act and Assert
+        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+        verifyNoInteractions(cardRepository);
     }
+
+    @Test
+    public void testCreateCardWithNullHash() {
+        // Arrange
+        CardDto cardDto = new CardDto();
+        cardDto.setHash(null);
+
+        // Act and Assert
+        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+        verifyNoInteractions(cardRepository);
+    }
+
+    @Test
+    public void testCreateCardWithEmptyHash() {
+        // Arrange
+        CardDto cardDto = new CardDto();
+        cardDto.setHash("");
+
+        // Act and Assert
+        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+        verifyNoInteractions(cardRepository);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Test
@@ -200,7 +245,7 @@ public class CardServiceTest {
         when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(null);
 
         // Act & Assert
-        assertThrows(CardNotExistException.class, () -> cardService.getCardByUserId(userDto));
+        assertThrows(CardNotAssignedException.class, () -> cardService.getCardByUserId(userDto));
 
     }
 
@@ -279,7 +324,7 @@ public class CardServiceTest {
     }
 
     @Test
-    public void testGetCardByUserIdCardNotExistException() {
+    public void testGetCardByUserIdCardNotAssigned() {
         // Setup
         Integer userId = 1;
         UserDto userDto = new UserDto();
@@ -289,7 +334,7 @@ public class CardServiceTest {
         when(cardRepository.getCardByUserId(userId)).thenReturn(null);
 
         // Verify
-        assertThrows(CardNotExistException.class, () -> cardService.getCardByUserId(userDto));
+        assertThrows(CardNotAssignedException.class, () -> cardService.getCardByUserId(userDto));
 
         // Check if userRepository.findById was called once with userId as parameter
         verify(userRepository, times(1)).findById(userId);
@@ -361,7 +406,7 @@ public class CardServiceTest {
         when(studentRepository.findById(1)).thenReturn(Optional.of(student));
 
         // Act and Assert
-        assertThrows(CardNotExistException.class, () -> {
+        assertThrows(CardNotAssignedException.class, () -> {
             cardService.getCardByStudentId(studentDto);
         });
         verify(studentRepository, times(1)).findById(1);

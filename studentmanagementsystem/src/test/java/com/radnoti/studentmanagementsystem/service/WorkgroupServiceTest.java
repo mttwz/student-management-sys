@@ -38,7 +38,7 @@ public class WorkgroupServiceTest {
         workgroup.setGroupName(worgroupName);
         workgroupDto.setGroupName(worgroupName);
 
-        when(workgroupRepository.createWorkgroup(any(),any())).thenReturn(1);
+        //when(workgroupRepository.createWorkgroup(any(),any())).thenReturn(1);
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
         //act
         int actual = workgroupService.createWorkgroup(workgroupDto);
@@ -55,7 +55,7 @@ public class WorkgroupServiceTest {
         workgroup.setGroupName(worgroupName);
         workgroupDto.setGroupName(worgroupName);
 
-        when(workgroupRepository.createWorkgroup(any(),any())).thenReturn(1);
+        //when(workgroupRepository.createWorkgroup(any(),any())).thenReturn(1);
         when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
         //act & assert

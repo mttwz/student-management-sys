@@ -3,7 +3,6 @@ package com.radnoti.studentmanagementsystem.controller;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
-import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ public class WorkgroupController {
 
 
     private final WorkgroupService workgroupService;
-    private final ResponseFactory responseFactory;
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})

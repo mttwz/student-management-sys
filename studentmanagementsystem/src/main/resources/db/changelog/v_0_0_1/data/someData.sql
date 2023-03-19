@@ -10,3 +10,7 @@ INSERT INTO `User` (`id`, `role_id`, `first_name`, `last_name`, `phone`, `birth`
 
 INSERT INTO `Card` (`id`, `hash`) VALUES (1, 'haaaaash');
 INSERT INTO `Student` (`id`, `card_id`, `user_id`) VALUES (1, 1, 2);
+
+INSERT INTO `Workgroup` (`id`, `group_name`, `institution`) VALUES (1, 'groupname', 'inst');
+
+INSERT INTO `Workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (1, 2, 1);

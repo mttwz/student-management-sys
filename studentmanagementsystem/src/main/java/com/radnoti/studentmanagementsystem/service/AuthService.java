@@ -34,10 +34,13 @@ public class AuthService {
     private final HashUtil hashUtil;
 
     /**
-     * Generates a JWT token for the authenticated user
-     * @param userDto The login credentials for the user in Json format
-     * @return The authenticated user details in Json format.
-     * @throws ResponseStatusException on failed login
+     * Authenticates a user and generates a JWT token upon successful authentication.
+     * @param userDto The user DTO containing the user's email and password.
+     * @return A UserLoginDto object containing the user's information and JWT token.
+     * @throws InvalidCredentialsException If the email or password is invalid.
+     * @throws UserNotActivatedException If the user has not activated their account.
+     * @throws UserDeletedException If the user has been deleted.
+     * @throws NoSuchAlgorithmException If the SHA256 algorithm is not available.
      */
 
     @Transactional
@@ -65,7 +68,11 @@ public class AuthService {
         return userLoginDto;
     }
 
-
+    /**
+     * Validates a JWT token provided in the UserDto object.
+     * @param userDto The UserDto object containing the JWT token to be validated.
+     * @return A Map object containing a "valid" key with a Boolean value indicating whether the token is valid or not.
+     */
     @Transactional
     public Map validateJwt(UserDto userDto) {
         HashMap<String, Boolean> map = new HashMap<>();

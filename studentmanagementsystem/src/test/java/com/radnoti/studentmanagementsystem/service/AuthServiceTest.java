@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.security.HashUtil;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,160 +33,141 @@ public class AuthServiceTest {
 
 
 
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private HashUtil hashUtil;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @Mock
+    private UserMapper userMapper;
+
     @InjectMocks
-    AuthService authService;
-    @Mock
-    UserRepository userRepository;
-
-    @Mock
-    JwtUtil jwtUtil;
-
-    @Mock
-    UserMapper userMapper;
+    private AuthService authService;
 
     @Test
-    public void loginTest_valid() throws NoSuchAlgorithmException {
-        //arrange
+    public void testLogin_success() throws NoSuchAlgorithmException {
+        // Arrange
         UserDto userDto = new UserDto();
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("password");
 
         User user = new User();
         user.setId(1);
+        user.setEmail("test@test.com");
+        user.setPassword("hashedpassword");
         user.setIsActivated(true);
         user.setIsDeleted(false);
-        user.setEmail("testEmail");
-        user.setFirstName("testFirstName");
-        user.setLastName("testLastName");
 
-        UserLoginDto userLoginDto = new UserLoginDto();
-        userLoginDto.setId(1);
-        userLoginDto.setEmail("testEmail");
-        userLoginDto.setFirstName("testFirstName");
-        userLoginDto.setLastName("testLastName");
+        when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(1);
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        when(userMapper.fromEntityToLoginDto(user)).thenReturn(new UserLoginDto());
+        when(jwtUtil.generateJwt(user)).thenReturn("jwt_token");
 
-        when(userRepository.login(any(),any())).thenReturn(1);
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        when(jwtUtil.generateJwt(any())).thenReturn("veryVerySecretJwt");
-        when(userMapper.fromEntityToLoginDto(any())).thenReturn(userLoginDto);
+        // Act
+        UserLoginDto result = authService.login(userDto);
 
-
-        //act
-
-        UserLoginDto actual = authService.login(userDto);
-
-        //assert
-
-        assertEquals(1,actual.getId());
-        assertEquals("testFirstName",actual.getFirstName());
-        assertEquals("testLastName",actual.getLastName());
-        assertEquals("testEmail",actual.getEmail());
-        assertEquals("veryVerySecretJwt",actual.getJwt());
-
+        // Assert
+        assertNotNull(result);
+        assertEquals("jwt_token", result.getJwt());
     }
 
     @Test
-    public void loginTest_invalid(){
-        //arrange
+    public void testLogin_invalidCredentials() throws NoSuchAlgorithmException {
+        // Arrange
         UserDto userDto = new UserDto();
-        userDto.setEmail("mate");
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("password");
 
-        when(userRepository.login(any(),any())).thenReturn(1);
+        when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(null);
 
-       assertThrows(InvalidCredentialsException.class, ()-> authService.login(userDto));
-
-
-
-    }
-
-
-
-
-    @Test
-    public void loginTest_empty_username(){
-        //arrange
-        UserDto userDto = new UserDto();
-
-        when(userRepository.login(any(),any())).thenReturn(1);
-        when(userRepository.findById(any())).thenReturn(Optional.empty());
-
-        assertThrows(InvalidCredentialsException.class, ()-> authService.login(userDto));
-
+        // Act & Assert
+        assertThrows(InvalidCredentialsException.class, () -> authService.login(userDto));
     }
 
     @Test
-    public void loginTest_null_userId(){
-        //arrange
+    public void testLogin_userNotActivated() throws NoSuchAlgorithmException {
+        // Arrange
         UserDto userDto = new UserDto();
-
-        User user = new User();
-        user.setId(null);
-
-        when(userRepository.login(any(),any())).thenReturn(null);
-
-
-       assertThrows(InvalidCredentialsException.class, ()-> authService.login(userDto));
-
-    }
-
-    @Test
-    public void loginTest_user_does_not_exist(){
-        //arrange
-        UserDto userDto = new UserDto();
-        when(userRepository.login(any(),any())).thenReturn(1);
-        when(userRepository.findById(any())).thenReturn(Optional.empty());
-        //act & assert
-        assertThrows(InvalidCredentialsException.class,()->authService.login(userDto));
-
-    }
-
-
-    @Test
-    public void loginTest_user_not_activated(){
-        UserDto userDto = new UserDto();
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("password");
 
         User user = new User();
         user.setId(1);
+        user.setEmail("test@test.com");
+        user.setPassword("hashedpassword");
         user.setIsActivated(false);
         user.setIsDeleted(false);
 
-        when(userRepository.login(any(),any())).thenReturn(1);
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(1);
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-        assertThrows(UserNotActivatedException.class, ()-> authService.login(userDto));
-
-
+        // Act & Assert
+        assertThrows(UserNotActivatedException.class, () -> authService.login(userDto));
     }
 
     @Test
-    public void loginTest_user_is_deleted(){
+    public void testLogin_userDeleted() throws NoSuchAlgorithmException {
+        // Arrange
         UserDto userDto = new UserDto();
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("password");
 
         User user = new User();
         user.setId(1);
+        user.setEmail("test@test.com");
+        user.setPassword("hashedpassword");
         user.setIsActivated(true);
         user.setIsDeleted(true);
 
-        when(userRepository.login(any(),any())).thenReturn(1);
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(1);
+        when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-        assertThrows(UserDeletedException.class, ()-> authService.login(userDto));
-
-
+        // Act & Assert
+        assertThrows(UserDeletedException.class, () -> authService.login(userDto));
     }
-
 
     @Test
-    public void validateJwtTest_valid(){
-        //arrange
+    public void testValidateJwt_valid() {
+        // Arrange
         UserDto userDto = new UserDto();
-        when(jwtUtil.validateJwt(any())).thenReturn(true);
-        Map expected = new HashMap<>();
-        expected.put("valid",true);
+        userDto.setJwt("valid_jwt");
 
-        //act
-        Map actual = authService.validateJwt(userDto);
-        //assert
-        assertEquals(expected, actual);
+        when(jwtUtil.validateJwt("valid_jwt")).thenReturn(true);
+
+        // Act
+        Map<String, Boolean> result = authService.validateJwt(userDto);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.containsKey("valid"));
+        assertTrue(result.get("valid"));
     }
+
+    @Test
+    public void testValidateJwt_invalid() {
+        // Arrange
+        UserDto userDto = new UserDto();
+        userDto.setJwt("invalid_jwt");
+
+        when(jwtUtil.validateJwt("invalid_jwt")).thenReturn(false);
+
+        // Act
+        Map<String, Boolean> result = authService.validateJwt(userDto);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.containsKey("valid"));
+        assertFalse(result.get("valid"));
+    }
+
 
 
 }

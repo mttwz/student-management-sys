@@ -5,7 +5,6 @@ import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.CardService;
-import com.radnoti.studentmanagementsystem.util.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,6 @@ import java.util.Map;
 public class CardController {
 
     private final CardService cardService;
-
-    private final ResponseFactory responseFactory;
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})

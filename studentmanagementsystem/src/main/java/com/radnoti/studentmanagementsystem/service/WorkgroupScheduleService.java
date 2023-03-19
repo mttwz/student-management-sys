@@ -57,7 +57,7 @@ public class WorkgroupScheduleService {
 
     @Transactional
     public ArrayList<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, UserDto userDto) {
-// TODO: 2023. 03. 19. datumok szarok kikell javitni
+
         ArrayList<Integer> workgroupScheduleList;
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);

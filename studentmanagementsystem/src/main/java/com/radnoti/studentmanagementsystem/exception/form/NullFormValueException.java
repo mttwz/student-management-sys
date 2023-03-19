@@ -2,6 +2,6 @@ package com.radnoti.studentmanagementsystem.exception.form;
 
 public class NullFormValueException extends RuntimeException{
     public NullFormValueException() {
-        super("One of the fields is null");
+        super("One or more fields are null");
     }
 }

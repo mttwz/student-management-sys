@@ -61,6 +61,22 @@ public class UserService {
     private final WorkgroupMembersMapper workgroupMembersMapper;
 
 
+    /**
+     * Creates a new user based on the given UserDto object and saves it to the database.
+     * The method first checks if all required fields are present in the UserDto object, and if not, it throws an InvalidFormValueException.
+     * It then checks if a user with the same email already exists in the database, and if so, it throws a UserAlreadyExistException.
+     * The method sets the user's password to a hash value generated using the SHA-256 algorithm.
+     * It also sets an activation code for the user, which is a randomly generated string of length ACTIVATION_CODE_LENGTH.
+     * The user's activation status is set to false, and its deleted status is set to false.
+     * The user's role is determined based on the roleName field of the UserDto object, which can be "superadmin", "admin", or "student".
+     * The created user is then saved to the database and its ID is returned.
+     * @param userDto a UserDto object containing the user's information
+     * @return the ID of the created user
+     * @throws InvalidFormValueException if a required field is missing or empty in the UserDto object
+     * @throws UserAlreadyExistException if a user with the same email already exists in the database
+     * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not available in the environment
+     */
+
     @Transactional
     public Integer adduser(UserDto userDto) throws NoSuchAlgorithmException {
         if ((userDto.getRoleName() == null ||
