@@ -68,8 +68,8 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.empty());
 
-        when(userRepository.register(any(), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
-                .thenReturn(1);
+//        when(userRepository.register(any(), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+//                .thenReturn(1);
 
 
         //act
@@ -99,8 +99,8 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.empty());
 
-        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
-                .thenReturn(1);
+//        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+//                .thenReturn(1);
 
 
         //act
@@ -130,8 +130,8 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any()))
                 .thenReturn(Optional.empty());
 
-        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
-                .thenReturn(1);
+//        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+//                .thenReturn(1);
 
 
 
@@ -214,8 +214,8 @@ public final class UserServiceTest {
         userDto.setPassword("mate");
 
 
-        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
-                .thenReturn(null);
+//        when(userRepository.register(any(Integer.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(String.class), any(String.class)))
+//                .thenReturn(null);
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         //assert & act
@@ -246,7 +246,7 @@ public final class UserServiceTest {
         user.setWorkgroupmembersCollection(workgroupmembersCollection);
 
 
-        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(1);
+//        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(1);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
         //act
@@ -301,7 +301,7 @@ public final class UserServiceTest {
 
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
-        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(null);
+//        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(null);
         //act & equals
         assertThrows(UserNotAddedToWorkgroupException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
 

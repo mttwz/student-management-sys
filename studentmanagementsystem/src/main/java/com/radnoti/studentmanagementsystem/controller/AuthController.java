@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 
@@ -21,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(path = "/login", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<UserLoginDto> login(@RequestBody UserDto userDto){
+    public ResponseEntity<UserLoginDto> login(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
         return ResponseEntity.ok(authService.login(userDto));
     }
 

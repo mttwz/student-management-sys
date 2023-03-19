@@ -80,14 +80,14 @@ public class CardService {
         if (studentDto.getId() == null || studentDto.getCardId() == null) {
             throw new InvalidFormValueException();
         }
-        cardRepository.connectCardToStudent(studentDto.getId(), studentDto.getCardId());
 
-        studentRepository.findById(studentDto.getId())
+        Student student = studentRepository.findById(studentDto.getId())
                 .orElseThrow(StudentNotExistException::new);
 
-        cardRepository.findById(studentDto.getCardId())
+        Card card = cardRepository.findById(studentDto.getCardId())
                 .orElseThrow(CardNotExistException::new);
 
+        student.setCardId(card);
     }
 
     @Transactional
@@ -99,7 +99,7 @@ public class CardService {
 
         Integer cardId = cardRepository.getCardByUserId(userDto.getId());
         if (cardId == null) {
-            throw new CardNotExistException();
+            throw new CardNotAssignedException();
         }
         return cardId;
     }
@@ -115,7 +115,7 @@ public class CardService {
         Integer cardId = student.getCardId().getId();
 
         if (cardId == null) {
-            throw new CardNotExistException();
+            throw new CardNotAssignedException();
         }
         return cardId;
     }

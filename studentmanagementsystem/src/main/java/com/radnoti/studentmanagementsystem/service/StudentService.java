@@ -61,10 +61,12 @@ public class StudentService {
     public Integer registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
         Integer savedUserId = userService.adduser(userDto);
+
         Student student = new Student();
         User user = userRepository.findById(savedUserId)
                 .orElseThrow(UserNotExistException::new);
         student.setUserId(user);
+
         studentRepository.save(student);
         return savedUserId;
     }

@@ -20,9 +20,6 @@ public interface StudentRepository extends CrudRepository<Student, Integer>  {
 
 
     @Procedure
-    Integer registerStudent(String firstName, String lastName, String phone, Date birth, String email, String password);
-
-    @Procedure
     Integer logStudent(Integer studentId);
 
 }

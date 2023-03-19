@@ -9,6 +9,7 @@ import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.security.HashUtil;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +31,8 @@ public class AuthService {
 
     private final UserMapper userMapper;
 
+    private final HashUtil hashUtil;
+
     /**
      * Generates a JWT token for the authenticated user
      * @param userDto The login credentials for the user in Json format
@@ -37,8 +41,9 @@ public class AuthService {
      */
 
     @Transactional
-    public UserLoginDto login(UserDto userDto){
-        Integer userId = userRepository.login(userDto.getEmail(), userDto.getPassword());
+    public UserLoginDto login(UserDto userDto) throws NoSuchAlgorithmException {
+        String password = hashUtil.getSHA256Hash(userDto.getPassword());
+        Integer userId = userRepository.login(userDto.getEmail(), password);
 
         if(userId == null){
             throw new InvalidCredentialsException();

@@ -69,7 +69,12 @@ public class WorkgroupScheduleService {
         Iterable<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findAllById(workgroupScheduleList);
 
         for(Workgroupschedule workgroupschedule : optionalWorkgroupschedule){
-            workgroupscheduleDtoArrayList.add(workgroupScheduleMapper.fromEntityToDto(workgroupschedule));
+            WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
+            Date fixedStartDate = new Date(workgroupscheduleDto.getStart().getTime() + 1000 * 3600);
+            Date fixedEndDate = new Date(workgroupscheduleDto.getStart().getTime() + 1000 * 3600);
+            workgroupscheduleDto.setStart(fixedStartDate);
+            workgroupscheduleDto.setEnd(fixedEndDate);
+            workgroupscheduleDtoArrayList.add(workgroupscheduleDto);
         }
         return workgroupscheduleDtoArrayList;
     }

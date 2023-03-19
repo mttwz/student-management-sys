@@ -50,7 +50,7 @@ public class StudentServiceTest {
         Student student = new Student(1);
 
 
-        when(studentRepository.registerStudent(any(),any(),any(),any(),any(),any())).thenReturn(1);
+//        when(studentRepository.registerStudent(any(),any(),any(),any(),any(),any())).thenReturn(1);
         //act
         int actual = studentService.registerStudent(userDto);
 

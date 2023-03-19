@@ -52,7 +52,6 @@ public class UserService {
 
     private final WorkgroupRepository workgroupRepository;
 
-    private final JwtUtil jwtUtil;
 
     private final HashUtil hashUtil;
 
@@ -119,8 +118,9 @@ public class UserService {
                 .orElseThrow(WorkgroupNotExistException::new);
 
         Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
-        workgroupMembersRepository.save(workgroupmembers);
-        return workgroupmembers.getId();
+        Workgroupmembers savedWorkgroupmembers =  workgroupMembersRepository.save(workgroupmembers);
+
+        return savedWorkgroupmembers.getId();
 
     }
 
@@ -147,6 +147,7 @@ public class UserService {
             throw new UserAlreadyDeletedException();
         }
         user.setIsDeleted(true);
+
         return userDto.getId();
     }
 
@@ -172,6 +173,7 @@ public class UserService {
     public UserInfoDto getUserInfo(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
+
         return userMapper.fromEntityToInfoDto(user);
 
     }

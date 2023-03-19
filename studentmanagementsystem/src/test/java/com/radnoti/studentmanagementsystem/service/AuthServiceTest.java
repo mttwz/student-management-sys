@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class AuthServiceTest {
     UserMapper userMapper;
 
     @Test
-    public void loginTest_valid(){
+    public void loginTest_valid() throws NoSuchAlgorithmException {
         //arrange
         UserDto userDto = new UserDto();
 

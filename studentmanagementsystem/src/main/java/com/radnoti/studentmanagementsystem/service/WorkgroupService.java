@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueExceptio
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
+import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
@@ -27,6 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WorkgroupService {
     private final WorkgroupRepository workgroupRepository;
+    private final WorkgroupMapper workgroupMapper;
 
 
     @Transactional
@@ -38,6 +40,10 @@ public class WorkgroupService {
         if(workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
             throw new EmptyFormValueException();
         }
+
+        Workgroup workgroup = workgroupMapper.fromDtoToEntity(workgroupDto);
+        workgroup.setGroupName(workgroupDto.getGroupName());
+        workgroup.setInstitution(workgroupDto.getInstitution());
 
         Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDto.getGroupName(), workgroupDto.getInstitution());
         return workgroupId;
