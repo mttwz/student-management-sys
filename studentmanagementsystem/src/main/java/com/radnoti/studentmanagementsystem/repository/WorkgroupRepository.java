@@ -18,8 +18,6 @@ import java.util.ArrayList;
  */
 public interface WorkgroupRepository extends CrudRepository<Workgroup, Integer> {
     
-    @Procedure
-    Integer createWorkgroup(String groupName, String institution);
 
     
 }

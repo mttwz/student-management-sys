@@ -7,8 +7,5 @@ import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import java.util.Date;
 
 public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupschedule, Integer> {
-    @Procedure
-    Integer createWorkgroupSchedule(String name, Date start, Date end, Boolean isOnsite, Integer workgroupId);
-
 
 }

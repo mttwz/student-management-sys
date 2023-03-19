@@ -39,25 +39,24 @@ public class CardController {
     public ResponseEntity<Map> createCard(@RequestBody CardDto cardDto) {
         return ResponseEntity.ok()
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", cardService.createCard(cardDto)));
+                .body(Map.of("id", cardService.createCard(cardDto)));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/get-card-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map> getCardByUserId(@RequestBody UserDto userDto) {
-        System.err.println("asd");
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", cardService.getCardByUserId(userDto)));
+                .body(Map.of("id", cardService.getCardByUserId(userDto)));
     }
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/get-card-by-student-id", consumes = {"application/json"}, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map> getCardByStudentId(@RequestBody StudentDto studentDto) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", cardService.getCardByStudentId(studentDto)));
+                .body(Map.of("id", cardService.getCardByStudentId(studentDto)));
     }
 
 

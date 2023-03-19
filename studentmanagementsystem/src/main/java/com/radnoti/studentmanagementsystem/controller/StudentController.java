@@ -31,11 +31,11 @@ public class StudentController {
 
 
 
-    @PostMapping(path = "/register-student", consumes = {"application/json"})
+    @PostMapping(path = "/register-student", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<Map> register(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .header("Content-Type","application/json")
-                .body(responseFactory.createResponse("id", studentService.registerStudent(userDto)));
+                .body(Map.of("id", studentService.registerStudent(userDto)));
     }
 
 

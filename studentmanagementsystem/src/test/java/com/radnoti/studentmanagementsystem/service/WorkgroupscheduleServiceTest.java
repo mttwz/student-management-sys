@@ -50,8 +50,8 @@ public class WorkgroupscheduleServiceTest {
 
         Workgroup workgroup = new Workgroup(1);
 
-        when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any()))
-                .thenReturn(1);
+        //when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any()))
+                //.thenReturn(1);
         when(workgroupRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroup));
         when(workgroupscheduleRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroupschedule));
 
@@ -71,7 +71,7 @@ public class WorkgroupscheduleServiceTest {
         WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
         Workgroup workgroup = new Workgroup(1);
 
-        when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any())).thenReturn(1);
+        //when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any())).thenReturn(1);
         when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.empty());
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
 

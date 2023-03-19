@@ -24,11 +24,11 @@ public class WorkgroupController {
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/create-workgroup", consumes = {"application/json"})
+    @PostMapping(path = "/create-workgroup", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<Map> createWorkgroup(@RequestBody WorkgroupDto workgroupDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", workgroupService.createWorkgroup(workgroupDto)));
+                .body(Map.of("id", workgroupService.createWorkgroup(workgroupDto)));
 
     }
 

@@ -33,6 +33,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +57,7 @@ public class WorkgroupScheduleService {
 
     @Transactional
     public ArrayList<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, UserDto userDto) {
+// TODO: 2023. 03. 19. datumok szarok kikell javitni
         ArrayList<Integer> workgroupScheduleList;
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
@@ -70,10 +73,8 @@ public class WorkgroupScheduleService {
 
         for(Workgroupschedule workgroupschedule : optionalWorkgroupschedule){
             WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
-            Date fixedStartDate = new Date(workgroupscheduleDto.getStart().getTime() + 1000 * 3600);
-            Date fixedEndDate = new Date(workgroupscheduleDto.getStart().getTime() + 1000 * 3600);
-            workgroupscheduleDto.setStart(fixedStartDate);
-            workgroupscheduleDto.setEnd(fixedEndDate);
+            workgroupscheduleDto.setStart(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getStart().toInstant(), ZoneOffset.UTC).atZone(ZoneId.of("UTC-1")).toInstant()));
+            workgroupscheduleDto.setEnd(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getEnd().toInstant(), ZoneOffset.UTC).atZone(ZoneId.of("UTC-1")).toInstant()));
             workgroupscheduleDtoArrayList.add(workgroupscheduleDto);
         }
         return workgroupscheduleDtoArrayList;
@@ -82,6 +83,7 @@ public class WorkgroupScheduleService {
 
     @Transactional
     public Integer createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) throws ParseException {
+// TODO: 2023. 03. 19. datumok szarok kikell javitni
         if(workgroupscheduleDto.getName() == null ||
                 workgroupscheduleDto.getWorkgroupId() == null ||
                 workgroupscheduleDto.getStart() == null ||
@@ -91,20 +93,15 @@ public class WorkgroupScheduleService {
             throw new InvalidFormValueException();
         }
 
-
-
         workgroupRepository.findById(workgroupscheduleDto.getWorkgroupId())
                 .orElseThrow(WorkgroupNotExistException::new);
-
-
-
 
         Workgroupschedule workgroupschedule = workgroupScheduleMapper.fromDtoToEntity(workgroupscheduleDto);
 
         workgroupschedule.setName(workgroupscheduleDto.getName());
         workgroupschedule.setWorkgroupId(new Workgroup(workgroupscheduleDto.getWorkgroupId()));
-        workgroupschedule.setStart(new Date(workgroupscheduleDto.getStart().getTime() - 1000 * 3600));
-        workgroupschedule.setEnd(new Date(workgroupscheduleDto.getEnd().getTime() - 1000 * 3600));
+        workgroupschedule.setStart(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getStart().toInstant(), ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toInstant()));
+        workgroupschedule.setEnd(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getEnd().toInstant(), ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toInstant()));
         workgroupschedule.setIsOnsite(workgroupschedule.getIsOnsite());
 
 

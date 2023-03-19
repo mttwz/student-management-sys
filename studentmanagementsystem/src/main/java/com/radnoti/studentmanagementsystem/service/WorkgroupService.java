@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
@@ -33,20 +34,17 @@ public class WorkgroupService {
 
     @Transactional
     public Integer createWorkgroup(WorkgroupDto workgroupDto) {
-
-        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null){
-            throw new NullFormValueException();
-        }
-        if(workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
-            throw new EmptyFormValueException();
+        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
+            throw new InvalidFormValueException();
         }
 
         Workgroup workgroup = workgroupMapper.fromDtoToEntity(workgroupDto);
         workgroup.setGroupName(workgroupDto.getGroupName());
         workgroup.setInstitution(workgroupDto.getInstitution());
 
-        Integer workgroupId = workgroupRepository.createWorkgroup(workgroupDto.getGroupName(), workgroupDto.getInstitution());
-        return workgroupId;
+        Workgroup savedWorkgroup =  workgroupRepository.save(workgroup);
+
+        return savedWorkgroup.getId();
 
     }
 

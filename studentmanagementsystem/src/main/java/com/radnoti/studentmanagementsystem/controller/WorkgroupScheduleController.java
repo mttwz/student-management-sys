@@ -28,7 +28,7 @@ public class WorkgroupScheduleController {
     private final ResponseFactory responseFactory;
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"})
+    @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<ArrayList<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
@@ -36,20 +36,20 @@ public class WorkgroupScheduleController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/create-workgroup-schedule", consumes = {"application/json"})
+    @PostMapping(path = "/create-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<Map> createWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) throws ParseException {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDto)));
+                .body(Map.of("id", workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDto)));
 
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/delete-workgroup-schedule", consumes = {"application/json"})
+    @PostMapping(path = "/delete-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<Map> deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(responseFactory.createResponse("id", workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDto)));
+                .body(Map.of("id", workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDto)));
 
     }
 
