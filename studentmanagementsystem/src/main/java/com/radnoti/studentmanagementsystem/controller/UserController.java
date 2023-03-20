@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -22,11 +23,9 @@ public class UserController {
     private final UserService userService;
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/register-user", consumes = {"application/json"}, produces = {"application/json"})
+    @PostMapping(path = "/register-user")
     public ResponseEntity<Map> adduser(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", userService.adduser(userDto)));
+        return ResponseEntity.ok(Map.of("id", userService.adduser(userDto)));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
@@ -86,9 +85,14 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/search-super-admin")
-    public @ResponseBody ArrayList<UserDto> searchSuperadmin(@RequestParam String filter, @RequestParam String q){
+    public @ResponseBody ArrayList<UserInfoDto> searchSuperadmin(@RequestParam String filter,
+                                                                 @RequestParam String q,
+                                                                 @RequestParam(required = false, defaultValue = "id") String sort,
+                                                                 @RequestParam(required = false, defaultValue = "asc") String direction ,
+                                                                 @RequestParam Integer pageNumber){
         //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=mate
-        return userService.searchSuperadmin(filter,q);
+        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=st&sort=id&direction=desc&pageNumber=0
+        return userService.searchSuperadmin(filter,q,sort,direction,pageNumber);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
