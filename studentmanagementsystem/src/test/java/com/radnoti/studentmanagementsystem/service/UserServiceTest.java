@@ -11,6 +11,7 @@ import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
+import liquibase.pro.packaged.M;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,6 +48,12 @@ public final class UserServiceTest {
 
     @Mock
     WorkgroupRepository workgroupRepository;
+
+    @Mock
+    WorkgroupService workgroupService;
+
+    @Mock
+    RoleService roleService;
 
     @Test()
     public void addUserTest_valid_superadmin() throws NoSuchAlgorithmException {
@@ -250,7 +257,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
         //act
-        int actual = userService.addUserToWorkgroup(workgroupmembersDto);
+        int actual = workgroupService.addUserToWorkgroup(workgroupmembersDto);
 
         //equals
         assertEquals(1, actual);
@@ -273,7 +280,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
         //act & equals
-        assertThrows(UserNotExistException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
+        assertThrows(UserNotExistException.class, () -> workgroupService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
@@ -288,7 +295,7 @@ public final class UserServiceTest {
         when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
         //act & equals
-        assertThrows(WorkgroupNotExistException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
+        assertThrows(WorkgroupNotExistException.class, () -> workgroupService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
@@ -303,7 +310,7 @@ public final class UserServiceTest {
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
 //        when(userRepository.addUserToWorkgroup(any(), any())).thenReturn(null);
         //act & equals
-        assertThrows(UserNotAddedToWorkgroupException.class, () -> userService.addUserToWorkgroup(workgroupmembersDto));
+        assertThrows(UserNotAddedToWorkgroupException.class, () -> workgroupService.addUserToWorkgroup(workgroupmembersDto));
 
     }
 
@@ -429,7 +436,7 @@ public final class UserServiceTest {
         //act
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
         //assert
-        assertThrows(UserNotExistException.class, () -> userService.setUserRole(userDto));
+        assertThrows(UserNotExistException.class, () -> roleService.setUserRole(userDto));
     }
 
 

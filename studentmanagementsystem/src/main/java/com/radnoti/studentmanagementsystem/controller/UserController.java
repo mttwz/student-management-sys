@@ -41,20 +41,9 @@ public class UserController {
         userService.deleteUser(userDto);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/set-user-role", consumes = {"application/json"}, produces = {"application/json"})
-    public void setUserRole(@RequestBody UserDto userDto) {
-        userService.setUserRole(userDto);
-    }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/add-user-to-workgroup", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> addUserToWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", userService.addUserToWorkgroup(workgroupmembersDto)));
 
-    }
+
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
