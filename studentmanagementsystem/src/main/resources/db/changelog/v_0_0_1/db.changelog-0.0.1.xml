@@ -48,27 +48,6 @@
                  endDelimiter="$$"/>
     </changeSet>
 
-    <changeSet id="search-admins" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/search-admins.sql" stripComments="true" endDelimiter="$$"/>
-    </changeSet>
-
-    <changeSet id="search-all-user" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/search-all-user.sql" stripComments="true" endDelimiter="$$"/>
-    </changeSet>
-
-    <changeSet id="search-students" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/search-students.sql" stripComments="true" endDelimiter="$$"/>
-    </changeSet>
-
-    <changeSet id="search-superadmins" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/search-superadmins.sql" stripComments="true" endDelimiter="$$"/>
-    </changeSet>
-
-    <changeSet id="search-workgroups" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/search-workgroups.sql" stripComments="true" endDelimiter="$$"/>
-    </changeSet>
-
-
     <changeSet id="test" author="mate">
         <sqlFile path="db/changelog/v_0_0_1/data/someData.sql" stripComments="true"/>
     </changeSet>
