@@ -252,11 +252,7 @@ public class UserService {
     }
 
     @Transactional
-    public ArrayList<UserInfoDto> searchSuperadmin(String filter,String q,String sort,String direction,Integer pageNumber) {
-        Pageable pageable;
-        if (Objects.equals(direction, "desc")){
-            pageable = PageRequest.of(pageNumber,3, Sort.by(sort).descending());
-        }else pageable = PageRequest.of(pageNumber,3, Sort.by(sort).ascending());
+    public ArrayList<UserInfoDto> searchSuperadmin(String filter,String q,Pageable pageable) {
 
         ArrayList<UserInfoDto> userDtoArrayList = new ArrayList<>();
         ArrayList<User> userArrayList = new ArrayList<>();

@@ -4,6 +4,7 @@ import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,12 +88,12 @@ public class UserController {
     @PostMapping(path = "/search-super-admin")
     public @ResponseBody ArrayList<UserInfoDto> searchSuperadmin(@RequestParam String filter,
                                                                  @RequestParam String q,
-                                                                 @RequestParam(required = false, defaultValue = "id") String sort,
-                                                                 @RequestParam(required = false, defaultValue = "asc") String direction ,
-                                                                 @RequestParam Integer pageNumber){
+                                                                 Pageable pageable){
         //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=mate
         //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=st&sort=id&direction=desc&pageNumber=0
-        return userService.searchSuperadmin(filter,q,sort,direction,pageNumber);
+
+        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=&page=0&size=3&sort=,asc
+        return userService.searchSuperadmin(filter,q,pageable);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
