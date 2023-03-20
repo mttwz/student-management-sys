@@ -50,23 +50,23 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     ArrayList<User> searchAllUser(String searchString);
 
     @Query("select u from User u where " +
-            "u.firstName like concat('%',:searchString,'%') or " +
+            "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%') and " +
+            "u.email like concat('%',:searchString,'%')) and " +
             "u.roleId.id = 3")
     ArrayList<User> searchStudents(String searchString);
 
     @Query("select u from User u where " +
-            "u.firstName like concat('%',:searchString,'%') or " +
+            "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%') and " +
+            "u.email like concat('%',:searchString,'%')) and " +
             "u.roleId.id = 2")
     ArrayList<User> searchAdmins(String searchString);
 
     @Query("select u from User u where " +
-            "u.firstName like concat('%',:searchString,'%') or " +
+            "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%') and " +
+            "u.email like concat('%',:searchString,'%')) and " +
             "u.roleId.id = 1")
     ArrayList<User> searchSuperadmins(String searchString);
 
