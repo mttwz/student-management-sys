@@ -24,4 +24,6 @@ public class AttendanceController {
                 .header("Content-Type","application/json")
                 .body(Map.of("id", attendanceService.logStudent(studentDto)));
     }
+
+
 }

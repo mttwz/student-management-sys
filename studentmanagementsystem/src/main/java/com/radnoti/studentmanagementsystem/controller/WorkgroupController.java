@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
@@ -29,6 +30,12 @@ public class WorkgroupController {
                 .header("Content-Type", "application/json")
                 .body(Map.of("id", workgroupService.createWorkgroup(workgroupDto)));
 
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/delete-workgroup", consumes = {"application/json"}, produces = {"application/json"})
+    public void deleteWorkgroup(@RequestBody WorkgroupDto workgroupDto) {
+        workgroupService.deleteWorkgroup(workgroupDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})

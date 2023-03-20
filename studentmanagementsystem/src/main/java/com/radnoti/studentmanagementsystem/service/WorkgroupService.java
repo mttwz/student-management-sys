@@ -17,6 +17,7 @@ import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class WorkgroupService {
 
     private final WorkgroupMembersMapper workgroupMembersMapper;
     private final WorkgroupMembersRepository workgroupMembersRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
@@ -60,11 +62,15 @@ public class WorkgroupService {
 
     @Transactional
     public void deleteWorkgroup(WorkgroupDto workgroupDto) {
-        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
-            throw new InvalidFormValueException();
-        }
+//        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
+//            throw new InvalidFormValueException();
+//        }
 
         Workgroup workgroup = workgroupRepository.findById(workgroupDto.getId()).orElseThrow(WorkgroupNotExistException::new);
+
+        if(workgroup.getDeleted()){
+            throw new InvalidFormValueException();
+        }
 
         Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
         workgroup.setDeleted(true);
@@ -86,7 +92,7 @@ public class WorkgroupService {
 
     @Transactional
     public Integer addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
-        workgroupRepository.findById(workgroupmembersDto.getUserId())
+        userRepository.findById(workgroupmembersDto.getUserId())
                 .orElseThrow(UserNotExistException::new);
 
         workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())

@@ -66,10 +66,11 @@ public class CardService {
 
     @Transactional
     public void deleteCard(final CardDto cardDto) {
-        if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
+        Card card = cardRepository.findById(cardDto.getId()).orElseThrow(CardNotExistException::new);
+
+        if(card.getDeleted()){
             throw new InvalidFormValueException();
         }
-        Card card = cardRepository.findById(cardDto.getId()).orElseThrow(CardNotExistException::new);
 
         Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
         card.setDeleted(true);

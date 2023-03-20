@@ -39,6 +39,13 @@ public class CardController {
                 .body(Map.of("id", cardService.createCard(cardDto)));
     }
 
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/delete-card", consumes = {"application/json"}, produces = {"application/json"})
+    public void deleteCard(@RequestBody CardDto cardDto) {
+        cardService.deleteCard(cardDto);
+    }
+
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/get-card-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)

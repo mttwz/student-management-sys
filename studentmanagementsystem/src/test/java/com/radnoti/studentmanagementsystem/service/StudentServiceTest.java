@@ -3,6 +3,7 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
+import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
@@ -33,23 +34,40 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private StudentRepository studentRepository;
+
     @InjectMocks
-    StudentService studentService;
-
-    @Mock
-    StudentRepository studentRepository;
-
-    @Mock
-    UserRepository userRepository;
-
-    @Mock
-    UserMapper userMapper;
-
-    @Mock
-    HashUtil hashUtil;
+    private StudentService studentService;
 
 
+    @Test
+    public void testRegisterStudent() throws NoSuchAlgorithmException {
+        UserDto userDto = new UserDto();
+        userDto.setFirstName("testuser");
+        userDto.setPassword("testpassword");
+        userDto.setRoleName(RoleEnum.Types.STUDENT);
 
 
+        when(userService.adduser(userDto)).thenReturn(1);
+
+        User user = new User();
+        user.setId(1);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        Student student = new Student();
+        student.setUserId(user);
+        when(studentRepository.save(any())).thenReturn(student);
+
+        int actual = studentService.registerStudent(userDto);
+
+        assertEquals(1, actual);
+    }
 
 }

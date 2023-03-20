@@ -42,12 +42,8 @@ public class UserController {
     }
 
 
-
-
-
-
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @GetMapping(path = "/get-all-user", consumes = {"application/json"}, produces = {"application/json"})
+    @PostMapping(path = "/get-all-user", consumes = {"application/json"}, produces = {"application/json"})
     public  ResponseEntity<ArrayList<UserInfoDto>> getWorkgroupScheduleByUserId() {
         return ResponseEntity.ok()
                 .header("Content-Type", "application/json")
