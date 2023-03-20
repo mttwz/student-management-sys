@@ -54,28 +54,28 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%') and " +
             "u.roleId.id = 3")
-    ArrayList<User> searchStudents(String string);
+    ArrayList<User> searchStudents(String searchString);
 
     @Query("select u from User u where " +
             "u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%') and " +
             "u.roleId.id = 2")
-    ArrayList<User> searchAdmins(String string);
+    ArrayList<User> searchAdmins(String searchString);
 
     @Query("select u from User u where " +
             "u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%') and " +
             "u.roleId.id = 1")
-    ArrayList<User> searchSuperadmins(String string);
+    ArrayList<User> searchSuperadmins(String searchString);
 
     @Query("select u from User u " +
             "join Workgroupmembers wm on u.id = wm.userId.id " +
             "join Workgroup w on w.id = wm.workgroupId.id " +
             "where u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%')")
-    ArrayList<User> searchWorkgroups(String string);
+    ArrayList<User> searchWorkgroups(String searchString);
 
     @Procedure
     ArrayList<User> getUserFromWorkgroup(Integer id);
