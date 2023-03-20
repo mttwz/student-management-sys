@@ -106,7 +106,11 @@ public class Attendance implements Serializable {
 
     @Override
     public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Attendance[ id=" + id + " ]";
+        return "Attendance{" +
+                "id=" + id +
+                ", arrival=" + arrival +
+                ", leaving=" + leaving +
+                ", studentId=" + studentId +
+                '}';
     }
-    
 }

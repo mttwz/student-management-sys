@@ -5,6 +5,7 @@ import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueExceptio
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotDeletedException;
@@ -69,9 +70,9 @@ public class WorkgroupScheduleService {
         }
 
         ArrayList<WorkgroupscheduleDto> workgroupscheduleDtoArrayList = new ArrayList<>();
-        Iterable<Workgroupschedule> optionalWorkgroupschedule = workgroupscheduleRepository.findAllById(workgroupScheduleList);
+        Iterable<Workgroupschedule> optionalWorkgroupSchedule = workgroupscheduleRepository.findAllById(workgroupScheduleList);
 
-        for(Workgroupschedule workgroupschedule : optionalWorkgroupschedule){
+        for(Workgroupschedule workgroupschedule : optionalWorkgroupSchedule){
             WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
             workgroupscheduleDto.setStart(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getStart().toInstant(), ZoneOffset.UTC).atZone(ZoneId.of("UTC-1")).toInstant()));
             workgroupscheduleDto.setEnd(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getEnd().toInstant(), ZoneOffset.UTC).atZone(ZoneId.of("UTC-1")).toInstant()));
@@ -82,7 +83,7 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public Integer createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) throws ParseException {
+    public Integer createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto){
 // TODO: 2023. 03. 19. datumok szarok kikell javitni
         if(workgroupscheduleDto.getName() == null ||
                 workgroupscheduleDto.getWorkgroupId() == null ||
@@ -103,9 +104,8 @@ public class WorkgroupScheduleService {
         workgroupschedule.setStart(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getStart().toInstant(), ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toInstant()));
         workgroupschedule.setEnd(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getEnd().toInstant(), ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toInstant()));
         workgroupschedule.setIsOnsite(workgroupschedule.getIsOnsite());
+        workgroupschedule.setDeleted(false);
 
-
-        System.err.println();
 
         Workgroupschedule savedWorkgroupSchedule = workgroupscheduleRepository.save(workgroupschedule);
 
@@ -117,12 +117,24 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public Integer deleteWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
-        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getWorkgroupId())
+    public void deleteWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
+        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getId())
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
+        if (workgroupschedule.getDeleted()){
+            throw new WorkgroupAlreadyDeletedException();
+        }
+        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        workgroupschedule.setDeleted(true);
+        workgroupschedule.setDeletedAt(currDate);
 
-        workgroupscheduleRepository.delete(workgroupschedule);
-        return workgroupscheduleDto.getId();
+    }
+
+    @Transactional
+    public void restoreDeletedWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
+        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getId())
+                .orElseThrow(WorkgroupScheduleNotExistException::new);
+        workgroupschedule.setDeleted(false);
+        workgroupschedule.setDeletedAt(null);
 
     }
 

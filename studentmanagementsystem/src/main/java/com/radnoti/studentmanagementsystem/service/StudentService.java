@@ -36,15 +36,6 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
 
-    /**
-     * Adds a new user to the system with student privileges.
-     *
-     * @param userDto The DTO object representing the user to be added.
-     * @return The ID of the added user.
-     * @throws InvalidFormValueException if any required field in the provided DTO object is null or empty.
-     * @throws UserAlreadyExistException if a user with the provided email already exists in the database.
-     * @throws NoSuchAlgorithmException if an error occurs while hashing the user's password.
-     */
     @Transactional
     public Integer registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);

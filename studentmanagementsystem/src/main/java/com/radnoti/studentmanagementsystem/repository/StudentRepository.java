@@ -18,8 +18,4 @@ import java.util.Optional;
  */
 public interface StudentRepository extends CrudRepository<Student, Integer>  {
 
-
-    @Procedure
-    Integer logStudent(Integer studentId);
-
 }

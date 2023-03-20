@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 /**
  *
  * @author matevoros
@@ -20,6 +22,12 @@ public class CardDto {
     private Integer id;
 
     private String hash;
+
+    private Date createdAt;
+
+    private Boolean isDeleted;
+
+    private Date deletedAt;
 
 
 }

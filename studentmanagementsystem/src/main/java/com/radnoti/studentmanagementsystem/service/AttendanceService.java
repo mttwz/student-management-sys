@@ -3,14 +3,24 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
+import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Component
@@ -19,23 +29,46 @@ public class AttendanceService {
 
 
     private final StudentRepository studentRepository;
+    private final AttendanceRepository attendanceRepository;
 
 
     @Transactional
     public Integer logStudent(StudentDto studentDto){
-        // TODO: 2023. 03. 14.  ezt nemtudom meg hogyan :(
+        Pageable pageable = PageRequest.of(0, 1);
 
-        if(studentDto.getId() == null){
-            throw new NullFormValueException();
+        Student student = studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
+
+        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+
+        List<Attendance> lastAttendanceList = attendanceRepository.getLastAttendanceByStudentId(studentDto.getId(),pageable);
+
+        if(lastAttendanceList.size() != 0){
+            Attendance lastAttendance = lastAttendanceList.get(0);
+            Date lastArrival = lastAttendance.getArrival();
+            Date lastLeaving = lastAttendance.getLeaving();
+            if(lastLeaving == null && isSameDay(currDate,lastArrival)){
+                lastAttendance.setLeaving(currDate);
+                attendanceRepository.save(lastAttendance);
+                return lastAttendance.getId();
+            }
         }
-        studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
-        Integer connectionId = studentRepository.logStudent(studentDto.getId());
+
+        Attendance newAttendance = new Attendance();
+        newAttendance.setArrival(currDate);
+        newAttendance.setStudentId(student);
+        attendanceRepository.save(newAttendance);
+        return newAttendance.getId();
+
+    }
 
 
-        if(connectionId == null){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Log not saved");
-        }
-
-        return connectionId;
+    public static boolean isSameDay(Date date1, Date date2) {
+        LocalDate localDate1 = date1.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate localDate2 = date2.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        return localDate1.isEqual(localDate2);
     }
 }

@@ -11,8 +11,10 @@ import org.mapstruct.Mapping;
 public interface WorkgroupScheduleMapper {
 
     @Mapping(source = "workgroupId.id",target = "workgroupId")
+    @Mapping(source = "deleted",target = "isDeleted")
     WorkgroupscheduleDto fromEntityToDto(Workgroupschedule workgroupschedule);
 
     @Mapping(source = "workgroupId",target = "workgroupId.id")
+    @Mapping(source = "isDeleted",target = "deleted")
     Workgroupschedule fromDtoToEntity(WorkgroupscheduleDto workgroupscheduleDto);
 }

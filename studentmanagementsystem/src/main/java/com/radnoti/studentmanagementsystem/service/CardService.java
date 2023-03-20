@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,7 +45,6 @@ public class CardService {
 
     private final CardMapper cardMapper;
 
-
     /**
      * Creates a new card in the database based on the provided DTO object.
      *
@@ -58,8 +58,23 @@ public class CardService {
             throw new InvalidFormValueException();
         }
         Card card = cardMapper.fromDtoToEntity(cardDto);
+        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        card.setCreatedAt(currDate);
         cardRepository.save(card);
         return card.getId();
+    }
+
+    @Transactional
+    public void deleteCard(final CardDto cardDto) {
+        if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
+            throw new InvalidFormValueException();
+        }
+        Card card = cardRepository.findById(cardDto.getId()).orElseThrow(CardNotExistException::new);
+
+        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        card.setDeleted(true);
+        card.setDeletedAt(currDate);
+        cardRepository.save(card);
     }
 
     /**

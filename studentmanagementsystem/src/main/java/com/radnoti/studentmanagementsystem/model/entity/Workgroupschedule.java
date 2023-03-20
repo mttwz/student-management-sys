@@ -51,6 +51,10 @@ public class Workgroupschedule implements Serializable {
     private Date end;
     @Column(name = "is_onsite")
     private Boolean isOnsite;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+    @Column(name = "deleted_at")
+    private Date deletedAt;
     @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
     @ManyToOne
     private Workgroup workgroupId;
@@ -100,6 +104,22 @@ public class Workgroupschedule implements Serializable {
 
     public void setIsOnsite(Boolean isOnsite) {
         this.isOnsite = isOnsite;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public Workgroup getWorkgroupId() {

@@ -32,6 +32,10 @@ public class WorkgroupscheduleDto implements Serializable {
 
     private Boolean isOnsite;
 
+    private Boolean isDeleted;
+
+    private Date deletedAt;
+
 
 
     //private Collection<WorkgroupDto> workgroupCollection;

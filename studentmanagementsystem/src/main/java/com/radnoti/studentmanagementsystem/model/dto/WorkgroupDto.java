@@ -7,7 +7,12 @@ package com.radnoti.studentmanagementsystem.model.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -25,6 +30,13 @@ public class WorkgroupDto implements Serializable {
     private String groupName;
 
     private String institution;
+
+
+    private Date createdAt;
+
+    private Boolean isDeleted;
+
+    private Date deletedAt;
 
     private UserDto userId;
 

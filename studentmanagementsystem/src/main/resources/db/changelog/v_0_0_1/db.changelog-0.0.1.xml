@@ -48,11 +48,6 @@
                  endDelimiter="$$"/>
     </changeSet>
 
-
-    <changeSet id="log-student" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/log-student.sql" stripComments="true" endDelimiter="$$"/>
-    </changeSet>
-
     <changeSet id="search-admins" author="mate">
         <sqlFile path="db/changelog/v_0_0_1/procedures/search-admins.sql" stripComments="true" endDelimiter="$$"/>
     </changeSet>

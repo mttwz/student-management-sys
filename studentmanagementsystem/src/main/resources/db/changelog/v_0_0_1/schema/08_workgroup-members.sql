@@ -8,7 +8,7 @@ CREATE TABLE `Workgroup_members` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `workgroup_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 
 ALTER TABLE `Workgroup_members`

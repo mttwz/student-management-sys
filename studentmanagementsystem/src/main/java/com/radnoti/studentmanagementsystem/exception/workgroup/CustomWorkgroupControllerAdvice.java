@@ -46,4 +46,10 @@ public class CustomWorkgroupControllerAdvice {
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "workgroup03"), status);
     }
 
+    @ExceptionHandler(WorkgroupAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleException(WorkgroupAlreadyDeletedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "workgroup04"), status);
+    }
+
 }

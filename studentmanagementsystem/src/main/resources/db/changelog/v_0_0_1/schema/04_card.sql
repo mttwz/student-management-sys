@@ -5,8 +5,11 @@
 
 CREATE TABLE `Card` (
   `id` int(11) NOT NULL,
-  `hash` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `hash` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `is_deleted` tinyint(1) DEFAULT '0',
+  `deleted_at` datetime DEFAULT NULL
+);
 
 
 ALTER TABLE `Card`

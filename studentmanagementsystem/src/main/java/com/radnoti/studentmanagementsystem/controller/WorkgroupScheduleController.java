@@ -44,12 +44,17 @@ public class WorkgroupScheduleController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/delete-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDto)));
-
+    public void deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
+        workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDto);
     }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @PostMapping(path = "/restore-deleted-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
+    public void restoreDeletedWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
+        workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto);
+    }
+
+
 
 
     @PostMapping(path = "/upload-file/{workgroupscheduleId}", consumes = {"multipart/form-data"})

@@ -31,26 +31,20 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/set-user-is-activated", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> setUserIsActivated(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", userService.setUserIsActivated(userDto)));
+    public void setUserIsActivated(@RequestBody UserDto userDto) {
+        userService.setUserIsActivated(userDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/delete-user", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> deleteUser(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id",userService.deleteUser(userDto)));
+    public void deleteUser(@RequestBody UserDto userDto) {
+        userService.deleteUser(userDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/set-user-role", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> setUserRole(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", userService.setUserRole(userDto)));
+    public void setUserRole(@RequestBody UserDto userDto) {
+        userService.setUserRole(userDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})

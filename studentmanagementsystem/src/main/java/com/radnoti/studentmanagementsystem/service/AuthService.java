@@ -54,7 +54,6 @@ public class AuthService {
 
         User user = userRepository.findById(userId).orElseThrow(InvalidCredentialsException::new);
 
-
         if (!user.getIsActivated()){
             throw new UserNotActivatedException();
         }

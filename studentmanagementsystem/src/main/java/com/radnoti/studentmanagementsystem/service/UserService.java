@@ -7,10 +7,12 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
+import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
 import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
@@ -70,7 +72,7 @@ public class UserService {
      * The user's activation status is set to false, and its deleted status is set to false.
      * The user's role is determined based on the roleName field of the UserDto object, which can be "superadmin", "admin", or "student".
      * The created user is then saved to the database and its ID is returned.
-     * @param userDto a UserDto object containing the user's information
+     * @param userDto a Dto object containing the user's information
      * @return the ID of the created user
      * @throws InvalidFormValueException if a required field is missing or empty in the UserDto object
      * @throws UserAlreadyExistException if a user with the same email already exists in the database
@@ -123,7 +125,15 @@ public class UserService {
 
 
 
-
+    /**
+     * Adds a student to a workgroup in the database based on the provided DTO object.
+     *
+     * @return the ID of the created connection.
+     * @param workgroupmembersDto The DTO object containing the student's id and the workgroup's id.
+     * @throws UserNotExistException if the provided student's ID does not exist in the database.
+     * @throws WorkgroupNotExistException if the provided workgroup's ID does not exist in the database.
+     *
+     */
 
     @Transactional
     public Integer addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
@@ -140,22 +150,28 @@ public class UserService {
 
     }
 
+    /**
+     * Activates the user in the database based on the provided id.
+     *
+     * @param userDto The DTO object containing the user's id.
+     * @throws UserNotExistException if the provided user's ID does not exist in the database.
+     * @throws UserAlreadyActivatedException if the provided user already activated.
+     *
+     */
     @Transactional
-    public Integer setUserIsActivated(UserDto userDto) {
+    public void setUserIsActivated(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
         if (user.getIsActivated()){
             throw new UserAlreadyActivatedException();
         }
         user.setIsActivated(true);
-
-        return userDto.getId();
     }
 
 
 
     @Transactional
-    public Integer deleteUser(UserDto userDto) {
+    public void deleteUser(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
 
@@ -164,15 +180,13 @@ public class UserService {
         }
         user.setIsDeleted(true);
 
-        return userDto.getId();
     }
 
     @Transactional
-    public Integer setUserRole(UserDto userDto) {
+    public void setUserRole(UserDto userDto) {
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
         userRepository.setUserRole(userDto.getId(), userDto.getRoleName());
-        return userDto.getId();
     }
 
     @Transactional

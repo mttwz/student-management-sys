@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueExceptio
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -45,6 +47,21 @@ public class WorkgroupService {
         Workgroup savedWorkgroup =  workgroupRepository.save(workgroup);
 
         return savedWorkgroup.getId();
+
+    }
+
+    @Transactional
+    public void deleteWorkgroup(WorkgroupDto workgroupDto) {
+        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
+            throw new InvalidFormValueException();
+        }
+
+        Workgroup workgroup = workgroupRepository.findById(workgroupDto.getId()).orElseThrow(WorkgroupNotExistException::new);
+
+        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        workgroup.setDeleted(true);
+        workgroup.setDeletedAt(currDate);
+
 
     }
 
