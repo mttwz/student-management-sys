@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 //@SpringBootTest
@@ -270,20 +270,24 @@ public final class UserServiceTest {
 
 
 
-//    @Test
-//    public void deleteUserTest_valid(){
-//        UserDto userDto = new UserDto();
-//        userDto.setId(1);
-//        userDto.setIsDeleted(false);
-//
-//        User user = new User();
-//        user.setIsDeleted(false);
-//
-//        when(userRepository.findById(any(Integer.class)))
-//                .thenReturn(Optional.of(user));
-//
-//        //assertEquals(1,userService.deleteUser(userDto));
-//    }
+    @Test
+    public void deleteUserTest_valid(){
+        //arrange
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsDeleted(false);
+
+        User user = mock(User.class);
+        user.setId(1);
+
+        when(userRepository.findById(any()))
+                .thenReturn(Optional.of(user));
+        //act
+        userService.deleteUser(userDto);
+
+        //assert
+        verify(user,times(1)).setIsDeleted(any());
+    }
 
     @Test
     public void deleteUserTest_user_not_exist(){

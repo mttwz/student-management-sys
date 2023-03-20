@@ -74,10 +74,7 @@ public class UserController {
     public @ResponseBody ArrayList<UserInfoDto> searchSuperadmin(@RequestParam String filter,
                                                                  @RequestParam String q,
                                                                  Pageable pageable){
-        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=mate
-        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=st&sort=id&direction=desc&pageNumber=0
-
-        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=&page=0&size=3&sort=,asc
+        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=mate&page=0&size=3&sort=id,desc
         return userService.searchSuperadmin(filter,q,pageable);
     }
 
