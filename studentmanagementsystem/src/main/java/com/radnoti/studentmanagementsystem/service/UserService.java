@@ -245,22 +245,22 @@ public class UserService {
     }
 
     @Transactional
-    public ArrayList<UserDto> searchSuperadmin(SearchDto searchDto) {
+    public ArrayList<UserDto> searchSuperadmin(String filter,String q) {
         ArrayList<UserDto> userDtoArrayList = new ArrayList<>();
         ArrayList<User> userArrayList = new ArrayList<>();
 
-        if (Objects.equals(searchDto.getSearchFilter(), SearchFilterEnum.Types.ALL_USERS)) {
-            userArrayList = userRepository.searchAllUser(searchDto.getSearchText());
-        } else if (Objects.equals(searchDto.getSearchFilter(), SearchFilterEnum.Types.SUPERADMIN)) {
-            userArrayList = userRepository.searchSuperadmins(searchDto.getSearchText());
-        } else if (Objects.equals(searchDto.getSearchFilter(), SearchFilterEnum.Types.STUDENT)) {
-            userArrayList = userRepository.searchStudents(searchDto.getSearchText());
-        } else if (Objects.equals(searchDto.getSearchFilter(), SearchFilterEnum.Types.ADMIN)) {
-            userArrayList = userRepository.searchAdmins(searchDto.getSearchText());
-        } else if (Objects.equals(searchDto.getSearchFilter(), SearchFilterEnum.Types.WORKGROUP)) {
-            userArrayList = userRepository.searchWorkgroups(searchDto.getSearchText());
-        } else if (Objects.equals(searchDto.getSearchFilter(), SearchFilterEnum.Types.INSTITUTION)) {
-            userArrayList = userRepository.searchWorkgroups(searchDto.getSearchText());
+        if (Objects.equals(filter, SearchFilterEnum.Types.ALL_USERS)) {
+            userArrayList = userRepository.searchAllUser(q);
+        } else if (Objects.equals(filter, SearchFilterEnum.Types.SUPERADMIN)) {
+            userArrayList = userRepository.searchSuperadmins(q);
+        } else if (Objects.equals(filter, SearchFilterEnum.Types.STUDENT)) {
+            userArrayList = userRepository.searchStudents(q);
+        } else if (Objects.equals(filter, SearchFilterEnum.Types.ADMIN)) {
+            userArrayList = userRepository.searchAdmins(q);
+        } else if (Objects.equals(filter, SearchFilterEnum.Types.WORKGROUP)) {
+            userArrayList = userRepository.searchWorkgroups(q);
+        } else if (Objects.equals(filter, SearchFilterEnum.Types.INSTITUTION)) {
+            userArrayList = userRepository.searchWorkgroups(q);
 
         }
 

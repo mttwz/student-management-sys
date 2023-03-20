@@ -138,53 +138,6 @@ public class WorkgroupScheduleService {
 
     }
 
-
-
-
-
-
-    public void uploadFile(String pathVariableWorkgroupScheduleId, MultipartFile file) {
-//        Integer workgroupScheduleId;
-//        try{
-//            workgroupScheduleId = Integer.parseInt(pathVariableWorkgroupScheduleId);
-//        } catch (NumberFormatException e) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Invalid id");
-//        }
-//
-//        Workgroupschedule workgroupschedule = existanceCheckUtil.workgroupScheduleExistenceCheck(workgroupScheduleId);
-//
-//
-//        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDateTime now = LocalDateTime.now();
-//
-//        byte[] bytes;
-//        try {
-//            bytes = file.getBytes();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        String rootPath = "/Users/matevoros/Desktop";
-//        File dir = new File(rootPath + "/uploads/" + workgroupschedule.getName() + "_" + workgroupschedule + dateTimeFormatter.format(now));
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-//
-//        File serverFile = new File(dir.getAbsolutePath() + "/" + file.getOriginalFilename());
-//        if (serverFile.exists()) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "File already exist");
-//        }
-//
-//        try {
-//            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-//            stream.write(bytes);
-//            stream.close();
-//        } catch (IOException e) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Something went wrong");
-//        }
-
-
-    }
 }
 
 

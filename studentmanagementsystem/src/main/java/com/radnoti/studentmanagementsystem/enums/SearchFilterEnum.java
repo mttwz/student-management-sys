@@ -10,12 +10,12 @@ public enum SearchFilterEnum {
     INSTITUTION(6, SearchFilterEnum.Types.INSTITUTION);
 
     public class Types {
-        public static final String ALL_USERS = "All users";
-        public static final String SUPERADMIN = "Superadmin";
-        public static final String STUDENT = "Student";
-        public static final String ADMIN = "Admin";
-        public static final String WORKGROUP = "Workgroup";
-        public static final String INSTITUTION = "Institution";
+        public static final String ALL_USERS = "all-users";
+        public static final String SUPERADMIN = "super-admin";
+        public static final String STUDENT = "student";
+        public static final String ADMIN = "admin";
+        public static final String WORKGROUP = "workgroup";
+        public static final String INSTITUTION = "institution";
     }
     private final Integer id;
     private final String label;

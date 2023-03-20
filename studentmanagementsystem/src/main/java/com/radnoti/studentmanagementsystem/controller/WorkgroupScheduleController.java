@@ -54,12 +54,4 @@ public class WorkgroupScheduleController {
         workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto);
     }
 
-
-
-
-    @PostMapping(path = "/upload-file/{workgroupscheduleId}", consumes = {"multipart/form-data"})
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void uploadFile(@PathVariable String workgroupscheduleId,@RequestParam("file") MultipartFile file) throws URISyntaxException, FileNotFoundException {
-        workgroupscheduleService.uploadFile(workgroupscheduleId,file);
-    }
 }

@@ -43,8 +43,11 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("select u from User u where u.email = :email")
     Optional<User> findByUsername(String email);
 
-    @Procedure
-    ArrayList<User> searchAllUser(String string);
+    @Query("select u from User u where " +
+            "u.firstName like concat('%',:searchString,'%') or " +
+            "u.lastName like concat('%',:searchString,'%') or " +
+            "u.email like concat('%',:searchString,'%')")
+    ArrayList<User> searchAllUser(String searchString);
 
     @Procedure
     ArrayList<User> searchStudents(String string);

@@ -85,9 +85,10 @@ public class UserController {
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/search-super-admin", consumes = {"application/json"}, produces = {"application/json"})
-    public @ResponseBody ArrayList<UserDto> searchSuperadmin(@RequestBody SearchDto searchDto){
-        return userService.searchSuperadmin(searchDto);
+    @PostMapping(path = "/search-super-admin")
+    public @ResponseBody ArrayList<UserDto> searchSuperadmin(@RequestParam String filter, @RequestParam String q){
+        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=mate
+        return userService.searchSuperadmin(filter,q);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
