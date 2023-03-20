@@ -5,6 +5,8 @@
 package com.radnoti.studentmanagementsystem.model.dto;
 
 import lombok.*;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -33,7 +35,5 @@ public class UserDto {
     private Boolean isDeleted;
     private Date deletedAt;
     private String jwt;
-    private String searchText;
-
 
 }

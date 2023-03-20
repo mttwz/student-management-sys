@@ -33,6 +33,9 @@ import java.time.Instant;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +75,7 @@ public class UserService {
      * The user's activation status is set to false, and its deleted status is set to false.
      * The user's role is determined based on the roleName field of the UserDto object, which can be "superadmin", "admin", or "student".
      * The created user is then saved to the database and its ID is returned.
+     *
      * @param userDto a Dto object containing the user's information
      * @return the ID of the created user
      * @throws InvalidFormValueException if a required field is missing or empty in the UserDto object
@@ -146,7 +150,10 @@ public class UserService {
     }
 
 
-
+    /**
+     *
+     * @param userDto
+     */
     @Transactional
     public void deleteUser(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
@@ -217,12 +224,13 @@ public class UserService {
     }
 
     @Transactional
-    public ArrayList<UserDto> searchSuperadmin(String filter,String q) {
-        ArrayList<UserDto> userDtoArrayList = new ArrayList<>();
+    public ArrayList<UserInfoDto> searchSuperadmin(String filter,String q,Pageable pageable) {
+
+        ArrayList<UserInfoDto> userDtoArrayList = new ArrayList<>();
         ArrayList<User> userArrayList = new ArrayList<>();
 
         if (Objects.equals(filter, SearchFilterEnum.Types.ALL_USERS)) {
-            userArrayList = userRepository.searchAllUser(q);
+            userArrayList = userRepository.searchAllUser(q,pageable);
         } else if (Objects.equals(filter, SearchFilterEnum.Types.SUPERADMIN)) {
             userArrayList = userRepository.searchSuperadmins(q);
         } else if (Objects.equals(filter, SearchFilterEnum.Types.STUDENT)) {
@@ -237,7 +245,7 @@ public class UserService {
         }
 
         for (int i = 0; i < userArrayList.size(); i++) {
-            userDtoArrayList.add(userMapper.fromEntityToDto(userArrayList.get(i)));
+            userDtoArrayList.add(userMapper.fromEntityToInfoDto(userArrayList.get(i)));
         }
         return userDtoArrayList;
     }

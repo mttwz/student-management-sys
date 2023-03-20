@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.repository;
 import java.util.*;
 
 import com.radnoti.studentmanagementsystem.model.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -28,7 +29,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Modifying
     @Query("update User u set u.roleId.id = " +
-            "case when (select r.id from Role r where r.roleType = :roleName) = null then 3 " +
+            "case when (select r.id from Role r where r.roleType = :roleName) = null then :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).STUDENT.id} " +
             "else (select r.id from Role r where r.roleType = :roleName) end " +
             "where u.id = :userId")
     void setUserRole(Integer userId, String roleName);
@@ -44,10 +45,10 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByUsername(String email);
 
     @Query("select u from User u where " +
-            "u.firstName like concat('%',:searchString,'%') or " +
+            "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%')")
-    ArrayList<User> searchAllUser(String searchString);
+            "u.email like concat('%',:searchString,'%'))")
+    ArrayList<User> searchAllUser(String searchString,Pageable pageable);
 
     @Query("select u from User u where " +
             "(u.firstName like concat('%',:searchString,'%') or " +
