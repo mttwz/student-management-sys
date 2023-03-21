@@ -15,7 +15,7 @@ import java.io.StringWriter;
 @ControllerAdvice
 public class CustomWorkgroupScheduleControllerAdvice {
 
-    HttpStatus status;
+    private HttpStatus status;
     private StringWriter stringWriter;
 
     private PrintWriter printWriter;

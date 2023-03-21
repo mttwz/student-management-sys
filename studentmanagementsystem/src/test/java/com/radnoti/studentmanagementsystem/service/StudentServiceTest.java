@@ -3,6 +3,7 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Role;
@@ -55,7 +56,7 @@ public class StudentServiceTest {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
 
 
-        when(userService.adduser(userDto)).thenReturn(1);
+        when(userService.adduser(userDto)).thenReturn(new ResponseDto(1));
 
         User user = new User();
         user.setId(1);

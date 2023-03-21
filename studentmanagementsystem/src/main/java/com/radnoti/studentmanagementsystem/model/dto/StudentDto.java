@@ -22,7 +22,6 @@ import java.util.Collection;
 @NoArgsConstructor
 public class StudentDto {
 
-
     private Integer id;
 
     private Collection<AttendanceDto> attendanceCollection;

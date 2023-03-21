@@ -70,7 +70,7 @@ public class CardService {
         Card card = cardRepository.findById(cardDto.getId()).orElseThrow(CardNotExistException::new);
 
         if(card.getIsDeleted()){
-            throw new InvalidFormValueException();
+            throw new CardAlreadyDeletedException();
         }
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
@@ -103,6 +103,11 @@ public class CardService {
             throw new CardAlreadyAssignedException();
         }
 
+
+        if (card.getIsDeleted()){
+            throw new CardAlreadyAssignedException();
+        }
+
         student.setCardId(card);
         card.setIsAssigned(true);
         card.setAssignedTo(student.getId());
@@ -126,6 +131,7 @@ public class CardService {
                 .orElseThrow(UserNotExistException::new);
 
         Integer cardId = cardRepository.getCardByUserId(userDto.getId());
+
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(CardNotExistException::new);
 

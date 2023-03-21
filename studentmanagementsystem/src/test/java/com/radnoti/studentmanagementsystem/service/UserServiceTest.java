@@ -88,7 +88,7 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user);
 
-        int actual = userService.adduser(userDto);
+        Integer actual = userService.adduser(userDto).getId();
 
 
         assertEquals(1, actual);
@@ -118,7 +118,7 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user);
 
-        int actual = userService.adduser(userDto);
+        Integer actual = userService.adduser(userDto).getId();
 
 
         assertEquals(1, actual);
@@ -146,7 +146,7 @@ public final class UserServiceTest {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user);
 
-        int actual = userService.adduser(userDto);
+        Integer actual = userService.adduser(userDto).getId();
 
 
         assertEquals(1, actual);

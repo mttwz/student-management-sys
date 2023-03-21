@@ -12,6 +12,7 @@ import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueExceptio
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
 import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
@@ -91,16 +92,16 @@ public class UserService {
                 userDto.getFirstName() == null ||
                 userDto.getLastName() == null||
                 userDto.getPhone() == null||
-                userDto.getBirth().toString() == null ||
+                userDto.getBirth() == null ||
                 userDto.getEmail() == null ||
                 userDto.getPassword() == null ||
-                userDto.getRoleName().isEmpty() ||
-                userDto.getFirstName().isEmpty() ||
-                userDto.getLastName().isEmpty() ||
-                userDto.getPhone().isEmpty() ||
-                userDto.getBirth().toString().isEmpty() ||
-                userDto.getEmail().isEmpty() ||
-                userDto.getPassword().isEmpty())) {
+                userDto.getRoleName().isBlank() ||
+                userDto.getFirstName().isBlank() ||
+                userDto.getLastName().isBlank() ||
+                userDto.getPhone().isBlank() ||
+                userDto.getBirth().toString().isBlank() ||
+                userDto.getEmail().isBlank() ||
+                userDto.getPassword().isBlank())) {
             throw new InvalidFormValueException();
         }
 
@@ -113,7 +114,9 @@ public class UserService {
             roleId = RoleEnum.SUPERADMIN.getId();
         } else if (userDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
             roleId = RoleEnum.ADMIN.getId();
-        } else roleId = RoleEnum.STUDENT.getId();
+        } else if (userDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.STUDENT)){
+            roleId = RoleEnum.STUDENT.getId();
+        }else throw new RoleNotExistException();
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
@@ -176,9 +179,7 @@ public class UserService {
     public List<UserInfoDto> getAllUser() {
         Iterable<User> userIterable = userRepository.findAll();
         List<UserInfoDto> userInfoDtoList = new ArrayList<>();
-        for (User user : userIterable) {
-            userInfoDtoList.add(userMapper.fromEntityToInfoDto(user));
-        }
+        userIterable.forEach(user -> userInfoDtoList.add(userMapper.fromEntityToInfoDto(user)));
         return userInfoDtoList;
     }
 
@@ -186,7 +187,6 @@ public class UserService {
     public UserInfoDto getUserInfo(UserDto userDto) {
         User user = userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
-
         return userMapper.fromEntityToInfoDto(user);
 
     }
@@ -216,14 +216,16 @@ public class UserService {
             user.setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
         } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
             user.setRoleId(new Role(RoleEnum.ADMIN.getId()));
-        } else user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
+        } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.STUDENT)){
+            user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
+        }else throw new RoleNotExistException();
 
         user.setFirstName(userInfoDto.getFirstName());
         user.setLastName(userInfoDto.getLastName());
         user.setBirth(userInfoDto.getBirth());
         user.setEmail(userInfoDto.getEmail());
         user.setPhone(userInfoDto.getPhone());
-        userRepository.save(user);
+
         return new ResponseDto(userId);
     }
 

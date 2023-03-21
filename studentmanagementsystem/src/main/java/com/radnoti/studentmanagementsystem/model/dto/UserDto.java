@@ -6,9 +6,7 @@ package com.radnoti.studentmanagementsystem.model.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 /**
  *
