@@ -26,8 +26,8 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/register-user")
-    public ResponseEntity<Map> adduser(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
-        return ResponseEntity.ok(Map.of("id", userService.adduser(userDto)));
+    public ResponseDto adduser(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
+        return userService.adduser(userDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
@@ -46,10 +46,7 @@ public class UserController {
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/get-all-user", consumes = {"application/json"}, produces = {"application/json"})
     public  ResponseEntity<List<UserInfoDto>> getWorkgroupScheduleByUserId() {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(userService.getAllUser());
-
+        return ResponseEntity.ok(userService.getAllUser());
     }
 
 
@@ -63,10 +60,8 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/edit-user-info/{userId}", consumes = {"application/json"}, produces = {"application/json"})
-    public @ResponseBody ResponseEntity<Map> editUserInfo(@PathVariable String userId, @RequestBody UserInfoDto userInfoDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", userService.editUserInfo(userId,userInfoDto)));
+    public @ResponseBody ResponseDto editUserInfo(@PathVariable String userId, @RequestBody UserInfoDto userInfoDto) {
+        return userService.editUserInfo(userId,userInfoDto);
     }
 
 

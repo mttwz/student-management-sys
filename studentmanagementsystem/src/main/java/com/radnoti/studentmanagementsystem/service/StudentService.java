@@ -40,15 +40,15 @@ public class StudentService {
     @Transactional
     public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
-        Integer savedUserId = userService.adduser(userDto);
+        ResponseDto savedUserIdResponse = userService.adduser(userDto);
 
         Student student = new Student();
-        User user = userRepository.findById(savedUserId)
+        User user = userRepository.findById(savedUserIdResponse.getId())
                 .orElseThrow(UserNotExistException::new);
         student.setUserId(user);
 
         studentRepository.save(student);
-        return new ResponseDto(savedUserId);
+        return new ResponseDto(savedUserIdResponse.getId());
     }
 
 

@@ -86,7 +86,7 @@ public class UserService {
      */
 
     @Transactional
-    public Integer adduser(UserDto userDto) throws NoSuchAlgorithmException {
+    public ResponseDto adduser(UserDto userDto) throws NoSuchAlgorithmException {
         if ((userDto.getRoleName() == null ||
                 userDto.getFirstName() == null ||
                 userDto.getLastName() == null||
@@ -127,7 +127,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return savedUser.getId();
+        return new ResponseDto(savedUser.getId());
 
     }
 
@@ -192,7 +192,7 @@ public class UserService {
     }
 
     @Transactional
-    public Integer editUserInfo(String pathVariableUserId, UserInfoDto userInfoDto) {
+    public ResponseDto editUserInfo(String pathVariableUserId, UserInfoDto userInfoDto) {
 
         Integer userId;
         try{
@@ -224,7 +224,7 @@ public class UserService {
         user.setEmail(userInfoDto.getEmail());
         user.setPhone(userInfoDto.getPhone());
         userRepository.save(user);
-        return userId;
+        return new ResponseDto(userId);
     }
 
     @Transactional
