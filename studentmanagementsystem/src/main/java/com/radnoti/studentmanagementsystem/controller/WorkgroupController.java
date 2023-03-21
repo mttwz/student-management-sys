@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
@@ -25,10 +26,8 @@ public class WorkgroupController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/create-workgroup", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> createWorkgroup(@RequestBody WorkgroupDto workgroupDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", workgroupService.createWorkgroup(workgroupDto)));
+    public ResponseDto createWorkgroup(@RequestBody WorkgroupDto workgroupDto) {
+        return workgroupService.createWorkgroup(workgroupDto);
 
     }
 
@@ -40,11 +39,8 @@ public class WorkgroupController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/add-user-to-workgroup", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> addUserToWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", workgroupService.addUserToWorkgroup(workgroupmembersDto)));
-
+    public ResponseDto addUserToWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {
+        return workgroupService.addUserToWorkgroup(workgroupmembersDto);
     }
 
 

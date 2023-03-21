@@ -36,7 +36,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void createWorkgroupScheduleTest_valid() throws ParseException {
-        //arrage
+        //arrange
         String name = "Test";
         WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
         workgroupscheduleDto.setName(name);
@@ -54,9 +54,8 @@ public class WorkgroupscheduleServiceTest {
                 //.thenReturn(1);
         when(workgroupRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroup));
         when(workgroupscheduleRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroupschedule));
-
         //act
-        int actual = workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto);
+        Integer actual = workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto).getId();
 
         //assert
         assertEquals(1,actual);

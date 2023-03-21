@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
@@ -29,17 +30,13 @@ public class WorkgroupScheduleController {
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<List<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDto userDto) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Content-Type", "application/json")
-                .body(workgroupscheduleService.getWorkgroupScheduleByUserId(authHeader,userDto));
+        return ResponseEntity.ok(workgroupscheduleService.getWorkgroupScheduleByUserId(authHeader,userDto));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/create-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> createWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) throws ParseException {
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDto)));
+    public ResponseDto createWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) throws ParseException {
+        return workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDto);
 
     }
 

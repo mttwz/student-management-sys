@@ -13,6 +13,7 @@ import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExist
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
@@ -46,7 +47,7 @@ public class WorkgroupService {
 
 
     @Transactional
-    public Integer createWorkgroup(WorkgroupDto workgroupDto) {
+    public ResponseDto createWorkgroup(WorkgroupDto workgroupDto) {
         if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
             throw new InvalidFormValueException();
         }
@@ -57,7 +58,7 @@ public class WorkgroupService {
 
         Workgroup savedWorkgroup =  workgroupRepository.save(workgroup);
 
-        return savedWorkgroup.getId();
+        return new ResponseDto(savedWorkgroup.getId());
 
     }
 
@@ -92,7 +93,7 @@ public class WorkgroupService {
      */
 
     @Transactional
-    public Integer addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
+    public ResponseDto addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
         userRepository.findById(workgroupmembersDto.getUserId())
                 .orElseThrow(UserNotExistException::new);
 
@@ -102,7 +103,7 @@ public class WorkgroupService {
         Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
         Workgroupmembers savedWorkgroupmembers =  workgroupMembersRepository.save(workgroupmembers);
 
-        return savedWorkgroupmembers.getId();
+        return new ResponseDto( savedWorkgroupmembers.getId());
 
     }
 

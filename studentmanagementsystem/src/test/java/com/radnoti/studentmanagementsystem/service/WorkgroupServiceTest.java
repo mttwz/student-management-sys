@@ -61,7 +61,7 @@ public class WorkgroupServiceTest {
         when(workgroupRepository.save(any())).thenReturn(workgroup);
         when(workgroupMapper.fromDtoToEntity(any())).thenReturn(workgroup);
 
-        int actual = workgroupService.createWorkgroup(workgroupDto);
+        Integer actual = workgroupService.createWorkgroup(workgroupDto).getId();
 
         assertEquals(1,actual);
     }
@@ -99,10 +99,9 @@ public class WorkgroupServiceTest {
         when(workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto)).thenReturn(workgroupmembers);
         when(workgroupMembersRepository.save(any())).thenReturn(workgroupmembers);
 
-        //act
-        int actual = workgroupService.addUserToWorkgroup(workgroupmembersDto);
 
-        //equals
+        Integer actual = workgroupService.addUserToWorkgroup(workgroupmembersDto).getId();
+
         assertEquals(1, actual);
 
     }

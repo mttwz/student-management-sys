@@ -11,6 +11,7 @@ import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.Workgroup
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
@@ -79,7 +80,7 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public Integer createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto){
+    public ResponseDto createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto){
 // TODO: 2023. 03. 19. datumok szarok kikell javitni
         if(workgroupscheduleDto.getName() == null ||
                 workgroupscheduleDto.getWorkgroupId() == null ||
@@ -105,7 +106,7 @@ public class WorkgroupScheduleService {
 
         Workgroupschedule savedWorkgroupSchedule = workgroupscheduleRepository.save(workgroupschedule);
 
-        return savedWorkgroupSchedule.getId();
+        return new ResponseDto(savedWorkgroupSchedule.getId());
 
     }
 
