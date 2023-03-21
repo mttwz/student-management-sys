@@ -64,10 +64,6 @@ public class WorkgroupService {
 
     @Transactional
     public void deleteWorkgroup(WorkgroupDto workgroupDto) {
-//        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
-//            throw new InvalidFormValueException();
-//        }
-
         Workgroup workgroup = workgroupRepository.findById(workgroupDto.getId()).orElseThrow(WorkgroupNotExistException::new);
 
         if(workgroup.getIsDeleted()){

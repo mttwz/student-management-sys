@@ -25,7 +25,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -71,15 +72,12 @@ public class WorkgroupServiceTest {
         //arrange
         WorkgroupDto workgroupDto = new WorkgroupDto();
         workgroupDto.setGroupName("testName");
-        workgroupDto.setInstitution("testInstitution");
 
         Workgroup workgroup = new Workgroup();
         workgroup.setId(1);
         workgroup.setGroupName("testName");
-        workgroup.setInstitution("testInstitution");
 
-
-        assertThrows(NullPointerException.class,()->workgroupService.createWorkgroup(workgroupDto));
+        assertThrows(InvalidFormValueException.class,()->workgroupService.createWorkgroup(workgroupDto));
     }
 
 
@@ -133,16 +131,48 @@ public class WorkgroupServiceTest {
     }
 
     @Test
-    public void addUserToWorkgroupTest_user_not_added_to_workgroup(){
-        WorkgroupmembersDto workgroupmembersDto = new WorkgroupmembersDto();
+    public void deleteWorkgroupTest_valid(){
 
-        User user = new User();
+        WorkgroupDto workgroupDto = new WorkgroupDto();
+        workgroupDto.setId(1);
+        workgroupDto.setIsDeleted(false);
+
+        Workgroup mockWorkgroup = mock(Workgroup.class);
+
+        mockWorkgroup.setId(1);
+
+        when(workgroupRepository.findById(any())).thenReturn(Optional.of(mockWorkgroup));
+
+        workgroupService.deleteWorkgroup(workgroupDto);
+
+        verify(mockWorkgroup,times(1)).setIsDeleted(true);
+    }
+
+    @Test
+    public void deleteWorkgroupTest_workgroup_not_exist(){
+        WorkgroupDto workgroupDto = new WorkgroupDto();
+        workgroupDto.setId(1);
+        workgroupDto.setIsDeleted(false);
+
+        when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(WorkgroupNotExistException.class, () -> workgroupService.deleteWorkgroup(workgroupDto));
+
+    }
+
+    @Test
+    public void deleteWorkgroupTest_workgroup_already_deleted(){
+        WorkgroupDto workgroupDto = new WorkgroupDto();
+        workgroupDto.setId(1);
+        workgroupDto.setIsDeleted(true);
+
         Workgroup workgroup = new Workgroup();
+        workgroup.setId(1);
+        workgroup.setIsDeleted(true);
 
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
 
-        assertThrows(UserNotAddedToWorkgroupException.class, () -> workgroupService.addUserToWorkgroup(workgroupmembersDto));
+        assertThrows(InvalidFormValueException.class, () -> workgroupService.deleteWorkgroup(workgroupDto));
 
     }
 

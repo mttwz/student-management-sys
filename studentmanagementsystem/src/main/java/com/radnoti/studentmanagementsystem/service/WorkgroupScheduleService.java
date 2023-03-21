@@ -81,7 +81,7 @@ public class WorkgroupScheduleService {
 
     @Transactional
     public ResponseDto createWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto){
-// TODO: 2023. 03. 19. datumok szarok kikell javitni
+// TODO: 2023. 03. 19. datumokat kikell javitni
         if(workgroupscheduleDto.getName() == null ||
                 workgroupscheduleDto.getWorkgroupId() == null ||
                 workgroupscheduleDto.getStart() == null ||

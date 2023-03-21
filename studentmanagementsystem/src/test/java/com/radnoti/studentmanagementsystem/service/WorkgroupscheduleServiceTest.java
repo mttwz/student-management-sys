@@ -1,25 +1,44 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
+import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
+import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
+import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
+import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -33,29 +52,45 @@ public class WorkgroupscheduleServiceTest {
     @Mock
     WorkgroupRepository workgroupRepository;
 
+    @Mock
+    WorkgroupScheduleMapper workgroupScheduleMapper;
+
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    JwtUtil jwtUtil;
+
+
+
 
     @Test
     public void createWorkgroupScheduleTest_valid() throws ParseException {
         //arrange
-        String name = "Test";
-        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
-        workgroupscheduleDto.setName(name);
-        workgroupscheduleDto.setId(1);
-        workgroupscheduleDto.setWorkgroupId(1);
-
-        Workgroupschedule workgroupschedule = new Workgroupschedule();
-        workgroupschedule.setName(name);
-        workgroupschedule.setId(1);
-        workgroupschedule.setWorkgroupId(new Workgroup(1));
-
         Workgroup workgroup = new Workgroup(1);
 
-        //when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any()))
-                //.thenReturn(1);
-        when(workgroupRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroup));
-        when(workgroupscheduleRepository.findById(any(Integer.class))).thenReturn(Optional.of(workgroupschedule));
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setName("teszt");
+        workgroupscheduleDto.setId(1);
+        workgroupscheduleDto.setWorkgroupId(1);
+        workgroupscheduleDto.setStart(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupscheduleDto.setEnd(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupscheduleDto.setIsOnsite(true);
+
+        Workgroupschedule workgroupschedule = new Workgroupschedule();
+        workgroupschedule.setName("teszt");
+        workgroupschedule.setId(1);
+        workgroupschedule.setWorkgroupId(workgroup);
+        workgroupschedule.setStart(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupschedule.setEnd(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupschedule.setIsOnsite(true);
+
+
+        when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
+        when(workgroupScheduleMapper.fromDtoToEntity(workgroupscheduleDto)).thenReturn(workgroupschedule);
+        when(workgroupscheduleRepository.save(any())).thenReturn(workgroupschedule);
         //act
-        Integer actual = workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto).getId();
+        int actual = workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto).getId();
 
         //assert
         assertEquals(1,actual);
@@ -66,41 +101,132 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void createWorkgroupScheduleTest_not_created(){
-        String name = "Test";
-        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
         Workgroup workgroup = new Workgroup(1);
 
-        //when(workgroupscheduleRepository.createWorkgroupSchedule(any(),any(),any(),any(),any())).thenReturn(1);
-        when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.empty());
-        when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setName("teszt");
+        workgroupscheduleDto.setId(1);
 
-        Exception ex = assertThrows(ResponseStatusException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
-        String expectedMessage = "409 CONFLICT \"Schedule not created\"";
-        String actualMessage = ex.getMessage();
 
-        assertEquals(expectedMessage, actualMessage);
+        Workgroupschedule workgroupschedule = new Workgroupschedule();
+        workgroupschedule.setName("teszt");
+        workgroupschedule.setId(1);
+
+
+        assertThrows(InvalidFormValueException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
+
     }
 
     @Test
     public void createWorkgroupScheduleTest_workgroup_does_not_exist(){
-        String name = "Test";
+        Workgroup workgroup = new Workgroup(1);
+
         WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
-        workgroupscheduleDto.setName(name);
+        workgroupscheduleDto.setName("teszt");
         workgroupscheduleDto.setId(1);
         workgroupscheduleDto.setWorkgroupId(1);
+        workgroupscheduleDto.setStart(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupscheduleDto.setEnd(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupscheduleDto.setIsOnsite(true);
 
         Workgroupschedule workgroupschedule = new Workgroupschedule();
-        workgroupschedule.setName(name);
+        workgroupschedule.setName("teszt");
         workgroupschedule.setId(1);
-        workgroupschedule.setWorkgroupId(new Workgroup(1));
+        workgroupschedule.setWorkgroupId(workgroup);
+        workgroupschedule.setStart(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupschedule.setEnd(ZonedDateTime.parse("2023-02-03T10:15:30+01:00"));
+        workgroupschedule.setIsOnsite(true);
 
-        when(workgroupRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(ResponseStatusException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
-        String expectedMessage = "400 BAD_REQUEST \"Workgroup does not exist\"";
-        String actualMessage = ex.getMessage();
+        assertThrows(WorkgroupNotExistException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
 
-        assertEquals(expectedMessage, actualMessage);
+
+    }
+
+    @Test
+    public void getWorkgroupScheduleByUserIdTest_valid(){
+        // Arrange
+        String authHeader = "test-auth-header";
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+
+        User user = new User();
+        user.setId(1);
+
+        List<Integer> workgroupScheduleList = Arrays.asList(1, 2, 3);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        when(jwtUtil.getRoleFromJwt(any())).thenReturn(RoleEnum.Types.SUPERADMIN);
+        when(userRepository.getWorkgroupScheduleByUserId(any())).thenReturn(workgroupScheduleList);
+
+        Workgroupschedule workgroupschedule1 = new Workgroupschedule();
+        WorkgroupscheduleDto workgroupscheduleDto1 = new WorkgroupscheduleDto();
+        when(workgroupscheduleRepository.findAllById(any())).thenReturn(List.of(workgroupschedule1));
+        when(workgroupScheduleMapper.fromEntityToDto(any())).thenReturn(workgroupscheduleDto1);
+
+        // Act
+        List<WorkgroupscheduleDto> result = workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userDto);
+
+        // Assert
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void getWorkgroupScheduleByUserIdTest_user_not_exist(){
+        String authHeader = "test-auth-header";
+
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(UserNotExistException.class,()->workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userDto));
+
+    }
+
+    @Test
+    public void deleteWorkgroupScheduleTest_valid(){
+
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setId(1);
+        workgroupscheduleDto.setIsDeleted(false);
+
+        Workgroupschedule mockWorkgroupSchedule = mock(Workgroupschedule.class);
+        mockWorkgroupSchedule.setId(1);
+
+        when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.of(mockWorkgroupSchedule));
+
+        workgroupScheduleService.deleteWorkgroupSchedule(workgroupscheduleDto);
+
+        verify(mockWorkgroupSchedule, times(1)).setIsDeleted(true);
+    }
+
+    @Test
+    public void deleteWorkgroupScheduleTest_workgroupSchedule_not_exist(){
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setId(1);
+        workgroupscheduleDto.setIsDeleted(false);
+
+        when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.empty());
+
+        assertThrows(WorkgroupScheduleNotExistException.class,()->workgroupScheduleService.deleteWorkgroupSchedule(workgroupscheduleDto));
+
+    }
+
+    @Test
+    public void deleteWorkgroupScheduleTest_workgroupSchedule_already_deleted(){
+        WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
+        workgroupscheduleDto.setId(1);
+        workgroupscheduleDto.setIsDeleted(true);
+
+        Workgroupschedule workgroupschedule = new Workgroupschedule();
+        workgroupschedule.setId(1);
+        workgroupschedule.setIsDeleted(true);
+
+        when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.of(workgroupschedule));
+
+        assertThrows(WorkgroupAlreadyDeletedException.class,()->workgroupScheduleService.deleteWorkgroupSchedule(workgroupscheduleDto));
 
     }
 

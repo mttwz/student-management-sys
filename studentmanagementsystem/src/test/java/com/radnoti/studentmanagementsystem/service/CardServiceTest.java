@@ -105,19 +105,33 @@ public class CardServiceTest {
 
 
     @Test
-    public void testConnectCardToStudentWithValidData() {
+    public void connectCardToStudentTest_valid() {
         // arrange
         StudentDto studentDto = new StudentDto();
         studentDto.setId(1);
-        studentDto.setCardId(2);
+        studentDto.setCardId(1);
+
+        Student student = new Student();
+        student.setId(1);
+
         Card card = new Card();
-        card.setIsAssigned(false);
+        card.setId(1);
+        card.setIsDeleted(false);
+
+//        card.setIsAssigned(true);
+
+        Card mockCard = mock(Card.class);
+        Student mockStudent = mock(Student.class);
+
         // mock the behavior of your repositories
         when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(card));
-        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(new Student()));
+        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(student));
 
+        cardService.connectCardToStudent(studentDto);
         // act and assert
-        assertDoesNotThrow(() -> cardService.connectCardToStudent(studentDto));
+        verify(mockStudent,times(1)).setCardId(card);
+        verify(mockCard,times(1)).setIsAssigned(true);
+        verify(mockCard,times(1)).setAssignedTo(student.getId());
     }
 
     @Test
