@@ -65,7 +65,7 @@ public class CardServiceTest {
 
 
         // Act
-        Integer cardId = cardService.createCard(cardDto);
+        Integer cardId = cardService.createCard(cardDto).getId();
 
         // Assert
         assertNotNull(cardId);
@@ -110,9 +110,10 @@ public class CardServiceTest {
         StudentDto studentDto = new StudentDto();
         studentDto.setId(1);
         studentDto.setCardId(2);
-
+        Card card = new Card();
+        card.setIsAssigned(false);
         // mock the behavior of your repositories
-        when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(new Card()));
+        when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(card));
         when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(new Student()));
 
         // act and assert
@@ -183,10 +184,13 @@ public class CardServiceTest {
         when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(user));
 
         Integer cardId = 123;
+        Card card = new Card(cardId);
+
         when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(cardId);
+        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
 
         // Act
-        Integer result = cardService.getCardByUserId(userDto);
+        Integer result = cardService.getCardByUserId(userDto).getId();
 
         // Assert
         assertEquals(cardId, result);
@@ -226,7 +230,7 @@ public class CardServiceTest {
         when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(null);
 
         // Act & Assert
-        assertThrows(CardNotAssignedException.class, () -> cardService.getCardByUserId(userDto));
+        assertThrows(CardNotExistException.class, () -> cardService.getCardByUserId(userDto));
 
     }
 
@@ -258,12 +262,14 @@ public class CardServiceTest {
         Integer cardId = 123;
         UserDto userDto = new UserDto();
         userDto.setId(userId);
+        Card card = new Card(cardId);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-        when(cardRepository.getCardByUserId(userId)).thenReturn(cardId);
+        when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
+        when(cardRepository.getCardByUserId(any())).thenReturn(cardId);
+        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
 
         // Verify
-        assertEquals(cardId, cardService.getCardByUserId(userDto));
+        assertEquals(cardId, cardService.getCardByUserId(userDto).getId());
 
         // Check if userRepository.findById was called once with userId as parameter
         verify(userRepository, times(1)).findById(userId);
@@ -305,7 +311,7 @@ public class CardServiceTest {
     }
 
     @Test
-    public void testGetCardByUserIdCardNotAssigned() {
+    public void testGetCardByUserIdCardNotExist() {
         // Setup
         Integer userId = 1;
         UserDto userDto = new UserDto();
@@ -315,7 +321,7 @@ public class CardServiceTest {
         when(cardRepository.getCardByUserId(userId)).thenReturn(null);
 
         // Verify
-        assertThrows(CardNotAssignedException.class, () -> cardService.getCardByUserId(userDto));
+        assertThrows(CardNotExistException.class, () -> cardService.getCardByUserId(userDto));
 
         // Check if userRepository.findById was called once with userId as parameter
         verify(userRepository, times(1)).findById(userId);
@@ -338,7 +344,7 @@ public class CardServiceTest {
 
 
         // Act
-        Integer result = cardService.getCardByStudentId(studentDto);
+        Integer result = cardService.getCardByStudentId(studentDto).getId();
 
         // Assert
         assertEquals(2, result);

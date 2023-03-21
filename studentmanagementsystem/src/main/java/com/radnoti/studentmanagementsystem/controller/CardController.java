@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.CardService;
@@ -32,10 +33,9 @@ public class CardController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/create-card", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> createCard(@RequestBody CardDto cardDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", cardService.createCard(cardDto)));
+    public ResponseDto createCard(@RequestBody CardDto cardDto) {
+        return cardService.createCard(cardDto);
+
     }
 
 
@@ -48,18 +48,14 @@ public class CardController {
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/get-card-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map> getCardByUserId(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", cardService.getCardByUserId(userDto)));
+    public ResponseDto getCardByUserId(@RequestBody UserDto userDto) {
+        return cardService.getCardByUserId(userDto);
     }
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/get-card-by-student-id", consumes = {"application/json"}, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map> getCardByStudentId(@RequestBody StudentDto studentDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(Map.of("id", cardService.getCardByStudentId(studentDto)));
+    public ResponseDto getCardByStudentId(@RequestBody StudentDto studentDto) {
+        return cardService.getCardByStudentId(studentDto);
     }
 
 

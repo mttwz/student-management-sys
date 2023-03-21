@@ -11,6 +11,7 @@ import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistExce
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
@@ -52,7 +53,7 @@ public class CardService {
      * @throws InvalidFormValueException if the provided DTO object is null or its hash value is null or empty.
      */
     @Transactional
-    public Integer createCard(final CardDto cardDto) {
+    public ResponseDto createCard(final CardDto cardDto) {
         if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
             throw new InvalidFormValueException();
         }
@@ -61,7 +62,7 @@ public class CardService {
         card.setCreatedAt(currDate);
         card.setIsDeleted(false);
         cardRepository.save(card);
-        return card.getId();
+        return new ResponseDto(card.getId());
     }
 
     @Transactional
@@ -117,7 +118,7 @@ public class CardService {
      * @throws CardNotAssignedException if the user with the provided ID does not have a card assigned to them.
      */
     @Transactional
-    public Integer getCardByUserId(UserDto userDto) {
+    public ResponseDto getCardByUserId(UserDto userDto) {
         if (userDto.getId() == null) {
             throw new NullFormValueException();
         }
@@ -131,7 +132,7 @@ public class CardService {
         if (Boolean.TRUE.equals(card.getIsDeleted())) {
             throw new CardAlreadyDeletedException();
         }
-        return cardId;
+        return new ResponseDto(cardId);
     }
 
     /**
@@ -144,7 +145,7 @@ public class CardService {
      * @throws CardNotAssignedException if the student with the provided ID does not have a card assigned to them.
      */
     @Transactional
-    public Integer getCardByStudentId(StudentDto studentDto) {
+    public ResponseDto getCardByStudentId(StudentDto studentDto) {
         if (studentDto.getId() == null) {
             throw new NullFormValueException();
         }
@@ -158,7 +159,7 @@ public class CardService {
         if (Boolean.TRUE.equals(student.getCardId().getIsDeleted())) {
             throw new CardAlreadyDeletedException();
         }
-        return student.getCardId().getId();
+        return new ResponseDto(student.getCardId().getId());
     }
 
 
