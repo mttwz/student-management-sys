@@ -65,7 +65,7 @@ public class StudentServiceTest {
         student.setUserId(user);
         when(studentRepository.save(any())).thenReturn(student);
 
-        int actual = studentService.registerStudent(userDto);
+        int actual = studentService.registerStudent(userDto).getId();
 
         assertEquals(1, actual);
     }

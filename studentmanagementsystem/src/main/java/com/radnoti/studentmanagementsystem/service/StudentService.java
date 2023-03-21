@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.model.entity.User;
@@ -37,7 +38,7 @@ public class StudentService {
 
 
     @Transactional
-    public Integer registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
+    public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
         Integer savedUserId = userService.adduser(userDto);
 
@@ -47,7 +48,7 @@ public class StudentService {
         student.setUserId(user);
 
         studentRepository.save(student);
-        return savedUserId;
+        return new ResponseDto(savedUserId);
     }
 
 

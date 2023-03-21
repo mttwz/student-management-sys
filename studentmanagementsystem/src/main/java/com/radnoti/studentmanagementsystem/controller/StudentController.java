@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.controller;
 
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.StudentService;
@@ -29,10 +30,8 @@ public class StudentController {
 
 
     @PostMapping(path = "/register-student", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> register(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
-        return ResponseEntity.ok()
-                .header("Content-Type","application/json")
-                .body(Map.of("id", studentService.registerStudent(userDto)));
+    public ResponseDto register(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
+        return studentService.registerStudent(userDto);
     }
 
 
