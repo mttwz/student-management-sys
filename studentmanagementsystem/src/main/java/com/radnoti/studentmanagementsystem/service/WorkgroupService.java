@@ -7,12 +7,18 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
+import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
+import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +39,10 @@ public class WorkgroupService {
     private final WorkgroupRepository workgroupRepository;
     private final WorkgroupMapper workgroupMapper;
 
+    private final WorkgroupMembersMapper workgroupMembersMapper;
+    private final WorkgroupMembersRepository workgroupMembersRepository;
+    private final UserRepository userRepository;
+
 
     @Transactional
     public Integer createWorkgroup(WorkgroupDto workgroupDto) {
@@ -52,16 +62,46 @@ public class WorkgroupService {
 
     @Transactional
     public void deleteWorkgroup(WorkgroupDto workgroupDto) {
-        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
-            throw new InvalidFormValueException();
-        }
+//        if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
+//            throw new InvalidFormValueException();
+//        }
 
         Workgroup workgroup = workgroupRepository.findById(workgroupDto.getId()).orElseThrow(WorkgroupNotExistException::new);
+
+        if(workgroup.getDeleted()){
+            throw new InvalidFormValueException();
+        }
 
         Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
         workgroup.setDeleted(true);
         workgroup.setDeletedAt(currDate);
 
+
+    }
+
+
+    /**
+     * Adds a student to a workgroup in the database based on the provided DTO object.
+     *
+     * @return the ID of the created connection.
+     * @param workgroupmembersDto The DTO object containing the student's id and the workgroup's id.
+     * @throws UserNotExistException if the provided student's ID does not exist in the database.
+     * @throws WorkgroupNotExistException if the provided workgroup's ID does not exist in the database.
+     *
+     */
+
+    @Transactional
+    public Integer addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
+        userRepository.findById(workgroupmembersDto.getUserId())
+                .orElseThrow(UserNotExistException::new);
+
+        workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
+                .orElseThrow(WorkgroupNotExistException::new);
+
+        Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
+        Workgroupmembers savedWorkgroupmembers =  workgroupMembersRepository.save(workgroupmembers);
+
+        return savedWorkgroupmembers.getId();
 
     }
 

@@ -130,30 +130,7 @@ public class UserService {
 
 
 
-    /**
-     * Adds a student to a workgroup in the database based on the provided DTO object.
-     *
-     * @return the ID of the created connection.
-     * @param workgroupmembersDto The DTO object containing the student's id and the workgroup's id.
-     * @throws UserNotExistException if the provided student's ID does not exist in the database.
-     * @throws WorkgroupNotExistException if the provided workgroup's ID does not exist in the database.
-     *
-     */
 
-    @Transactional
-    public Integer addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
-        userRepository.findById(workgroupmembersDto.getUserId())
-                .orElseThrow(UserNotExistException::new);
-
-        workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
-                .orElseThrow(WorkgroupNotExistException::new);
-
-        Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
-        Workgroupmembers savedWorkgroupmembers =  workgroupMembersRepository.save(workgroupmembers);
-
-        return savedWorkgroupmembers.getId();
-
-    }
 
     /**
      * Activates the user in the database based on the provided id.
@@ -190,12 +167,7 @@ public class UserService {
 
     }
 
-    @Transactional
-    public void setUserRole(UserDto userDto) {
-        userRepository.findById(userDto.getId())
-                .orElseThrow(UserNotExistException::new);
-        userRepository.setUserRole(userDto.getId(), userDto.getRoleName());
-    }
+
 
     @Transactional
     public ArrayList<UserInfoDto> getAllUser() {
