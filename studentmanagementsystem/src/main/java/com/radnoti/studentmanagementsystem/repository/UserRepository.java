@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.repository;
 import java.util.*;
 
 import com.radnoti.studentmanagementsystem.model.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -48,35 +49,35 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%'))")
-    ArrayList<User> searchAllUser(String searchString,Pageable pageable);
+    Page<User> searchAllUser(String searchString, Pageable pageable);
 
     @Query("select u from User u where " +
             "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%')) and " +
             "u.roleId.id = 3")
-    ArrayList<User> searchStudents(String searchString);
+    Page<User>  searchStudents(String searchString,Pageable pageable);
 
     @Query("select u from User u where " +
             "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%')) and " +
             "u.roleId.id = 2")
-    ArrayList<User> searchAdmins(String searchString);
+    Page<User>  searchAdmins(String searchString,Pageable pageable);
 
     @Query("select u from User u where " +
             "(u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%') or " +
             "u.email like concat('%',:searchString,'%')) and " +
             "u.roleId.id = 1")
-    ArrayList<User> searchSuperadmins(String searchString);
+    Page<User>  searchSuperadmins(String searchString,Pageable pageable);
 
     @Query("select u from User u " +
             "join Workgroupmembers wm on u.id = wm.userId.id " +
             "join Workgroup w on w.id = wm.workgroupId.id " +
             "where u.firstName like concat('%',:searchString,'%') or " +
             "u.lastName like concat('%',:searchString,'%')")
-    ArrayList<User> searchWorkgroups(String searchString);
+    Page<User>  searchWorkgroups(String searchString,Pageable pageable);
 
     @Procedure
     ArrayList<User> getUserFromWorkgroup(Integer id);

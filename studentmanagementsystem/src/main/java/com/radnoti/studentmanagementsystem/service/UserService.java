@@ -33,6 +33,7 @@ import java.time.Instant;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -252,30 +253,25 @@ public class UserService {
     }
 
     @Transactional
-    public ArrayList<UserInfoDto> searchSuperadmin(String filter,String q,Pageable pageable) {
+    public List<UserInfoDto> searchSuperadmin(String filter,String q,Pageable pageable) {
 
-        ArrayList<UserInfoDto> userDtoArrayList = new ArrayList<>();
-        ArrayList<User> userArrayList = new ArrayList<>();
 
-        if (Objects.equals(filter, SearchFilterEnum.Types.ALL_USERS)) {
-            userArrayList = userRepository.searchAllUser(q,pageable);
-        } else if (Objects.equals(filter, SearchFilterEnum.Types.SUPERADMIN)) {
-            userArrayList = userRepository.searchSuperadmins(q);
+        Page<User> userPage = userRepository.searchAllUser(q,pageable);
+
+        if (Objects.equals(filter, SearchFilterEnum.Types.SUPERADMIN)) {
+            userPage = userRepository.searchSuperadmins(q,pageable);
         } else if (Objects.equals(filter, SearchFilterEnum.Types.STUDENT)) {
-            userArrayList = userRepository.searchStudents(q);
+            userPage = userRepository.searchStudents(q,pageable);
         } else if (Objects.equals(filter, SearchFilterEnum.Types.ADMIN)) {
-            userArrayList = userRepository.searchAdmins(q);
+            userPage = userRepository.searchAdmins(q,pageable);
         } else if (Objects.equals(filter, SearchFilterEnum.Types.WORKGROUP)) {
-            userArrayList = userRepository.searchWorkgroups(q);
+            userPage = userRepository.searchWorkgroups(q,pageable);
         } else if (Objects.equals(filter, SearchFilterEnum.Types.INSTITUTION)) {
-            userArrayList = userRepository.searchWorkgroups(q);
-
+            userPage = userRepository.searchWorkgroups(q,pageable);
         }
+        List<UserInfoDto> userInfoDtoList = userPage.stream().map(e -> userMapper.fromEntityToInfoDto(e)).toList();
 
-        for (int i = 0; i < userArrayList.size(); i++) {
-            userDtoArrayList.add(userMapper.fromEntityToInfoDto(userArrayList.get(i)));
-        }
-        return userDtoArrayList;
+        return userInfoDtoList;
     }
 
 

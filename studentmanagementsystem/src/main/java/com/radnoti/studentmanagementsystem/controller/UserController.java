@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -86,13 +87,11 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/search-super-admin")
-    public @ResponseBody ArrayList<UserInfoDto> searchSuperadmin(@RequestParam String filter,
-                                                                 @RequestParam String q,
-                                                                 Pageable pageable){
-        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=mate
-        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=st&sort=id&direction=desc&pageNumber=0
+    public @ResponseBody List<UserInfoDto> searchSuperadmin(@RequestParam String filter,
+                                                            @RequestParam String q,
+                                                            Pageable pageable){
 
-        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=&page=0&size=3&sort=,asc
+        //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=&page=0&size=3&sort=id,asc
         return userService.searchSuperadmin(filter,q,pageable);
     }
 
