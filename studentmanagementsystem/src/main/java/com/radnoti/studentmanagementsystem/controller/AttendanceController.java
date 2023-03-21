@@ -20,8 +20,8 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
     @PostMapping(path = "/log-student", consumes = {"application/json"})
-    public ResponseEntity<ResponseDto> logStudent(@RequestBody StudentDto studentDto){
-        return ResponseEntity.ok(attendanceService.logStudent(studentDto));
+    public ResponseDto logStudent(@RequestBody StudentDto studentDto){
+        return attendanceService.logStudent(studentDto);
     }
 
 
