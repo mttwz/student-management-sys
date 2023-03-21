@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.model.entity;
 
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -18,13 +19,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 @Table(name = "Workgroup")
 @XmlRootElement
-@NamedQueries({
-        @NamedQuery(name = "Workgroup.findAll", query = "SELECT w FROM Workgroup w"),
-        @NamedQuery(name = "Workgroup.findById", query = "SELECT w FROM Workgroup w WHERE w.id = :id"),
-        @NamedQuery(name = "Workgroup.findByGroupName", query = "SELECT w FROM Workgroup w WHERE w.groupName = :groupName"),
-        @NamedQuery(name = "Workgroup.findByInstitution", query = "SELECT w FROM Workgroup w WHERE w.institution = :institution")})
 public class Workgroup extends UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,86 +47,9 @@ public class Workgroup extends UserDto implements Serializable {
     @Column(name = "deleted_at")
     private ZonedDateTime deletedAt;
 
-    public Workgroup() {
-    }
-
     public Workgroup(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public String getInstitution() {
-        return institution;
-    }
-
-    public void setInstitution(String institution) {
-        this.institution = institution;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-
-    public ZonedDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-
-    public void setDeletedAt(ZonedDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Workgroup)) {
-            return false;
-        }
-        Workgroup other = (Workgroup) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Workgroup[ id=" + id + " ]";
-    }
 
 }

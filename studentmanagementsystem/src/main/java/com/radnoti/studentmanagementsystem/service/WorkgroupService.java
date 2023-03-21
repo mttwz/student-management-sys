@@ -69,12 +69,12 @@ public class WorkgroupService {
 
         Workgroup workgroup = workgroupRepository.findById(workgroupDto.getId()).orElseThrow(WorkgroupNotExistException::new);
 
-        if(workgroup.getDeleted()){
+        if(workgroup.getIsDeleted()){
             throw new InvalidFormValueException();
         }
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
-        workgroup.setDeleted(true);
+        workgroup.setIsDeleted(true);
         workgroup.setDeletedAt(currDate);
 
 

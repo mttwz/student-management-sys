@@ -100,7 +100,7 @@ public class WorkgroupScheduleService {
         workgroupschedule.setStart(workgroupscheduleDto.getStart());
         workgroupschedule.setEnd(workgroupscheduleDto.getEnd());
         workgroupschedule.setIsOnsite(workgroupschedule.getIsOnsite());
-        workgroupschedule.setDeleted(false);
+        workgroupschedule.setIsDeleted(false);
 
 
         Workgroupschedule savedWorkgroupSchedule = workgroupscheduleRepository.save(workgroupschedule);
@@ -116,11 +116,11 @@ public class WorkgroupScheduleService {
     public void deleteWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
         Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getId())
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
-        if (workgroupschedule.getDeleted()){
+        if (workgroupschedule.getIsDeleted()){
             throw new WorkgroupAlreadyDeletedException();
         }
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
-        workgroupschedule.setDeleted(true);
+        workgroupschedule.setIsDeleted(true);
         workgroupschedule.setDeletedAt(currDate);
 
     }
@@ -129,7 +129,7 @@ public class WorkgroupScheduleService {
     public void restoreDeletedWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
         Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getId())
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
-        workgroupschedule.setDeleted(false);
+        workgroupschedule.setIsDeleted(false);
         workgroupschedule.setDeletedAt(null);
 
     }

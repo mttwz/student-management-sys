@@ -61,7 +61,7 @@ public class CardService {
         Card card = cardMapper.fromDtoToEntity(cardDto);
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         card.setCreatedAt(currDate);
-        card.setDeleted(false);
+        card.setIsDeleted(false);
         cardRepository.save(card);
         return card.getId();
     }
@@ -70,12 +70,12 @@ public class CardService {
     public void deleteCard(final CardDto cardDto) {
         Card card = cardRepository.findById(cardDto.getId()).orElseThrow(CardNotExistException::new);
 
-        if(card.getDeleted()){
+        if(card.getIsDeleted()){
             throw new InvalidFormValueException();
         }
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
-        card.setDeleted(true);
+        card.setIsDeleted(true);
         card.setDeletedAt(currDate);
         cardRepository.save(card);
     }

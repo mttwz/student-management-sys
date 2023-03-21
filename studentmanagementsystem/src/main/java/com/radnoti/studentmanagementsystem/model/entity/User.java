@@ -4,7 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -19,8 +19,14 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author matevoros
  */
-@AllArgsConstructor
+
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "User")
 @XmlRootElement
 public class User implements Serializable {
@@ -74,174 +80,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "userId")
     private Collection<Passwordreset> passwordresetCollection;
 
-    public User() {
-    }
 
     public User(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public ZonedDateTime getBirth() {
-        return birth;
-    }
-
-    public void setBirth(ZonedDateTime birth) {
-        this.birth = birth;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public ZonedDateTime getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt(ZonedDateTime registeredAt) {
-        this.registeredAt = registeredAt;
-    }
-
-    public String getActivationCode() {
-        return activationCode;
-    }
-
-    public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
-    }
-
-    public Boolean getIsActivated() {
-        return isActivated;
-    }
-
-    public void setIsActivated(Boolean isActivated) {
-        this.isActivated = isActivated;
-    }
-
-    public ZonedDateTime getActivatedAt() {
-        return activatedAt;
-    }
-
-    public void setActivatedAt(ZonedDateTime activatedAt) {
-        this.activatedAt = activatedAt;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public ZonedDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(ZonedDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public Role getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Role roleId) {
-        this.roleId = roleId;
-    }
-
-    @XmlTransient
-    public Collection<Workgroupmembers> getWorkgroupmembersCollection() {
-        return workgroupmembersCollection;
-    }
-
-    public void setWorkgroupmembersCollection(Collection<Workgroupmembers> workgroupmembersCollection) {
-        this.workgroupmembersCollection = workgroupmembersCollection;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    @XmlTransient
-    public Collection<Passwordreset> getPasswordresetCollection() {
-        return passwordresetCollection;
-    }
-
-    public void setPasswordresetCollection(Collection<Passwordreset> passwordresetCollection) {
-        this.passwordresetCollection = passwordresetCollection;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.User[ id=" + id + " ]";
-    }
-    
 }

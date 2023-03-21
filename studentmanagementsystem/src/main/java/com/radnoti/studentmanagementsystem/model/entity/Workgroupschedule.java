@@ -4,7 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -30,6 +30,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 @Table(name = "Workgroup_schedule")
 @XmlRootElement
 @AllArgsConstructor
@@ -57,101 +62,8 @@ public class Workgroupschedule implements Serializable {
     @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
     @ManyToOne
     private Workgroup workgroupId;
-
-    public Workgroupschedule() {
-    }
-
     public Workgroupschedule(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ZonedDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(ZonedDateTime start) {
-        this.start = start;
-    }
-
-    public ZonedDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(ZonedDateTime end) {
-        this.end = end;
-    }
-
-    public Boolean getIsOnsite() {
-        return isOnsite;
-    }
-
-    public void setIsOnsite(Boolean isOnsite) {
-        this.isOnsite = isOnsite;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public ZonedDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(ZonedDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public Workgroup getWorkgroupId() {
-        return workgroupId;
-    }
-
-    public void setWorkgroupId(Workgroup workgroupId) {
-        this.workgroupId = workgroupId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Workgroupschedule)) {
-            return false;
-        }
-        Workgroupschedule other = (Workgroupschedule) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Workgroupschedule[ id=" + id + " ]";
-    }
-    
 }

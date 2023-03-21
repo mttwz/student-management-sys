@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -16,12 +18,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 @Table(name = "Card")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Card.findAll", query = "SELECT c FROM Card c"),
-    @NamedQuery(name = "Card.findById", query = "SELECT c FROM Card c WHERE c.id = :id"),
-    @NamedQuery(name = "Card.findByHash", query = "SELECT c FROM Card c WHERE c.hash = :hash")})
 public class Card implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,84 +45,9 @@ public class Card implements Serializable {
     @OneToOne(mappedBy = "cardId")
     private Student student;
 
-    public Card() {
-    }
 
     public Card(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public ZonedDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public void setDeletedAt(ZonedDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Card)) {
-            return false;
-        }
-        Card other = (Card) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Card[ id=" + id + " ]";
-    }
-    
 }

@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -26,11 +28,13 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author matevoros
  */
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 @Table(name = "Student")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Student.findAll", query = "SELECT s FROM Student s"),
-    @NamedQuery(name = "Student.findById", query = "SELECT s FROM Student s WHERE s.id = :id")})
 public class Student implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,69 +52,9 @@ public class Student implements Serializable {
     @OneToOne
     private User userId;
 
-    public Student() {
-    }
-
     public Student(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @XmlTransient
-    public Collection<Attendance> getAttendanceCollection() {
-        return attendanceCollection;
-    }
-
-    public void setAttendanceCollection(Collection<Attendance> attendanceCollection) {
-        this.attendanceCollection = attendanceCollection;
-    }
-
-    public Card getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(Card cardId) {
-        this.cardId = cardId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Student)) {
-            return false;
-        }
-        Student other = (Student) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Student[ id=" + id + " ]";
-    }
-    
 }

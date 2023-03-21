@@ -4,6 +4,8 @@
  */
 package com.radnoti.studentmanagementsystem.model.entity;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -28,16 +30,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author matevoros
  */
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 @Table(name = "Password_reset")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Passwordreset.findAll", query = "SELECT p FROM Passwordreset p"),
-    @NamedQuery(name = "Passwordreset.findById", query = "SELECT p FROM Passwordreset p WHERE p.id = :id"),
-    @NamedQuery(name = "Passwordreset.findByResetCode", query = "SELECT p FROM Passwordreset p WHERE p.resetCode = :resetCode"),
-    @NamedQuery(name = "Passwordreset.findByExpireDate", query = "SELECT p FROM Passwordreset p WHERE p.expireDate = :expireDate"),
-    @NamedQuery(name = "Passwordreset.findByIsUsed", query = "SELECT p FROM Passwordreset p WHERE p.isUsed = :isUsed")})
 public class Passwordreset implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,76 +55,8 @@ public class Passwordreset implements Serializable {
     @ManyToOne
     private User userId;
 
-    public Passwordreset() {
-    }
-
     public Passwordreset(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getResetCode() {
-        return resetCode;
-    }
-
-    public void setResetCode(String resetCode) {
-        this.resetCode = resetCode;
-    }
-
-    public ZonedDateTime getExpireDate() {
-        return expireDate;
-    }
-
-    public void setExpireDate(ZonedDateTime expireDate) {
-        this.expireDate = expireDate;
-    }
-
-    public Boolean getIsUsed() {
-        return isUsed;
-    }
-
-    public void setIsUsed(Boolean isUsed) {
-        this.isUsed = isUsed;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Passwordreset)) {
-            return false;
-        }
-        Passwordreset other = (Passwordreset) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.radnoti.studentmanagementsystem.model.Passwordreset[ id=" + id + " ]";
-    }
-    
 }
