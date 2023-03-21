@@ -1,5 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
@@ -34,14 +35,20 @@ public class AttendanceService {
 
 
     @Transactional
-    public ResponseDto logStudent(StudentDto studentDto){
+    public ResponseDto logStudent(String studentIdString){
+        Integer studentId;
+        try {
+            studentId = Integer.parseInt(studentIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
+        }
         Pageable pageable = PageRequest.of(0, 1);
 
-        Student student = studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
+        Student student = studentRepository.findById(studentId).orElseThrow(StudentNotExistException::new);
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
-        List<Attendance> lastAttendanceList = attendanceRepository.getLastAttendanceByStudentId(studentDto.getId(),pageable);
+        List<Attendance> lastAttendanceList = attendanceRepository.getLastAttendanceByStudentId(studentId,pageable);
 
         if(!lastAttendanceList.isEmpty()){
             Attendance lastAttendance = lastAttendanceList.get(0);

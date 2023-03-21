@@ -38,24 +38,22 @@ public class CardController {
 
     }
 
-
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/delete-card", consumes = {"application/json"}, produces = {"application/json"})
-    public void deleteCard(@RequestBody CardDto cardDto) {
-        cardService.deleteCard(cardDto);
+    @DeleteMapping(path = "/delete-card/{cardId}")
+    public void deleteCard(@PathVariable String cardId) {
+        cardService.deleteCard(cardId);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/get-card-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseDto getCardByUserId(@RequestBody UserDto userDto) {
-        return cardService.getCardByUserId(userDto);
+    @GetMapping(path = "/get-card-by-user-id/{userId}")
+    public ResponseDto getCardByUserId(@PathVariable String userId) {
+        return cardService.getCardByUserId(userId);
     }
+
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/get-card-by-student-id", consumes = {"application/json"}, produces = {"application/json"})
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseDto getCardByStudentId(@RequestBody StudentDto studentDto) {
-        return cardService.getCardByStudentId(studentDto);
+    @GetMapping(path = "/get-card-by-student-id/{studentId}")
+    public ResponseDto getCardByStudentId(@PathVariable String studentId) {
+        return cardService.getCardByStudentId(studentId);
     }
 
 

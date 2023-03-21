@@ -250,7 +250,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any()))
                 .thenReturn(Optional.empty());
 
-        assertThrows(UserNotExistException.class, ()-> userService.setUserIsActivated(userDto));
+        assertThrows(UserNotExistException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
 
     }
 
@@ -266,7 +266,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.of(user));
 
-        assertThrows(UserAlreadyActivatedException.class, ()-> userService.setUserIsActivated(userDto));
+        assertThrows(UserAlreadyActivatedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
     }
 
 
@@ -285,7 +285,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any()))
                 .thenReturn(Optional.of(mockUser));
         //act
-        userService.deleteUser(userDto);
+        userService.deleteUser(userDto.getId().toString());
 
         //assert
         verify(mockUser,times(1)).setIsDeleted(true);
@@ -301,7 +301,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());
 
-        assertThrows(UserNotExistException.class, ()-> userService.deleteUser(userDto));
+        assertThrows(UserNotExistException.class, ()-> userService.deleteUser(userDto.getId().toString()));
 
     }
 
@@ -317,7 +317,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.of(user));
 
-        assertThrows(UserAlreadyDeletedException.class, ()-> userService.deleteUser(userDto));
+        assertThrows(UserAlreadyDeletedException.class, ()-> userService.deleteUser(userDto.getId().toString()));
     }
 
 

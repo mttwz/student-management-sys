@@ -141,29 +141,44 @@ public class UserService {
     /**
      * Activates the user in the database based on the provided id.
      *
-     * @param userDto The DTO object containing the user's id.
+     * @param userIdString The user's id as String.
      * @throws UserNotExistException if the provided user's ID does not exist in the database.
      * @throws UserAlreadyActivatedException if the provided user already activated.
      *
      */
     @Transactional
-    public void setUserIsActivated(UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
+    public void setUserIsActivated(String userIdString) {
+        Integer userId;
+        try {
+            userId = Integer.parseInt(userIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
+        }
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
-        if (user.getIsActivated()){
+        if (Boolean.TRUE.equals(user.getIsDeleted())){
+            throw new UserAlreadyDeletedException();
+        }
+        if (Boolean.TRUE.equals(user.getIsActivated())){
             throw new UserAlreadyActivatedException();
         }
         user.setIsActivated(true);
     }
 
 
-    /**
-     *
-     * @param userDto
-     */
+
+
     @Transactional
-    public void deleteUser(UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
+    public void deleteUser(String userIdString) {
+        Integer userId;
+        try {
+            userId = Integer.parseInt(userIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
+        }
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
         if (user.getIsDeleted()) {
@@ -184,8 +199,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoDto getUserInfo(UserDto userDto) {
-        User user = userRepository.findById(userDto.getId())
+    public UserInfoDto getUserInfo(String userIdString) {
+        Integer userId;
+        try {
+            userId = Integer.parseInt(userIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
+        }
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
         return userMapper.fromEntityToInfoDto(user);
 
@@ -200,13 +222,11 @@ public class UserService {
         }catch (NumberFormatException ex){
             throw new InvalidFormValueException();
         }
+
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-
-        String userName = userInfoDto.getEmail();
-
-        Optional<User> optionalUserByEmail = userRepository.findByUsername(userName);
+        Optional<User> optionalUserByEmail = userRepository.findByUsername(userInfoDto.getEmail());
 
         if (optionalUserByEmail.isPresent() && !Objects.equals(optionalUserByEmail.get().getId(), userId)) {
             throw new UserAlreadyExistException();
@@ -246,22 +266,8 @@ public class UserService {
         } else if (Objects.equals(filter, SearchFilterEnum.Types.INSTITUTION)) {
             userPage = userRepository.searchWorkgroups(q,pageable);
         }
-        List<UserInfoDto> userInfoDtoList = userPage.stream().map(e -> userMapper.fromEntityToInfoDto(e)).toList();
 
-        return userInfoDtoList;
+        return userPage.stream().map(userMapper::fromEntityToInfoDto).toList();
     }
-
-
-    @Transactional
-    public List<UserDto> getUserFromWorkgroup(UserDto userDto) {
-        List<UserDto> userDtoList = new ArrayList<>();
-        List<User> userList = userRepository.getUserFromWorkgroup(userDto.getId());
-        for (int i = 0; i < userList.size(); i++) {
-            userDtoList.add(userMapper.fromEntityToDto(userList.get(i)));
-        }
-
-        return userDtoList;
-    }
-
 
 }

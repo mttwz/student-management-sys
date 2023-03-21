@@ -31,30 +31,30 @@ public class CustomCardControllerAdvice {
     @ExceptionHandler(CardNotCreatedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotCreatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card01"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-001-ERR"), status);
     }
 
     @ExceptionHandler(CardNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card02"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-002-ERR"), status);
     }
 
     @ExceptionHandler(CardNotAssignedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotAssignedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card03"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-003-ERR"), status);
     }
 
     @ExceptionHandler(CardAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardAlreadyDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card04"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-004-ERR"), status);
     }
 
     @ExceptionHandler(CardAlreadyAssignedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardAlreadyAssignedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card06"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-005-ERR"), status);
     }
 }

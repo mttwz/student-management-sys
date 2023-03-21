@@ -32,31 +32,30 @@ public class UserController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/set-user-is-activated", consumes = {"application/json"}, produces = {"application/json"})
-    public void setUserIsActivated(@RequestBody UserDto userDto) {
-        userService.setUserIsActivated(userDto);
+    @PostMapping(path = "/set-user-is-activated/{userId}")
+    public void setUserIsActivated(@PathVariable String userId) {
+        userService.setUserIsActivated(userId);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/delete-user", consumes = {"application/json"}, produces = {"application/json"})
-    public void deleteUser(@RequestBody UserDto userDto) {
-        userService.deleteUser(userDto);
+    @DeleteMapping(path = "/delete-user/{userId}")
+    public void deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
     }
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/get-all-user", consumes = {"application/json"}, produces = {"application/json"})
+    @GetMapping(path = "/get-all-user")
     public  ResponseEntity<List<UserInfoDto>> getWorkgroupScheduleByUserId() {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/get-user-info", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<UserInfoDto> getUserInfo(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok()
-                .header("Content-Type", "application/json")
-                .body(userService.getUserInfo(userDto));
+    @GetMapping(path = "/get-user-info/{userId}")
+    public ResponseEntity<UserInfoDto> getUserInfo(@PathVariable String userId) {
+        return ResponseEntity.ok(userService.getUserInfo(userId));
+
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
@@ -75,12 +74,5 @@ public class UserController {
         //http://127.0.0.1:8080/api/v1/user/search-super-admin?filter=all-users&q=&page=0&size=3&sort=id,asc
         return userService.searchSuperadmin(filter,q,pageable);
     }
-
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/get-user-from-workgroup", consumes = {"application/json"}, produces = {"application/json"})
-    public @ResponseBody List<UserDto> getAllUserIdFromWorkgroup(@RequestBody UserDto userDto){
-        return userService.getUserFromWorkgroup(userDto);
-    }
-
 
 }
