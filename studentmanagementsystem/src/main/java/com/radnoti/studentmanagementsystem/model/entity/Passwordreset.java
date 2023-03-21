@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -47,8 +48,7 @@ public class Passwordreset implements Serializable {
     @Column(name = "reset_code")
     private String resetCode;
     @Column(name = "expire_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date expireDate;
+    private ZonedDateTime expireDate;
     @Column(name = "is_used")
     private Boolean isUsed;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -78,11 +78,11 @@ public class Passwordreset implements Serializable {
         this.resetCode = resetCode;
     }
 
-    public Date getExpireDate() {
+    public ZonedDateTime getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(Date expireDate) {
+    public void setExpireDate(ZonedDateTime expireDate) {
         this.expireDate = expireDate;
     }
 

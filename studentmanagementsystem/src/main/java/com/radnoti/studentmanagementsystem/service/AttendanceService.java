@@ -38,14 +38,14 @@ public class AttendanceService {
 
         Student student = studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
 
-        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
         List<Attendance> lastAttendanceList = attendanceRepository.getLastAttendanceByStudentId(studentDto.getId(),pageable);
 
-        if(lastAttendanceList.size() != 0){
+        if(!lastAttendanceList.isEmpty()){
             Attendance lastAttendance = lastAttendanceList.get(0);
-            Date lastArrival = lastAttendance.getArrival();
-            Date lastLeaving = lastAttendance.getLeaving();
+            ZonedDateTime lastArrival = lastAttendance.getArrival();
+            ZonedDateTime lastLeaving = lastAttendance.getLeaving();
             if(lastLeaving == null && isSameDay(currDate,lastArrival)){
                 lastAttendance.setLeaving(currDate);
                 attendanceRepository.save(lastAttendance);
@@ -62,7 +62,7 @@ public class AttendanceService {
     }
 
 
-    public static boolean isSameDay(Date date1, Date date2) {
+    public static boolean isSameDay(ZonedDateTime date1, ZonedDateTime date2) {
         LocalDate localDate1 = date1.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();

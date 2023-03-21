@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -36,11 +37,9 @@ public class Attendance implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "arrival")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date arrival;
+    private ZonedDateTime arrival;
     @Column(name = "leaving")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date leaving;
+    private ZonedDateTime leaving;
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student studentId;
@@ -60,19 +59,19 @@ public class Attendance implements Serializable {
         this.id = id;
     }
 
-    public Date getArrival() {
+    public ZonedDateTime getArrival() {
         return arrival;
     }
 
-    public void setArrival(Date arrival) {
+    public void setArrival(ZonedDateTime arrival) {
         this.arrival = arrival;
     }
 
-    public Date getLeaving() {
+    public ZonedDateTime getLeaving() {
         return leaving;
     }
 
-    public void setLeaving(Date leaving) {
+    public void setLeaving(ZonedDateTime leaving) {
         this.leaving = leaving;
     }
 

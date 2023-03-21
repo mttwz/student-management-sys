@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ public class PasswordResetDto {
 
     private String resetCode;
 
-    private Date expireDate;
+    private ZonedDateTime expireDate;
 
     private boolean isUsed;
 

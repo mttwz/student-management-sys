@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.model.entity;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -39,12 +40,11 @@ public class Workgroup extends UserDto implements Serializable {
     @Column(name = "institution")
     private String institution;
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private ZonedDateTime createdAt;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
     @Column(name = "deleted_at")
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
 
     public Workgroup() {
     }
@@ -77,11 +77,11 @@ public class Workgroup extends UserDto implements Serializable {
         this.institution = institution;
     }
 
-    public Date getCreatedAt() {
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -93,13 +93,13 @@ public class Workgroup extends UserDto implements Serializable {
         isDeleted = deleted;
     }
 
-    @Override
-    public Date getDeletedAt() {
+
+    public ZonedDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    @Override
-    public void setDeletedAt(Date deletedAt) {
+
+    public void setDeletedAt(ZonedDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

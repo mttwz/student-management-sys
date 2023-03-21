@@ -32,13 +32,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 
@@ -57,9 +55,9 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public ArrayList<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, UserDto userDto) {
+    public List<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, UserDto userDto) {
 
-        ArrayList<Integer> workgroupScheduleList;
+        List<Integer> workgroupScheduleList;
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
 
@@ -69,16 +67,14 @@ public class WorkgroupScheduleService {
             workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
         }
 
-        ArrayList<WorkgroupscheduleDto> workgroupscheduleDtoArrayList = new ArrayList<>();
+        List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
         Iterable<Workgroupschedule> optionalWorkgroupSchedule = workgroupscheduleRepository.findAllById(workgroupScheduleList);
 
         for(Workgroupschedule workgroupschedule : optionalWorkgroupSchedule){
             WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
-            workgroupscheduleDto.setStart(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getStart().toInstant(), ZoneOffset.UTC).atZone(ZoneId.of("UTC-1")).toInstant()));
-            workgroupscheduleDto.setEnd(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getEnd().toInstant(), ZoneOffset.UTC).atZone(ZoneId.of("UTC-1")).toInstant()));
-            workgroupscheduleDtoArrayList.add(workgroupscheduleDto);
+            workgroupscheduleDtoList.add(workgroupscheduleDto);
         }
-        return workgroupscheduleDtoArrayList;
+        return workgroupscheduleDtoList;
     }
 
 
@@ -101,8 +97,8 @@ public class WorkgroupScheduleService {
 
         workgroupschedule.setName(workgroupscheduleDto.getName());
         workgroupschedule.setWorkgroupId(new Workgroup(workgroupscheduleDto.getWorkgroupId()));
-        workgroupschedule.setStart(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getStart().toInstant(), ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toInstant()));
-        workgroupschedule.setEnd(Date.from(LocalDateTime.ofInstant(workgroupscheduleDto.getEnd().toInstant(), ZoneOffset.UTC).atZone(ZoneId.systemDefault()).toInstant()));
+        workgroupschedule.setStart(workgroupscheduleDto.getStart());
+        workgroupschedule.setEnd(workgroupscheduleDto.getEnd());
         workgroupschedule.setIsOnsite(workgroupschedule.getIsOnsite());
         workgroupschedule.setDeleted(false);
 
@@ -123,7 +119,7 @@ public class WorkgroupScheduleService {
         if (workgroupschedule.getDeleted()){
             throw new WorkgroupAlreadyDeletedException();
         }
-        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
         workgroupschedule.setDeleted(true);
         workgroupschedule.setDeletedAt(currDate);
 

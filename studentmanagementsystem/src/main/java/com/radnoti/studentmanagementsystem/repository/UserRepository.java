@@ -40,7 +40,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "join Workgroupschedule ws on wm.workgroupId.id = ws.workgroupId.id " +
             "join Workgroup w on wm.workgroupId.id = w.id " +
             "where wm.userId.id = :userId")
-    ArrayList<Integer>getWorkgroupScheduleByUserId(Integer userId);
+    List<Integer>getWorkgroupScheduleByUserId(Integer userId);
 
     @Query("select u from User u where u.email = :email")
     Optional<User> findByUsername(String email);
@@ -80,7 +80,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Page<User>  searchWorkgroups(String searchString,Pageable pageable);
 
     @Procedure
-    ArrayList<User> getUserFromWorkgroup(Integer id);
+    List<User> getUserFromWorkgroup(Integer id);
 
 
 

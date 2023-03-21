@@ -30,6 +30,7 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import lombok.RequiredArgsConstructor;
@@ -114,13 +115,15 @@ public class UserService {
             roleId = RoleEnum.ADMIN.getId();
         } else roleId = RoleEnum.STUDENT.getId();
 
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
+
         User user = userMapper.fromDtoToEntity(userDto);
         user.setPassword(hashUtil.getSHA256Hash(userDto.getPassword()));
         user.setActivationCode(hashUtil.generateRandomString(ACTIVATION_CODE_LENGTH));
         user.setIsActivated(false);
         user.setIsDeleted(false);
         user.setRoleId(new Role(roleId));
-        user.setRegisteredAt(Date.from(Instant.now()));
+        user.setRegisteredAt(currDate);
 
         User savedUser = userRepository.save(user);
 
@@ -170,13 +173,13 @@ public class UserService {
 
 
     @Transactional
-    public ArrayList<UserInfoDto> getAllUser() {
+    public List<UserInfoDto> getAllUser() {
         Iterable<User> userIterable = userRepository.findAll();
-        ArrayList<UserInfoDto> userInfoDtoArrayList = new ArrayList<>();
+        List<UserInfoDto> userInfoDtoList = new ArrayList<>();
         for (User user : userIterable) {
-            userInfoDtoArrayList.add(userMapper.fromEntityToInfoDto(user));
+            userInfoDtoList.add(userMapper.fromEntityToInfoDto(user));
         }
-        return userInfoDtoArrayList;
+        return userInfoDtoList;
     }
 
     @Transactional
@@ -248,14 +251,14 @@ public class UserService {
 
 
     @Transactional
-    public ArrayList<UserDto> getUserFromWorkgroup(UserDto userDto) {
-        ArrayList<UserDto> userDtoArrayList = new ArrayList<>();
-        ArrayList<User> userArrayList = userRepository.getUserFromWorkgroup(userDto.getId());
-        for (int i = 0; i < userArrayList.size(); i++) {
-            userDtoArrayList.add(userMapper.fromEntityToDto(userArrayList.get(i)));
+    public List<UserDto> getUserFromWorkgroup(UserDto userDto) {
+        List<UserDto> userDtoList = new ArrayList<>();
+        List<User> userList = userRepository.getUserFromWorkgroup(userDto.getId());
+        for (int i = 0; i < userList.size(); i++) {
+            userDtoList.add(userMapper.fromEntityToDto(userList.get(i)));
         }
 
-        return userDtoArrayList;
+        return userDtoList;
     }
 
 

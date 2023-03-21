@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.model.dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -26,15 +27,15 @@ public class WorkgroupscheduleDto implements Serializable {
 
     private Integer workgroupId;
 
-    private Date start;
+    private ZonedDateTime start;
 
-    private Date end;
+    private ZonedDateTime end;
 
     private Boolean isOnsite;
 
     private Boolean isDeleted;
 
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
 
 
 

@@ -5,6 +5,7 @@
 package com.radnoti.studentmanagementsystem.model.entity;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -33,12 +34,11 @@ public class Card implements Serializable {
     @Column(name = "hash")
     private String hash;
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private ZonedDateTime createdAt;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
     @Column(name = "deleted_at")
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
     @OneToOne(mappedBy = "cardId")
     private Student student;
 
@@ -65,11 +65,11 @@ public class Card implements Serializable {
         this.hash = hash;
     }
 
-    public Date getCreatedAt() {
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(ZonedDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -81,11 +81,11 @@ public class Card implements Serializable {
         isDeleted = deleted;
     }
 
-    public Date getDeletedAt() {
+    public ZonedDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Date deletedAt) {
+    public void setDeletedAt(ZonedDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

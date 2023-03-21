@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -72,7 +73,7 @@ public class WorkgroupService {
             throw new InvalidFormValueException();
         }
 
-        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
         workgroup.setDeleted(true);
         workgroup.setDeletedAt(currDate);
 

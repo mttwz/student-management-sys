@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -18,11 +19,11 @@ public class UserInfoDto {
     private String firstName;
     private String lastName;
     private String phone;
-    private Date birth;
+    private ZonedDateTime birth;
     private String email;
-    private Date registeredAt;
+    private ZonedDateTime registeredAt;
     private Boolean isActivated;
-    private Date activatedAt;
+    private ZonedDateTime activatedAt;
     private Boolean isDeleted;
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
 }

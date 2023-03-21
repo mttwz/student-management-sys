@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.model.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -25,15 +26,15 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String phone;
-    private Date birth;
+    private ZonedDateTime birth;
     private String email;
     private String password;
-    private Date registeredAt;
+    private ZonedDateTime registeredAt;
     private String activationCode;
     private Boolean isActivated;
-    private Date activatedAt;
+    private ZonedDateTime activatedAt;
     private Boolean isDeleted;
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
     private String jwt;
 
 }

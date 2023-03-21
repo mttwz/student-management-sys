@@ -28,8 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -73,7 +74,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName("mate");
         userDto.setPhone("123");
-        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
@@ -104,7 +105,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName("mate");
         userDto.setPhone("123");
-        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
@@ -132,7 +133,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName("mate");
         userDto.setPhone("123");
-        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
@@ -160,7 +161,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName("");
         userDto.setPhone("123");
-        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("password");
 
@@ -178,7 +179,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName(null);
         userDto.setPhone("123");
-        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
@@ -196,7 +197,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName("mate");
         userDto.setPhone("123");
-        userDto.setBirth(new Date(1111, 11, 11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
@@ -215,7 +216,7 @@ public final class UserServiceTest {
         userDto.setFirstName("mate");
         userDto.setLastName("mate");
         userDto.setPhone("1234");
-        userDto.setBirth(new Date(1111,11,11));
+        userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
         userDto.setEmail("mate");
         userDto.setPassword("mate");
 
@@ -277,16 +278,17 @@ public final class UserServiceTest {
         userDto.setId(1);
         userDto.setIsDeleted(false);
 
-        User user = mock(User.class);
-        user.setId(1);
+        User mockUser = mock(User.class);
+
+        mockUser.setId(1);
 
         when(userRepository.findById(any()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(mockUser));
         //act
         userService.deleteUser(userDto);
 
         //assert
-        verify(user,times(1)).setIsDeleted(any());
+        verify(mockUser,times(1)).setIsDeleted(true);
     }
 
     @Test
@@ -295,8 +297,6 @@ public final class UserServiceTest {
         userDto.setId(1);
         userDto.setIsDeleted(true);
 
-        User user = new User();
-        user.setIsDeleted(true);
 
         when(userRepository.findById(any(Integer.class)))
                 .thenReturn(Optional.empty());

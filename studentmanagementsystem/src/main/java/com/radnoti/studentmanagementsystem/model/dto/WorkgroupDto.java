@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -32,11 +33,11 @@ public class WorkgroupDto implements Serializable {
     private String institution;
 
 
-    private Date createdAt;
+    private ZonedDateTime createdAt;
 
     private Boolean isDeleted;
 
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
 
     private UserDto userId;
 

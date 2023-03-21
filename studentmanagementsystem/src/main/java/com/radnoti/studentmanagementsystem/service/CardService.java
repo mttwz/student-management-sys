@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -58,8 +59,9 @@ public class CardService {
             throw new InvalidFormValueException();
         }
         Card card = cardMapper.fromDtoToEntity(cardDto);
-        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
         card.setCreatedAt(currDate);
+        card.setDeleted(false);
         cardRepository.save(card);
         return card.getId();
     }
@@ -72,7 +74,7 @@ public class CardService {
             throw new InvalidFormValueException();
         }
 
-        Date currDate = Date.from(java.time.ZonedDateTime.now().toInstant());
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
         card.setDeleted(true);
         card.setDeletedAt(currDate);
         cardRepository.save(card);

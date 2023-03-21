@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.model.entity;
 import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -44,17 +45,15 @@ public class Workgroupschedule implements Serializable {
     @Column(name = "name")
     private String name;
     @Column(name = "start")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date start;
+    private ZonedDateTime start;
     @Column(name = "end")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date end;
+    private ZonedDateTime end;
     @Column(name = "is_onsite")
     private Boolean isOnsite;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
     @Column(name = "deleted_at")
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
     @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
     @ManyToOne
     private Workgroup workgroupId;
@@ -82,19 +81,19 @@ public class Workgroupschedule implements Serializable {
         this.name = name;
     }
 
-    public Date getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(ZonedDateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public ZonedDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(ZonedDateTime end) {
         this.end = end;
     }
 
@@ -114,11 +113,11 @@ public class Workgroupschedule implements Serializable {
         isDeleted = deleted;
     }
 
-    public Date getDeletedAt() {
+    public ZonedDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Date deletedAt) {
+    public void setDeletedAt(ZonedDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

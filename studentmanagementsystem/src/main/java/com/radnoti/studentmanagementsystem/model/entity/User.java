@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.model.entity;
 import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.*;
@@ -41,8 +42,7 @@ public class User implements Serializable {
     @Column(name = "phone")
     private String phone;
     @Column(name = "birth")
-    @Temporal(TemporalType.DATE)
-    private Date birth;
+    private ZonedDateTime birth;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 255)
     @Column(name = "email")
@@ -51,8 +51,7 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
     @Column(name = "registered_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date registeredAt;
+    private ZonedDateTime registeredAt;
     @Lob
     @Size(max = 65535)
     @Column(name = "activation_code")
@@ -60,13 +59,11 @@ public class User implements Serializable {
     @Column(name = "is_activated")
     private Boolean isActivated;
     @Column(name = "activated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date activatedAt;
+    private ZonedDateTime activatedAt;
     @Column(name = "is_deleted")
     private Boolean isDeleted;
     @Column(name = "deleted_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
     private Role roleId;
@@ -116,11 +113,11 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
-    public Date getBirth() {
+    public ZonedDateTime getBirth() {
         return birth;
     }
 
-    public void setBirth(Date birth) {
+    public void setBirth(ZonedDateTime birth) {
         this.birth = birth;
     }
 
@@ -140,11 +137,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Date getRegisteredAt() {
+    public ZonedDateTime getRegisteredAt() {
         return registeredAt;
     }
 
-    public void setRegisteredAt(Date registeredAt) {
+    public void setRegisteredAt(ZonedDateTime registeredAt) {
         this.registeredAt = registeredAt;
     }
 
@@ -164,11 +161,11 @@ public class User implements Serializable {
         this.isActivated = isActivated;
     }
 
-    public Date getActivatedAt() {
+    public ZonedDateTime getActivatedAt() {
         return activatedAt;
     }
 
-    public void setActivatedAt(Date activatedAt) {
+    public void setActivatedAt(ZonedDateTime activatedAt) {
         this.activatedAt = activatedAt;
     }
 
@@ -180,11 +177,11 @@ public class User implements Serializable {
         this.isDeleted = isDeleted;
     }
 
-    public Date getDeletedAt() {
+    public ZonedDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Date deletedAt) {
+    public void setDeletedAt(ZonedDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

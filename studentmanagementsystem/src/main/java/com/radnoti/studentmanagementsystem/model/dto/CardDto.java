@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -23,11 +24,11 @@ public class CardDto {
 
     private String hash;
 
-    private Date createdAt;
+    private ZonedDateTime createdAt;
 
     private Boolean isDeleted;
 
-    private Date deletedAt;
+    private ZonedDateTime deletedAt;
 
 
 }
