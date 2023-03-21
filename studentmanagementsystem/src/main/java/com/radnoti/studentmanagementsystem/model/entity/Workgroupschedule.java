@@ -61,6 +61,7 @@ public class Workgroupschedule implements Serializable {
     private ZonedDateTime deletedAt;
     @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
     @ManyToOne
+    @ToString.Exclude
     private Workgroup workgroupId;
     public Workgroupschedule(Integer id) {
         this.id = id;

@@ -143,12 +143,11 @@ public class AuthServiceTest {
         when(jwtUtil.validateJwt("valid_jwt")).thenReturn(true);
 
         // Act
-        Map<String, Boolean> result = authService.validateJwt(userDto);
+        Boolean result = authService.validateJwt(userDto);
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.containsKey("valid"));
-        assertTrue(result.get("valid"));
+        assertTrue(result);
     }
 
     @Test
@@ -160,12 +159,12 @@ public class AuthServiceTest {
         when(jwtUtil.validateJwt("invalid_jwt")).thenReturn(false);
 
         // Act
-        Map<String, Boolean> result = authService.validateJwt(userDto);
+        Boolean result = authService.validateJwt(userDto);
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.containsKey("valid"));
-        assertFalse(result.get("valid"));
+
+        assertFalse(result);
     }
 
 

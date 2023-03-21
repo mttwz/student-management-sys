@@ -45,4 +45,16 @@ public class CustomCardControllerAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card03"), status);
     }
+
+    @ExceptionHandler(CardAlreadyDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleException(CardAlreadyDeletedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card04"), status);
+    }
+
+    @ExceptionHandler(CardAlreadyAssignedException.class)
+    public ResponseEntity<ErrorResponse> handleException(CardAlreadyAssignedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "card06"), status);
+    }
 }

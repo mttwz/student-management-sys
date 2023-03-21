@@ -46,6 +46,7 @@ public class Role implements Serializable {
     @Column(name = "role_type")
     private String roleType;
     @OneToMany(mappedBy = "roleId")
+    @ToString.Exclude
     private Collection<User> userCollection;
 
     public Role(Integer id) {

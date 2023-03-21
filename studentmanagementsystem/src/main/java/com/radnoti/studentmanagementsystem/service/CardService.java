@@ -4,9 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
+import com.radnoti.studentmanagementsystem.exception.card.*;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
@@ -100,7 +98,13 @@ public class CardService {
         Card card = cardRepository.findById(studentDto.getCardId())
                 .orElseThrow(CardNotExistException::new);
 
+        if (card.getIsAssigned()){
+            throw new CardAlreadyAssignedException();
+        }
+
         student.setCardId(card);
+        card.setIsAssigned(true);
+        card.setAssignedTo(student.getId());
     }
 
     /**
@@ -117,11 +121,15 @@ public class CardService {
         if (userDto.getId() == null) {
             throw new NullFormValueException();
         }
-        userRepository.findById(userDto.getId()).orElseThrow(UserNotExistException::new);
+        userRepository.findById(userDto.getId())
+                .orElseThrow(UserNotExistException::new);
 
         Integer cardId = cardRepository.getCardByUserId(userDto.getId());
-        if (cardId == null) {
-            throw new CardNotAssignedException();
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(CardNotExistException::new);
+
+        if (Boolean.TRUE.equals(card.getIsDeleted())) {
+            throw new CardAlreadyDeletedException();
         }
         return cardId;
     }
@@ -142,12 +150,15 @@ public class CardService {
         }
         Student student = studentRepository.findById(studentDto.getId())
                 .orElseThrow(StudentNotExistException::new);
-        Integer cardId = student.getCardId().getId();
 
-        if (cardId == null) {
+
+        if (student.getCardId().getId() == null) {
             throw new CardNotAssignedException();
         }
-        return cardId;
+        if (Boolean.TRUE.equals(student.getCardId().getIsDeleted())) {
+            throw new CardAlreadyDeletedException();
+        }
+        return student.getCardId().getId();
     }
 
 

@@ -44,6 +44,7 @@ public class Attendance implements Serializable {
     private ZonedDateTime leaving;
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
+    @ToString.Exclude
     private Student studentId;
 
     public Attendance(Integer id) {

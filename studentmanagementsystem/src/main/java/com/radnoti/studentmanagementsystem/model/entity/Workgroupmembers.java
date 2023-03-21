@@ -43,9 +43,11 @@ public class Workgroupmembers implements Serializable {
     private Integer id;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
+    @ToString.Exclude
     private User userId;
     @JoinColumn(name = "workgroup_id", referencedColumnName = "id")
     @ManyToOne
+    @ToString.Exclude
     private Workgroup workgroupId;
     public Workgroupmembers(Integer id) {
         this.id = id;

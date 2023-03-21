@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
@@ -33,7 +34,7 @@ public class AttendanceService {
 
 
     @Transactional
-    public Integer logStudent(StudentDto studentDto){
+    public ResponseDto logStudent(StudentDto studentDto){
         Pageable pageable = PageRequest.of(0, 1);
 
         Student student = studentRepository.findById(studentDto.getId()).orElseThrow(StudentNotExistException::new);
@@ -49,7 +50,7 @@ public class AttendanceService {
             if(lastLeaving == null && isSameDay(currDate,lastArrival)){
                 lastAttendance.setLeaving(currDate);
                 attendanceRepository.save(lastAttendance);
-                return lastAttendance.getId();
+                return new ResponseDto(lastAttendance.getId());
             }
         }
 
@@ -57,7 +58,7 @@ public class AttendanceService {
         newAttendance.setArrival(currDate);
         newAttendance.setStudentId(student);
         attendanceRepository.save(newAttendance);
-        return newAttendance.getId();
+        return new ResponseDto(newAttendance.getId());
 
     }
 

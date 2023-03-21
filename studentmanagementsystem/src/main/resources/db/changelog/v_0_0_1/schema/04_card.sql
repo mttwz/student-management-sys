@@ -8,7 +8,9 @@ CREATE TABLE `Card` (
   `hash` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `is_deleted` tinyint(1) DEFAULT '0',
-  `deleted_at` datetime DEFAULT NULL
+  `deleted_at` datetime DEFAULT NULL,
+  `is_assigned` tinyint(1) DEFAULT '0',
+  `assigned_to` int(11) DEFAULT NULL
 );
 
 

@@ -72,12 +72,16 @@ public class User implements Serializable {
     private ZonedDateTime deletedAt;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
+    @ToString.Exclude
     private Role roleId;
     @OneToMany(mappedBy = "userId")
+    @ToString.Exclude
     private Collection<Workgroupmembers> workgroupmembersCollection;
     @OneToOne(mappedBy = "userId", fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Student student;
     @OneToMany(mappedBy = "userId")
+    @ToString.Exclude
     private Collection<Passwordreset> passwordresetCollection;
 
 

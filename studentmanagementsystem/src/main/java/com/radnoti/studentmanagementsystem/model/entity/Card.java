@@ -42,7 +42,13 @@ public class Card implements Serializable {
     private Boolean isDeleted;
     @Column(name = "deleted_at")
     private ZonedDateTime deletedAt;
+    @Column(name = "is_assigned")
+    private Boolean isAssigned;
+
+    @Column(name = "assigned_to")
+    private Integer assignedTo;
     @OneToOne(mappedBy = "cardId")
+    @ToString.Exclude
     private Student student;
 
 

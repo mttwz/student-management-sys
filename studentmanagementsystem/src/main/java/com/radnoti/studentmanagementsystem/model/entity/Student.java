@@ -44,12 +44,15 @@ public class Student implements Serializable {
     @Column(name = "id")
     private Integer id;
     @OneToMany(mappedBy = "studentId")
+    @ToString.Exclude
     private Collection<Attendance> attendanceCollection;
     @JoinColumn(name = "card_id", referencedColumnName = "id")
     @OneToOne
+    @ToString.Exclude
     private Card cardId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @OneToOne
+    @ToString.Exclude
     private User userId;
 
     public Student(Integer id) {

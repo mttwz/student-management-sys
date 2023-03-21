@@ -53,6 +53,7 @@ public class Passwordreset implements Serializable {
     private Boolean isUsed;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
+    @ToString.Exclude
     private User userId;
 
     public Passwordreset(Integer id) {

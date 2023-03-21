@@ -73,10 +73,7 @@ public class AuthService {
      * @return A Map object containing a "valid" key with a Boolean value indicating whether the token is valid or not.
      */
     @Transactional
-    public Map validateJwt(UserDto userDto) {
-        HashMap<String, Boolean> map = new HashMap<>();
-        boolean isValid = jwtUtil.validateJwt(userDto.getJwt());
-        map.put("valid", isValid);
-        return map;
+    public Boolean validateJwt(UserDto userDto) {
+        return jwtUtil.validateJwt(userDto.getJwt());
     }
 }

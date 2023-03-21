@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping(path = "/validate-jwt", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Map> validateJwt(@RequestBody UserDto userDto) {
+    public ResponseEntity<Boolean> validateJwt(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(authService.validateJwt(userDto));
     }
 
