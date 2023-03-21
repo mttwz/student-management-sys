@@ -31,25 +31,25 @@ public class CustomWorkgroupControllerAdvice {
     @ExceptionHandler(UserNotAddedToWorkgroupException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotAddedToWorkgroupException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "workgroup01"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-001-ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupNotCreatedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupNotCreatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "workgroup02"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-002-ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "workgroup03"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-003-ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupAlreadyDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "workgroup04"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-004-ERR"), status);
     }
 
 }

@@ -6,16 +6,17 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
+import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
-import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupDto;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
+import com.radnoti.studentmanagementsystem.model.dto.*;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -28,9 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author matevoros
@@ -42,6 +41,8 @@ public class WorkgroupService {
     private final WorkgroupMapper workgroupMapper;
 
     private final WorkgroupMembersMapper workgroupMembersMapper;
+
+    private final UserMapper userMapper;
     private final WorkgroupMembersRepository workgroupMembersRepository;
     private final UserRepository userRepository;
 
@@ -63,8 +64,16 @@ public class WorkgroupService {
     }
 
     @Transactional
-    public void deleteWorkgroup(WorkgroupDto workgroupDto) {
-        Workgroup workgroup = workgroupRepository.findById(workgroupDto.getId()).orElseThrow(WorkgroupNotExistException::new);
+    public void deleteWorkgroup(String workgroupIdString) {
+        Integer workgroupId;
+        try {
+            workgroupId = Integer.parseInt(workgroupIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
+        }
+
+
+        Workgroup workgroup = workgroupRepository.findById(workgroupId).orElseThrow(WorkgroupNotExistException::new);
 
         if(workgroup.getIsDeleted()){
             throw new InvalidFormValueException();
@@ -101,6 +110,16 @@ public class WorkgroupService {
 
         return new ResponseDto( savedWorkgroupmembers.getId());
 
+    }
+
+    @Transactional
+    public List<UserInfoDto> getUserFromWorkgroup(UserDto userDto) {
+        List<UserInfoDto> userDtoList = new ArrayList<>();
+        List<User> userList = userRepository.getUserFromWorkgroup(userDto.getId());
+
+        userList.forEach(user -> userDtoList.add(userMapper.fromEntityToInfoDto(user)));
+
+        return userDtoList;
     }
 
 

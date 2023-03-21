@@ -19,9 +19,9 @@ public class AttendanceController {
 
 
     private final AttendanceService attendanceService;
-    @PostMapping(path = "/log-student", consumes = {"application/json"})
-    public ResponseDto logStudent(@RequestBody StudentDto studentDto){
-        return attendanceService.logStudent(studentDto);
+    @PostMapping(path = "/log-student/{studentId}")
+    public ResponseDto logStudent(@PathVariable String studentId){
+        return attendanceService.logStudent(studentId);
     }
 
 

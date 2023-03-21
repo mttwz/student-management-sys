@@ -6,6 +6,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.*;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
@@ -66,8 +67,14 @@ public class CardService {
     }
 
     @Transactional
-    public void deleteCard(final CardDto cardDto) {
-        Card card = cardRepository.findById(cardDto.getId()).orElseThrow(CardNotExistException::new);
+    public void deleteCard(String cardIdString) {
+        Integer cardId;
+        try {
+            cardId = Integer.parseInt(cardIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
+        }
+        Card card = cardRepository.findById(cardId).orElseThrow(CardNotExistException::new);
 
         if(card.getIsDeleted()){
             throw new CardAlreadyDeletedException();
@@ -116,21 +123,26 @@ public class CardService {
     /**
      * Retrieves the ID of the card assigned to the user with the provided ID.
      *
-     * @param userDto The DTO object containing the user's id.
+     * @param userIdString User id as String.
      * @return The ID of the card assigned to the user.
      * @throws NullFormValueException if the provided ID value is null.
      * @throws UserNotExistException if the user with the provided ID does not exist in the database.
      * @throws CardNotAssignedException if the user with the provided ID does not have a card assigned to them.
      */
     @Transactional
-    public ResponseDto getCardByUserId(UserDto userDto) {
-        if (userDto.getId() == null) {
-            throw new NullFormValueException();
+    public ResponseDto getCardByUserId(String userIdString) {
+
+        Integer userId;
+        try {
+            userId = Integer.parseInt(userIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
         }
-        userRepository.findById(userDto.getId())
+
+        userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-        Integer cardId = cardRepository.getCardByUserId(userDto.getId());
+        Integer cardId = cardRepository.getCardByUserId(userId);
 
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(CardNotExistException::new);
@@ -144,18 +156,23 @@ public class CardService {
     /**
      * Retrieves the ID of the card assigned to the student with the provided ID.
      *
-     * @param studentDto The DTO object containing the student's id.
+     * @param studentIdString User id as String.
      * @return The ID of the card assigned to the student.
      * @throws NullFormValueException if the provided ID value is null.
      * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
      * @throws CardNotAssignedException if the student with the provided ID does not have a card assigned to them.
      */
     @Transactional
-    public ResponseDto getCardByStudentId(StudentDto studentDto) {
-        if (studentDto.getId() == null) {
-            throw new NullFormValueException();
+    public ResponseDto getCardByStudentId(String studentIdString) {
+
+        Integer studentId;
+        try {
+            studentId = Integer.parseInt(studentIdString);
+        }catch (NumberFormatException e){
+            throw new InvalidIdException();
         }
-        Student student = studentRepository.findById(studentDto.getId())
+
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(StudentNotExistException::new);
 
 

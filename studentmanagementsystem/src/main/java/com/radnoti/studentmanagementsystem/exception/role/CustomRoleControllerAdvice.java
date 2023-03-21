@@ -31,7 +31,7 @@ public class CustomRoleControllerAdvice {
     @ExceptionHandler(RoleNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(RoleNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "role01"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "ROLE-001-ERR"), status);
     }
 
 

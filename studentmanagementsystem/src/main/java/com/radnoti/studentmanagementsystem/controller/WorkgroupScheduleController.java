@@ -6,6 +6,7 @@ import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
 import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,15 @@ public class WorkgroupScheduleController {
     private final WorkgroupScheduleService workgroupscheduleService;
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/get-workgroup-schedule-by-user-id", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<List<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody UserDto userDto) {
-        return ResponseEntity.ok(workgroupscheduleService.getWorkgroupScheduleByUserId(authHeader,userDto));
+    @GetMapping(path = "/get-workgroup-schedule-by-user-id/{userId}")
+    public ResponseEntity<List<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable String userId) {
+        return ResponseEntity.ok(workgroupscheduleService.getWorkgroupScheduleByUserId(authHeader,userId));
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @GetMapping(path = "/get-workgroup-schedule-by-workgroup-id/{workgroupId}")
+    public ResponseEntity<List<WorkgroupscheduleDto>> getWorkgroupScheduleByWorkgroupId(@PathVariable String workgroupId, Pageable pageable) {
+        return ResponseEntity.ok(workgroupscheduleService.getWorkgroupScheduleByWorkgroupId(workgroupId,pageable));
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
@@ -41,9 +48,9 @@ public class WorkgroupScheduleController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/delete-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
-    public void deleteWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
-        workgroupscheduleService.deleteWorkgroupSchedule(workgroupscheduleDto);
+    @DeleteMapping(path = "/delete-workgroup-schedule/{workgroupScheduleId}")
+    public void deleteWorkgroupSchedule(@PathVariable String workgroupScheduleId) {
+        workgroupscheduleService.deleteWorkgroupSchedule(workgroupScheduleId);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
