@@ -41,11 +41,11 @@ public class WorkgroupController {
         return workgroupService.addUserToWorkgroup(workgroupmembersDto);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @GetMapping(path = "/get-user-from-workgroup")
-    public @ResponseBody List<UserInfoDto> getAllUserIdFromWorkgroup(@RequestBody UserDto userDto){
-        return workgroupService.getUserFromWorkgroup(userDto);
-    }
+//    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+//    @GetMapping(path = "/get-user-from-workgroup")
+//    public @ResponseBody List<UserInfoDto> getAllUserIdFromWorkgroup(@RequestBody UserDto userDto){
+//        return workgroupService.getUserFromWorkgroup(userDto);
+//    }
 
 
 }

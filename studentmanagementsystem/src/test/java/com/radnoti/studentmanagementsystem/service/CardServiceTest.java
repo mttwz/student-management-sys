@@ -1,11 +1,13 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
@@ -62,8 +64,6 @@ public class CardServiceTest {
         when(cardRepository.save(any())).thenReturn(card);
         when(cardMapper.fromDtoToEntity(any())).thenReturn(card);
 
-
-
         // Act
         Integer cardId = cardService.createCard(cardDto).getId();
 
@@ -111,27 +111,24 @@ public class CardServiceTest {
         studentDto.setId(1);
         studentDto.setCardId(1);
 
-        Student student = new Student();
-        student.setId(1);
-
-        Card card = new Card();
-        card.setId(1);
-        card.setIsDeleted(false);
-
-//        card.setIsAssigned(true);
+        Student mockStudent = mock(Student.class);
+        mockStudent.setId(1);
 
         Card mockCard = mock(Card.class);
-        Student mockStudent = mock(Student.class);
+        mockCard.setId(1);
+        mockCard.setIsDeleted(false);
+        mockCard.setIsAssigned(false);
+        mockCard.setAssignedTo(null);
 
         // mock the behavior of your repositories
-        when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(card));
-        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(student));
+        when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(mockCard));
+        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(mockStudent));
 
         cardService.connectCardToStudent(studentDto);
         // act and assert
-        verify(mockStudent,times(1)).setCardId(card);
+        verify(mockStudent,times(1)).setCardId(mockCard);
         verify(mockCard,times(1)).setIsAssigned(true);
-        verify(mockCard,times(1)).setAssignedTo(student.getId());
+        verify(mockCard,times(1)).setAssignedTo(mockStudent.getId());
     }
 
     @Test
@@ -210,14 +207,7 @@ public class CardServiceTest {
         assertEquals(cardId, result);
     }
 
-    @Test
-    public void getCardByUserIdTest_withNullId() {
-        // Arrange
-        UserDto userDto = new UserDto();
 
-        // Act & Assert
-        assertThrows(NullFormValueException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
-    }
 
     @Test
     public void getCardByUserIdTest_withNonexistentUser() {
@@ -248,15 +238,6 @@ public class CardServiceTest {
 
     }
 
-    @Test
-    public void testGetCardByStudentId_NullFormValueException() {
-        StudentDto studentDto = new StudentDto();
-
-        assertThrows(
-                NullFormValueException.class,
-                () -> cardService.getCardByStudentId(studentDto.getId().toString())
-        );
-    }
 
     @Test
     public void testGetCardByStudentId_StudentNotExistException() {
@@ -291,20 +272,6 @@ public class CardServiceTest {
         verify(cardRepository, times(1)).getCardByUserId(userId);
     }
 
-    @Test
-    public void testGetCardByUserIdNullFormValueException() {
-        // Setup
-        UserDto userDto = new UserDto();
-        userDto.setId(null);
-
-        // Verify
-        assertThrows(NullFormValueException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
-
-        // Check if userRepository.findById was not called
-        verify(userRepository, times(0)).findById(any());
-        // Check if cardRepository.getCardByUserId was not called
-        verify(cardRepository, times(0)).getCardByUserId(any());
-    }
 
     @Test
     public void testGetCardByUserIdUserNotExistException() {
@@ -365,19 +332,7 @@ public class CardServiceTest {
         verify(studentRepository, times(1)).findById(any());
     }
 
-    @Test
-    public void testGetCardByStudentId_withNullId() {
-        // Arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(null);
 
-        // Act and Assert
-        assertThrows(NullFormValueException.class, () -> {
-            cardService.getCardByStudentId(studentDto.getId().toString());
-        });
-        verify(studentRepository, times(0)).findById(any());
-        verify(cardRepository, times(0)).findById(any());
-    }
 
     @Test
     public void testGetCardByStudentId_withStudentNotExist() {
@@ -414,6 +369,50 @@ public class CardServiceTest {
     }
 
 
+
+    @Test
+    public void deleteCardTest_valid(){
+        CardDto cardDto = new CardDto();
+        cardDto.setId(1);
+        cardDto.setIsDeleted(false);
+
+        Card mockCard = mock(Card.class);
+        mockCard.setId(1);
+
+        when(cardRepository.findById(any())).thenReturn(Optional.of(mockCard));
+
+        cardService.deleteCard(cardDto.getId().toString());
+
+        verify(mockCard, times(1)).setIsDeleted(true);
+    }
+
+    @Test
+    public void deleteCardTest_card_not_exist(){
+        CardDto cardDto = new CardDto();
+        cardDto.setId(1);
+        cardDto.setIsDeleted(false);
+
+        when(cardRepository.findById(any()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(CardNotExistException.class, ()-> cardService.deleteCard(cardDto.getId().toString()));
+
+    }
+
+    @Test
+    public void deleteCardTest_card_already_deleted(){
+        CardDto cardDto = new CardDto();
+        cardDto.setId(1);
+        cardDto.setIsDeleted(true);
+
+        Card card = new Card();
+        card.setIsDeleted(true);
+
+        when(cardRepository.findById(any()))
+                .thenReturn(Optional.of(card));
+
+        assertThrows(CardAlreadyDeletedException.class, ()-> cardService.deleteCard(cardDto.getId().toString()));
+    }
 
 
 

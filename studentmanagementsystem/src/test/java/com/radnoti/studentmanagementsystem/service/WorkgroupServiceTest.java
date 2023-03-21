@@ -137,13 +137,16 @@ public class WorkgroupServiceTest {
         workgroupDto.setId(1);
         workgroupDto.setIsDeleted(false);
 
+        String workgroupId = workgroupDto.getId().toString();
+
+
         Workgroup mockWorkgroup = mock(Workgroup.class);
 
         mockWorkgroup.setId(1);
 
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(mockWorkgroup));
 
-        workgroupService.deleteWorkgroup(workgroupDto);
+        workgroupService.deleteWorkgroup(workgroupId);
 
         verify(mockWorkgroup,times(1)).setIsDeleted(true);
     }
@@ -154,9 +157,12 @@ public class WorkgroupServiceTest {
         workgroupDto.setId(1);
         workgroupDto.setIsDeleted(false);
 
+        String workgroupId = workgroupDto.getId().toString();
+
+
         when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
-        assertThrows(WorkgroupNotExistException.class, () -> workgroupService.deleteWorkgroup(workgroupDto));
+        assertThrows(WorkgroupNotExistException.class, () -> workgroupService.deleteWorkgroup(workgroupId));
 
     }
 
@@ -166,13 +172,16 @@ public class WorkgroupServiceTest {
         workgroupDto.setId(1);
         workgroupDto.setIsDeleted(true);
 
+        String workgroupId = workgroupDto.getId().toString();
+
+
         Workgroup workgroup = new Workgroup();
         workgroup.setId(1);
         workgroup.setIsDeleted(true);
 
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
 
-        assertThrows(InvalidFormValueException.class, () -> workgroupService.deleteWorkgroup(workgroupDto));
+        assertThrows(InvalidFormValueException.class, () -> workgroupService.deleteWorkgroup(workgroupId));
 
     }
 

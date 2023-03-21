@@ -115,16 +115,11 @@ public class WorkgroupScheduleService {
         workgroupschedule.setIsOnsite(workgroupschedule.getIsOnsite());
         workgroupschedule.setIsDeleted(false);
 
-
         Workgroupschedule savedWorkgroupSchedule = workgroupscheduleRepository.save(workgroupschedule);
 
         return new ResponseDto(savedWorkgroupSchedule.getId());
 
     }
-
-
-
-
     @Transactional
     public void deleteWorkgroupSchedule(String stringWorkgroupScheduleId) {
 

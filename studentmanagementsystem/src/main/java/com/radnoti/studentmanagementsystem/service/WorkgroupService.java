@@ -112,15 +112,15 @@ public class WorkgroupService {
 
     }
 
-    @Transactional
-    public List<UserInfoDto> getUserFromWorkgroup(UserDto userDto) {
-        List<UserInfoDto> userDtoList = new ArrayList<>();
-        List<User> userList = userRepository.getUserFromWorkgroup(userDto.getId());
-
-        userList.forEach(user -> userDtoList.add(userMapper.fromEntityToInfoDto(user)));
-
-        return userDtoList;
-    }
+//    @Transactional
+//    public List<UserInfoDto> getUserFromWorkgroup(UserDto userDto) {
+//        List<UserInfoDto> userDtoList = new ArrayList<>();
+//        List<User> userList = userRepository.getUserFromWorkgroup(userDto.getId());
+//
+//        userList.forEach(user -> userDtoList.add(userMapper.fromEntityToInfoDto(user)));
+//
+//        return userDtoList;
+//    }
 
 
 

@@ -71,20 +71,20 @@ public final class UserServiceTest {
         UserDto userDto = new UserDto();
         userDto.setId(1);
         userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDto.setFirstName("mate");
-        userDto.setLastName("mate");
+        userDto.setFirstName("Teszt");
+        userDto.setLastName("User");
         userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
-        userDto.setPassword("mate");
+        userDto.setEmail("test@email.com");
+        userDto.setPassword("password");
 
 
         User user = new User();
         user.setId(1);
-        user.setEmail("mate");
+        user.setEmail("test@email.com");
 
         when(userMapper.fromDtoToEntity(any())).thenReturn(user);
-        when(hashUtil.getSHA256Hash(any())).thenReturn("mate");
+        when(hashUtil.getSHA256Hash(any())).thenReturn("password");
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user);
 
@@ -101,20 +101,20 @@ public final class UserServiceTest {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);
-        userDto.setRoleName(RoleEnum.Types.ADMIN.toLowerCase());
-        userDto.setFirstName("mate");
-        userDto.setLastName("mate");
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("Teszt");
+        userDto.setLastName("User");
         userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
-        userDto.setPassword("mate");
+        userDto.setEmail("test@email.com");
+        userDto.setPassword("password");
 
         User user = new User();
         user.setId(1);
-        user.setEmail("mate");
+        user.setEmail("test@email.com");
 
         when(userMapper.fromDtoToEntity(any())).thenReturn(user);
-        when(hashUtil.getSHA256Hash(any())).thenReturn("mate");
+        when(hashUtil.getSHA256Hash(any())).thenReturn("password");
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user);
 
@@ -129,20 +129,20 @@ public final class UserServiceTest {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);
-        userDto.setRoleName(RoleEnum.Types.STUDENT.toLowerCase());
-        userDto.setFirstName("mate");
-        userDto.setLastName("mate");
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("Teszt");
+        userDto.setLastName("User");
         userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
-        userDto.setPassword("mate");
+        userDto.setEmail("test@email.com");
+        userDto.setPassword("password");
 
         User user = new User();
         user.setId(1);
-        user.setEmail("mate");
+        user.setEmail("test@email.com");
 
         when(userMapper.fromDtoToEntity(any())).thenReturn(user);
-        when(hashUtil.getSHA256Hash(any())).thenReturn("mate");
+        when(hashUtil.getSHA256Hash(any())).thenReturn("password");
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user);
 
@@ -158,11 +158,11 @@ public final class UserServiceTest {
         UserDto userDto = new UserDto();
         userDto.setId(1);
         userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDto.setFirstName("mate");
-        userDto.setLastName("");
+        userDto.setFirstName("");
+        userDto.setLastName("User");
         userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
+        userDto.setEmail("test@email.com");
         userDto.setPassword("password");
 
 
@@ -176,12 +176,12 @@ public final class UserServiceTest {
         UserDto userDto = new UserDto();
         userDto.setId(1);
         userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDto.setFirstName("mate");
+        userDto.setFirstName("Teszt");
         userDto.setLastName(null);
         userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
-        userDto.setPassword("mate");
+        userDto.setEmail("test@email.com");
+        userDto.setPassword("password");
 
 
         //assert
@@ -194,12 +194,12 @@ public final class UserServiceTest {
         UserDto userDto = new UserDto();
         userDto.setId(1);
         userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
-        userDto.setFirstName("mate");
-        userDto.setLastName("mate");
+        userDto.setFirstName("Teszt");
+        userDto.setLastName("User");
         userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
-        userDto.setPassword("mate");
+        userDto.setEmail("test@email.com");
+        userDto.setPassword("password");
 
         when(userRepository.findByUsername(any())).thenReturn(Optional.of(new User()));
 
@@ -212,13 +212,13 @@ public final class UserServiceTest {
         //arrange
         UserDto userDto = new UserDto();
         userDto.setId(1);
-        userDto.setRoleName(RoleEnum.Types.SUPERADMIN);
-        userDto.setFirstName("mate");
-        userDto.setLastName("mate");
-        userDto.setPhone("1234");
+        userDto.setRoleName(RoleEnum.Types.SUPERADMIN.toLowerCase());
+        userDto.setFirstName("Teszt");
+        userDto.setLastName("User");
+        userDto.setPhone("123");
         userDto.setBirth(ZonedDateTime.of(1111,11,11,0,0,0,0, ZoneId.systemDefault()));
-        userDto.setEmail("mate");
-        userDto.setPassword("mate");
+        userDto.setEmail("test@email.com");
+        userDto.setPassword("password");
 
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
@@ -240,7 +240,7 @@ public final class UserServiceTest {
         when(userRepository.findById(any()))
                 .thenReturn(Optional.of(mockUser));
         //act
-        userService.setUserIsActivated(userDto);
+        userService.setUserIsActivated(userDto.getId().toString());
 
         //assert
         verify(mockUser,times(1)).setIsActivated(true);
@@ -269,10 +269,29 @@ public final class UserServiceTest {
         User user = new User();
         user.setIsActivated(true);
 
-        when(userRepository.findById(any(Integer.class)))
+        when(userRepository.findById(any()))
                 .thenReturn(Optional.of(user));
 
         assertThrows(UserAlreadyActivatedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
+    }
+
+    @Test
+    public void setUserIsActivatedTest_user_is_deleted(){
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+        userDto.setIsActivated(false);
+        userDto.setIsDeleted(true);
+
+        User user = new User();
+        user.setId(1);
+        user.setIsActivated(false);
+        user.setIsDeleted(true);
+
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        assertThrows(UserAlreadyDeletedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
+
+
     }
 
 
