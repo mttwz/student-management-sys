@@ -15,6 +15,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface CardRepository extends CrudRepository<Card, Integer> {
 
-    @Query("select s.cardId.id from Student s where s.userId.id = :userId")
-    Integer getCardByUserId(Integer userId);
+    @Query("select s.cardId from Student s where s.userId.id = :userId")
+    Card getCardByUserId(Integer userId);
 }

@@ -42,7 +42,7 @@ public class WorkgroupScheduleController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/create-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseDto createWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) throws ParseException {
+    public ResponseDto createWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto){
         return workgroupscheduleService.createWorkgroupSchedule(workgroupscheduleDto);
 
     }

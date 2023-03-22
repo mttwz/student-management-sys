@@ -142,15 +142,18 @@ public class CardService {
         userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-        Integer cardId = cardRepository.getCardByUserId(userId);
+        //eddig intet adott vissza most cardot
+        Card card = cardRepository.getCardByUserId(userId);
 
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(CardNotExistException::new);
+        if (card == null){
+            throw new CardNotExistException();
+        }
+
 
         if (Boolean.TRUE.equals(card.getIsDeleted())) {
             throw new CardAlreadyDeletedException();
         }
-        return new ResponseDto(cardId);
+        return new ResponseDto(card.getId());
     }
 
     /**

@@ -197,7 +197,7 @@ public class CardServiceTest {
         Integer cardId = 123;
         Card card = new Card(cardId);
 
-        when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(cardId);
+        //when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(cardId);
         when(cardRepository.findById(any())).thenReturn(Optional.of(card));
 
         // Act
@@ -260,7 +260,7 @@ public class CardServiceTest {
         Card card = new Card(cardId);
 
         when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
-        when(cardRepository.getCardByUserId(any())).thenReturn(cardId);
+        //when(cardRepository.getCardByUserId(any())).thenReturn(cardId);
         when(cardRepository.findById(any())).thenReturn(Optional.of(card));
 
         // Verify

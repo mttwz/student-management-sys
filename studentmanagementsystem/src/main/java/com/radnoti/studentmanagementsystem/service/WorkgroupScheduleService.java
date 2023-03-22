@@ -136,6 +136,7 @@ public class WorkgroupScheduleService {
         if (workgroupschedule.getIsDeleted()){
             throw new WorkgroupAlreadyDeletedException();
         }
+        
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         workgroupschedule.setIsDeleted(true);
         workgroupschedule.setDeletedAt(currDate);
