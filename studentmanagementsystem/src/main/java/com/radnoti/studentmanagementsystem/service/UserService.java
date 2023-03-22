@@ -123,6 +123,8 @@ public class UserService {
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
+
+
         User user = userMapper.fromDtoToEntity(userDto);
         user.setPassword(hashUtil.getSHA256Hash(userDto.getPassword()));
         user.setActivationCode(hashUtil.generateRandomString(ACTIVATION_CODE_LENGTH));
