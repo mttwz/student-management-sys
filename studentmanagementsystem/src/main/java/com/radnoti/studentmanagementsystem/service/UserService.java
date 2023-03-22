@@ -121,8 +121,6 @@ public class UserService {
             roleId = RoleEnum.STUDENT.getId();
         }else throw new RoleNotExistException();
 
-
-        
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
         User user = userMapper.fromDtoToEntity(userDto);
