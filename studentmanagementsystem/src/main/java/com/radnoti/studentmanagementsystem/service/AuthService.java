@@ -46,15 +46,12 @@ public class AuthService {
     @Transactional
     public UserLoginDto login(UserDto userDto) throws NoSuchAlgorithmException {
         String password = hashUtil.getSHA256Hash(userDto.getPassword());
-        Integer userId = userRepository.login(userDto.getEmail(), password);
 
-        if(userId == null){
+        User user = userRepository.login(userDto.getEmail(), password);
+
+        if(user == null){
             throw new InvalidCredentialsException();
         }
-
-        User user = userRepository.findById(userId).
-                orElseThrow(InvalidCredentialsException::new);
-
         if (!user.getIsActivated()){
             throw new UserNotActivatedException();
         }

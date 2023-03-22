@@ -6,6 +6,8 @@ package com.radnoti.studentmanagementsystem.model.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
 /**
@@ -18,6 +20,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @ToString
 public class UserDto {
+
 
     private Integer id;
     private String roleName;

@@ -54,7 +54,7 @@ public class CardService {
      * @throws InvalidFormValueException if the provided DTO object is null or its hash value is null or empty.
      */
     @Transactional
-    public ResponseDto createCard(final CardDto cardDto) {
+    public ResponseDto createCard(CardDto cardDto) {
         if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
             throw new InvalidFormValueException();
         }
@@ -80,9 +80,15 @@ public class CardService {
             throw new CardAlreadyDeletedException();
         }
 
+        Student student = studentRepository.findById(card.getAssignedTo())
+                .orElseThrow(StudentNotExistException::new);
+
+        student.setCardId(null);
+
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         card.setIsDeleted(true);
         card.setDeletedAt(currDate);
+        card.setIsAssigned(false);
         cardRepository.save(card);
     }
 

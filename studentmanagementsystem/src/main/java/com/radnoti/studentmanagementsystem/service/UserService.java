@@ -34,6 +34,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,6 +65,8 @@ public class UserService {
     private final HashUtil hashUtil;
 
     private final UserMapper userMapper;
+
+    private final IdValidatorUtil idValidatorUtil;
 
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
     private final WorkgroupMembersMapper workgroupMembersMapper;
@@ -148,12 +151,7 @@ public class UserService {
      */
     @Transactional
     public void setUserIsActivated(String userIdString) {
-        Integer userId;
-        try {
-            userId = Integer.parseInt(userIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer userId = idValidatorUtil.idValidator(userIdString);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
@@ -250,10 +248,11 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserInfoDto> searchSuperadmin(String filter,String q,Pageable pageable) {
+    public PagingDto searchSuperadmin(String filter,String q,Pageable pageable) {
 
 
         Page<User> userPage = userRepository.searchAllUser(q,pageable);
+        PagingDto pagingDto = new PagingDto();
 
         if (Objects.equals(filter, SearchFilterEnum.Types.SUPERADMIN)) {
             userPage = userRepository.searchSuperadmins(q,pageable);
@@ -267,7 +266,12 @@ public class UserService {
             userPage = userRepository.searchWorkgroups(q,pageable);
         }
 
-        return userPage.stream().map(userMapper::fromEntityToInfoDto).toList();
+        Integer totalPages = userPage.getTotalPages();
+
+        pagingDto.setAllPages(totalPages);
+        pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
+        return pagingDto;
     }
 
 }

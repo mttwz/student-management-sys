@@ -23,10 +23,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-    @Query("select u.id from User u " +
+    @Query("select u from User u " +
             "where u.email = :email and " +
             "u.password = :password")
-    Integer login(String email, String password);
+    User login(String email, String password);
 
     @Modifying
     @Query("update User u set u.roleId.id = " +

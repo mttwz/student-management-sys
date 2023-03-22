@@ -67,7 +67,7 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/search-super-admin")
-    public @ResponseBody List<UserInfoDto> searchSuperadmin(@RequestParam String filter,
+    public @ResponseBody PagingDto searchSuperadmin(@RequestParam String filter,
                                                             @RequestParam String q,
                                                             Pageable pageable){
 

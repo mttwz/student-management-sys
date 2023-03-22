@@ -14,8 +14,8 @@ import org.mapstruct.Mapping;
 )
 public interface CardMapper {
 
-    @Mapping(target = "isDeleted", source = "isDeleted")
+
     CardDto fromEntityToDto(Card card);
-    @Mapping(target = "isDeleted", source = "isDeleted")
+
     Card fromDtoToEntity(CardDto cardDto);
 }

@@ -16,7 +16,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
+@ActiveProfiles("testH2")
 @SpringBootTest(classes = StudentmanagementsystemApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AuthControllerTest {

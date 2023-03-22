@@ -19,7 +19,6 @@ CREATE TABLE `User` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
 ALTER TABLE `User`
   ADD PRIMARY KEY (`id`),
   ADD KEY `role_id` (`role_id`);
