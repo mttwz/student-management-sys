@@ -17,7 +17,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AttendanceController {
 
-
     private final AttendanceService attendanceService;
     @PostMapping(path = "/log-student/{studentId}")
     public ResponseDto logStudent(@PathVariable String studentId){

@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyD
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
@@ -44,7 +45,7 @@ public class WorkgroupScheduleService {
 
 
     @Transactional
-    public List<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, String stringUserId) {
+    public PagingDto getWorkgroupScheduleByUserId(String authHeader, String stringUserId, Pageable pageable) {
 
         Integer userId;
         try {
@@ -53,25 +54,26 @@ public class WorkgroupScheduleService {
             throw new InvalidIdException();
         }
 
-        List<Integer> workgroupScheduleList;
+        Page<Workgroupschedule> workgroupSchedulePage;
+        PagingDto pagingDto = new PagingDto();
+
         userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userId);
+        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+            workgroupSchedulePage = userRepository.getWorkgroupScheduleByUserId(userId,pageable);
         } else {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
+            workgroupSchedulePage = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader),pageable);
         }
 
         List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
-        Iterable<Workgroupschedule> workgroupscheduleIterable = workgroupscheduleRepository.findAllById(workgroupScheduleList);
 
-        workgroupscheduleIterable.forEach(workgroupschedule -> {
-            WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
-            workgroupscheduleDtoList.add(workgroupscheduleDto);
-        });
 
-        return workgroupscheduleDtoList;
+        pagingDto.setWorkgroupscheduleList(workgroupSchedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList());
+        pagingDto.setAllPages(workgroupSchedulePage.getTotalPages());
+
+
+        return pagingDto;
     }
 
     @Transactional

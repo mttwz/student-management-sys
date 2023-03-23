@@ -7,6 +7,7 @@ package com.radnoti.studentmanagementsystem.repository;
 import java.util.*;
 
 import com.radnoti.studentmanagementsystem.model.entity.User;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -36,11 +37,11 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     void setUserRole(Integer userId, String roleName);
 
 
-    @Query("select ws.id from Workgroupmembers wm " +
+    @Query("select ws from Workgroupmembers wm " +
             "join Workgroupschedule ws on wm.workgroupId.id = ws.workgroupId.id " +
             "join Workgroup w on wm.workgroupId.id = w.id " +
             "where wm.userId.id = :userId")
-    List<Integer>getWorkgroupScheduleByUserId(Integer userId);
+    Page<Workgroupschedule>getWorkgroupScheduleByUserId(Integer userId,Pageable pageable);
 
     @Query("select u from User u where u.email = :email")
     Optional<User> findByUsername(String email);

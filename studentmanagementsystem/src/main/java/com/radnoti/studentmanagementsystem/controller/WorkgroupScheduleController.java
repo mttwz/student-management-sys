@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
@@ -28,10 +29,10 @@ import java.util.Map;
 public class WorkgroupScheduleController {
     private final WorkgroupScheduleService workgroupscheduleService;
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN,RoleEnum.Types.STUDENT})
     @GetMapping(path = "/get-workgroup-schedule-by-user-id/{userId}")
-    public ResponseEntity<List<WorkgroupscheduleDto>> getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable String userId) {
-        return ResponseEntity.ok(workgroupscheduleService.getWorkgroupScheduleByUserId(authHeader,userId));
+    public PagingDto getWorkgroupScheduleByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable String userId,Pageable pageable) {
+        return workgroupscheduleService.getWorkgroupScheduleByUserId(authHeader,userId,pageable);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
