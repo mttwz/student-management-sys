@@ -61,12 +61,10 @@ public class WorkgroupScheduleService {
                 .orElseThrow(UserNotExistException::new);
 
         if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
-            workgroupSchedulePage = userRepository.getWorkgroupScheduleByUserId(userId,pageable);
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(userId,pageable);
         } else {
-            workgroupSchedulePage = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader),pageable);
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader),pageable);
         }
-
-        List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
 
 
         pagingDto.setWorkgroupscheduleList(workgroupSchedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList());
