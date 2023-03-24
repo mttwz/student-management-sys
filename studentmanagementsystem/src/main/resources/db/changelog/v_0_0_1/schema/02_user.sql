@@ -12,9 +12,9 @@ CREATE TABLE `User` (
   `password` varchar(255) DEFAULT NULL,
   `registered_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `activation_code` text,
-  `is_activated` tinyint(1) DEFAULT '0',
+  `is_activated` tinyint(1) NOT NULL DEFAULT '0',
   `activated_at` datetime DEFAULT NULL,
-  `is_deleted` tinyint(1) DEFAULT '0',
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

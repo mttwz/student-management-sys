@@ -4,16 +4,11 @@ import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
-import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.CardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/card")
@@ -27,7 +22,7 @@ public class CardController {
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/connect-card-to-student", consumes = {"application/json"}, produces = {"application/json"})
     public void connectCardToStudent(@RequestBody StudentDto studentDto) {
-        cardService.connectCardToStudent(studentDto);
+        cardService.assignCardToStudent(studentDto);
     }
 
 
@@ -42,6 +37,12 @@ public class CardController {
     @DeleteMapping(path = "/delete-card/{cardId}")
     public void deleteCard(@PathVariable String cardId) {
         cardService.deleteCard(cardId);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/restore-deleted-card/{cardId}")
+    public void restoreDeletedCard(@PathVariable String cardId) {
+        cardService.restoreDeletedCard(cardId);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})

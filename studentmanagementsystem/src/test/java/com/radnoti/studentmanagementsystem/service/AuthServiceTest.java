@@ -65,7 +65,7 @@ public class AuthServiceTest {
         user.setIsDeleted(false);
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
-        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(user);
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.of(user));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(userMapper.fromEntityToLoginDto(user)).thenReturn(new UserLoginDto());
         when(jwtUtil.generateJwt(user)).thenReturn("jwt_token");
@@ -107,7 +107,7 @@ public class AuthServiceTest {
         user.setIsDeleted(false);
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
-        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(user);
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.of(user));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         // Act & Assert
@@ -129,7 +129,7 @@ public class AuthServiceTest {
         user.setIsDeleted(true);
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
-        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(user);
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.of(user));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         // Act & Assert

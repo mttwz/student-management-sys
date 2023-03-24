@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -43,6 +44,12 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @PostMapping(path = "/restore-deleted-user/{userId}")
+    public void restoreDeletedUser(@PathVariable String userId) {
+        userService.restoreDeletedUser(userId);
+    }
+
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @GetMapping(path = "/get-all-user")
@@ -67,10 +74,10 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/search-super-admin")
-    public @ResponseBody PagingDto searchSuperadmin(@RequestParam String filter,
-                                                            @RequestParam String q,
-                                                            Pageable pageable){
-        return userService.searchSuperadmin(filter,q,pageable);
+    public @ResponseBody PagingDto searchSuperadmin(@RequestBody(required = false) String groupName, @RequestParam String category,
+                                                    @RequestParam String q,
+                                                    Pageable pageable){
+        return userService.searchSuperadmin(groupName,category,q,pageable);
     }
 
 }

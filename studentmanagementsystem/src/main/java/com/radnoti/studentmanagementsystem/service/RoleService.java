@@ -26,11 +26,8 @@ public class RoleService {
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
 
-        Role role = roleRepository.findByRoleName(userDto.getRoleName());
-
-        if (role == null){
-            throw new RoleNotExistException();
-        }
+        roleRepository.findByRoleName(userDto.getRoleName())
+                .orElseThrow(RoleNotExistException::new);
 
         userRepository.setUserRole(userDto.getId(), userDto.getRoleName());
     }

@@ -257,7 +257,7 @@ public class WorkgroupscheduleServiceTest {
 
         when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.of(mockWorkgroupschedule));
 
-        workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto);
+        workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto.getId().toString());
 
         verify(mockWorkgroupschedule,times(1)).setIsDeleted(false);
         verify(mockWorkgroupschedule,times(1)).setDeletedAt(null);
@@ -273,7 +273,7 @@ public class WorkgroupscheduleServiceTest {
         when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.empty());
 
 
-        assertThrows(WorkgroupScheduleNotExistException.class,()->workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto));
+        assertThrows(WorkgroupScheduleNotExistException.class,()->workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto.getId().toString()));
 
     }
 

@@ -19,6 +19,7 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
+import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,16 +44,13 @@ public class WorkgroupScheduleService {
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
     private final JwtUtil jwtUtil;
 
+    private final IdValidatorUtil idValidatorUtil;
+
 
     @Transactional
-    public PagingDto getWorkgroupScheduleByUserId(String authHeader, String stringUserId, Pageable pageable) {
+    public PagingDto getWorkgroupScheduleByUserId(String authHeader, String userIdString, Pageable pageable) {
 
-        Integer userId;
-        try {
-            userId = Integer.parseInt(stringUserId);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer userId = idValidatorUtil.idValidator(userIdString);
 
         Page<Workgroupschedule> workgroupSchedulePage;
         PagingDto pagingDto = new PagingDto();
@@ -67,7 +65,7 @@ public class WorkgroupScheduleService {
         }
 
 
-        pagingDto.setWorkgroupscheduleList(workgroupSchedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList());
+        pagingDto.setWorkgroupscheduleDtoList(workgroupSchedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList());
         pagingDto.setAllPages(workgroupSchedulePage.getTotalPages());
 
 
@@ -75,13 +73,9 @@ public class WorkgroupScheduleService {
     }
 
     @Transactional
-    public List<WorkgroupscheduleDto> getWorkgroupScheduleByWorkgroupId(String stringWorkgroupId, Pageable pageable) {
-        Integer workgroupId;
-        try {
-            workgroupId = Integer.parseInt(stringWorkgroupId);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+    public List<WorkgroupscheduleDto> getWorkgroupScheduleByWorkgroupId(String workgroupIdString, Pageable pageable) {
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
+
         Workgroup workgroup = workgroupRepository.findById(workgroupId)
                 .orElseThrow(WorkgroupNotExistException::new);
 
@@ -121,15 +115,9 @@ public class WorkgroupScheduleService {
 
     }
     @Transactional
-    public void deleteWorkgroupSchedule(String stringWorkgroupScheduleId) {
+    public void deleteWorkgroupSchedule(String workgroupScheduleIdString) {
 
-        Integer workgroupScheduleId;
-        try {
-            workgroupScheduleId = Integer.parseInt(stringWorkgroupScheduleId);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
-
+        Integer workgroupScheduleId = idValidatorUtil.idValidator(workgroupScheduleIdString);
 
         Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId)
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
@@ -144,9 +132,13 @@ public class WorkgroupScheduleService {
     }
 
     @Transactional
-    public void restoreDeletedWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
-        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getId())
+    public void restoreDeletedWorkgroupSchedule(String workgroupScheduleIdString) {
+
+        Integer workgroupScheduleId = idValidatorUtil.idValidator(workgroupScheduleIdString);
+
+        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId)
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
+
         workgroupschedule.setIsDeleted(false);
         workgroupschedule.setDeletedAt(null);
 

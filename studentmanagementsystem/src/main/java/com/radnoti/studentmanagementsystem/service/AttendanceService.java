@@ -3,12 +3,16 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,20 +35,29 @@ public class AttendanceService {
 
 
     private final StudentRepository studentRepository;
+
+    private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
+
+    private final IdValidatorUtil idValidatorUtil;
 
 
     @Transactional
     public ResponseDto logStudent(String studentIdString){
-        Integer studentId;
-        try {
-            studentId = Integer.parseInt(studentIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer studentId = idValidatorUtil.idValidator(studentIdString);
+
         Pageable pageable = PageRequest.of(0, 1);
 
-        Student student = studentRepository.findById(studentId).orElseThrow(StudentNotExistException::new);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(StudentNotExistException::new);
+
+        if (student.getUserId().getIsDeleted()){
+            throw new UserDeletedException();
+        }
+
+        if (!student.getUserId().getIsActivated()){
+            throw new UserNotActivatedException();
+        }
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 

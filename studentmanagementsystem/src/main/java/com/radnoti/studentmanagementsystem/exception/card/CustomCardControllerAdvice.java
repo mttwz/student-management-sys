@@ -57,4 +57,10 @@ public class CustomCardControllerAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-005-ERR"), status);
     }
+
+    @ExceptionHandler(CardNotDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleException(CardNotDeletedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-006-ERR"), status);
+    }
 }

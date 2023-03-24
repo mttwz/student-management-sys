@@ -8,8 +8,8 @@ CREATE TABLE `Workgroup_schedule` (
   `workgroup_id` int(11) DEFAULT NULL,
   `start` datetime DEFAULT NULL,
   `end` datetime DEFAULT NULL,
-  `is_onsite` tinyint(1) DEFAULT '1',
-  `is_deleted` tinyint(1) DEFAULT '0',
+  `is_onsite` tinyint(1)NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(1)NOT NULL DEFAULT '0',
   `deleted_at` datetime DEFAULT NULL
 );
 

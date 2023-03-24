@@ -52,4 +52,10 @@ public class CustomWorkgroupControllerAdvice {
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-004-ERR"), status);
     }
 
+    @ExceptionHandler(WorkgroupNotDeletedException.class)
+    public ResponseEntity<ErrorResponse> handleException(WorkgroupNotDeletedException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-005-ERR"), status);
+    }
+
 }

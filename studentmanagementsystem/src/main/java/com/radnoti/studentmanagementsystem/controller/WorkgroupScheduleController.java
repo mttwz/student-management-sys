@@ -55,9 +55,9 @@ public class WorkgroupScheduleController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @PostMapping(path = "/restore-deleted-workgroup-schedule", consumes = {"application/json"}, produces = {"application/json"})
-    public void restoreDeletedWorkgroupSchedule(@RequestBody WorkgroupscheduleDto workgroupscheduleDto) {
-        workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto);
+    @PostMapping(path = "/restore-deleted-workgroup-schedule/{workgroupScheduleId}")
+    public void restoreDeletedWorkgroupSchedule(@PathVariable String workgroupScheduleId) {
+        workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupScheduleId);
     }
 
 }

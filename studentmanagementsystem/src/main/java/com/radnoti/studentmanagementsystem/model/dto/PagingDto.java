@@ -18,5 +18,6 @@ import java.util.List;
 public class PagingDto{
     private Integer allPages;
     private List<UserInfoDto> userInfoDtoList;
-    private List<WorkgroupscheduleDto> workgroupscheduleList;
+    private List<WorkgroupscheduleDto> workgroupscheduleDtoList;
+    private List<WorkgroupDto> workgroupDtoList;
 }

@@ -6,7 +6,6 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.*;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
@@ -14,22 +13,17 @@ import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
-import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -43,8 +37,9 @@ public class CardService {
     private final CardRepository cardRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
-
     private final CardMapper cardMapper;
+
+    private final IdValidatorUtil idValidatorUtil;
 
     /**
      * Creates a new card in the database based on the provided DTO object.
@@ -68,12 +63,8 @@ public class CardService {
 
     @Transactional
     public void deleteCard(String cardIdString) {
-        Integer cardId;
-        try {
-            cardId = Integer.parseInt(cardIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer cardId = idValidatorUtil.idValidator(cardIdString);
+
         Card card = cardRepository.findById(cardId).orElseThrow(CardNotExistException::new);
 
         if(card.getIsDeleted()){
@@ -92,6 +83,28 @@ public class CardService {
         cardRepository.save(card);
     }
 
+    @Transactional
+    public void restoreDeletedCard(String cardIdString) {
+        Integer cardId = idValidatorUtil.idValidator(cardIdString);
+
+        Card card = cardRepository.findById(cardId).orElseThrow(CardNotExistException::new);
+
+        Optional<Student> student = studentRepository.findById(card.getAssignedTo());
+
+        if (student.isPresent() && student.get().getCardId() == null){
+            student.get().setCardId(card);
+            card.setIsAssigned(true);
+        }
+
+        if(!card.getIsDeleted()){
+            throw new CardNotDeletedException();
+        }
+
+        card.setIsDeleted(false);
+        cardRepository.save(card);
+    }
+
+
     /**
      * Connects a card to a student in the database based on the provided DTO object.
      *
@@ -101,7 +114,7 @@ public class CardService {
      * @throws CardNotExistException if the card with the provided card ID does not exist in the database.
      */
     @Transactional
-    public void connectCardToStudent(StudentDto studentDto) {
+    public void assignCardToStudent(StudentDto studentDto) {
         if (studentDto.getId() == null || studentDto.getCardId() == null) {
             throw new InvalidFormValueException();
         }
@@ -115,7 +128,6 @@ public class CardService {
         if (card.getIsAssigned()){
             throw new CardAlreadyAssignedException();
         }
-
 
         if (card.getIsDeleted()){
             throw new CardAlreadyAssignedException();
@@ -137,24 +149,13 @@ public class CardService {
      */
     @Transactional
     public ResponseDto getCardByUserId(String userIdString) {
-
-        Integer userId;
-        try {
-            userId = Integer.parseInt(userIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer userId = idValidatorUtil.idValidator(userIdString);
 
         userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-        //eddig intet adott vissza most cardot
-        Card card = cardRepository.getCardByUserId(userId);
-
-        if (card == null){
-            throw new CardNotExistException();
-        }
-
+        Card card = cardRepository.getCardByUserId(userId)
+                .orElseThrow(CardNotExistException::new);
 
         if (Boolean.TRUE.equals(card.getIsDeleted())) {
             throw new CardAlreadyDeletedException();
@@ -173,24 +174,15 @@ public class CardService {
      */
     @Transactional
     public ResponseDto getCardByStudentId(String studentIdString) {
-
-        Integer studentId;
-        try {
-            studentId = Integer.parseInt(studentIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer studentId = idValidatorUtil.idValidator(studentIdString);
 
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(StudentNotExistException::new);
 
-
-        if (student.getCardId().getId() == null) {
+        if (student.getCardId() == null) {
             throw new CardNotAssignedException();
         }
-        if (Boolean.TRUE.equals(student.getCardId().getIsDeleted())) {
-            throw new CardAlreadyDeletedException();
-        }
+
         return new ResponseDto(student.getCardId().getId());
     }
 

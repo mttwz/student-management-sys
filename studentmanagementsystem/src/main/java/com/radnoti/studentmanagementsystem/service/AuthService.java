@@ -47,11 +47,9 @@ public class AuthService {
     public UserLoginDto login(UserDto userDto) throws NoSuchAlgorithmException {
         String password = hashUtil.getSHA256Hash(userDto.getPassword());
 
-        User user = userRepository.login(userDto.getEmail(), password);
+        User user = userRepository.login(userDto.getEmail(), password)
+                .orElseThrow(InvalidCredentialsException::new);
 
-        if(user == null){
-            throw new InvalidCredentialsException();
-        }
         if (!user.getIsActivated()){
             throw new UserNotActivatedException();
         }

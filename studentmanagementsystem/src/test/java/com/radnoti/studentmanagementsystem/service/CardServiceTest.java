@@ -2,12 +2,9 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
-import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
@@ -25,7 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.server.ResponseStatusException;
+
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -33,7 +30,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
@@ -124,7 +120,7 @@ public class CardServiceTest {
         when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(mockCard));
         when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(mockStudent));
 
-        cardService.connectCardToStudent(studentDto);
+        cardService.assignCardToStudent(studentDto);
         // act and assert
         verify(mockStudent,times(1)).setCardId(mockCard);
         verify(mockCard,times(1)).setIsAssigned(true);
@@ -139,7 +135,7 @@ public class CardServiceTest {
         studentDto.setCardId(2);
 
         // act and assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.connectCardToStudent(studentDto));
+        assertThrows(InvalidFormValueException.class, () -> cardService.assignCardToStudent(studentDto));
     }
 
     @Test
@@ -150,7 +146,7 @@ public class CardServiceTest {
         studentDto.setCardId(null);
 
         // act and assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.connectCardToStudent(studentDto));
+        assertThrows(InvalidFormValueException.class, () -> cardService.assignCardToStudent(studentDto));
     }
 
     @Test
@@ -164,7 +160,7 @@ public class CardServiceTest {
         when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.empty());
 
         // act and assert
-        assertThrows(StudentNotExistException.class, () -> cardService.connectCardToStudent(studentDto));
+        assertThrows(StudentNotExistException.class, () -> cardService.assignCardToStudent(studentDto));
     }
 
     @Test
@@ -179,7 +175,7 @@ public class CardServiceTest {
         when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(new Student()));
 
         // act and assert
-        assertThrows(CardNotExistException.class, () -> cardService.connectCardToStudent(studentDto));
+        assertThrows(CardNotExistException.class, () -> cardService.assignCardToStudent(studentDto));
     }
 
 
