@@ -8,6 +8,7 @@ import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyD
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
@@ -18,6 +19,7 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
+import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,25 +44,22 @@ public class WorkgroupScheduleService {
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
     private final JwtUtil jwtUtil;
 
+    private IdValidatorUtil idValidatorUtil;
 
     @Transactional
-    public List<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, String stringUserId) {
+    public List<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, String stringUserId, Pageable pageable) {
 
-        Integer userId;
-        try {
-            userId = Integer.parseInt(stringUserId);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer userId = idValidatorUtil.idValidator(stringUserId);
+
 
         List<Integer> workgroupScheduleList;
         userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
         if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(userId);
+            workgroupScheduleList = workgroupscheduleRepository.getWorkgroupScheduleByUserId(userId);
         } else {
-            workgroupScheduleList = userRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
+            workgroupScheduleList = workgroupscheduleRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
         }
 
         List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
@@ -76,12 +75,8 @@ public class WorkgroupScheduleService {
 
     @Transactional
     public List<WorkgroupscheduleDto> getWorkgroupScheduleByWorkgroupId(String stringWorkgroupId, Pageable pageable) {
-        Integer workgroupId;
-        try {
-            workgroupId = Integer.parseInt(stringWorkgroupId);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer workgroupId = idValidatorUtil.idValidator(stringWorkgroupId);
+
         Workgroup workgroup = workgroupRepository.findById(workgroupId)
                 .orElseThrow(WorkgroupNotExistException::new);
 

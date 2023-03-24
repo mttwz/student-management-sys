@@ -36,11 +36,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     void setUserRole(Integer userId, String roleName);
 
 
-    @Query("select ws.id from Workgroupmembers wm " +
-            "join Workgroupschedule ws on wm.workgroupId.id = ws.workgroupId.id " +
-            "join Workgroup w on wm.workgroupId.id = w.id " +
-            "where wm.userId.id = :userId")
-    List<Integer>getWorkgroupScheduleByUserId(Integer userId);
+
 
     @Query("select u from User u where u.email = :email")
     Optional<User> findByUsername(String email);

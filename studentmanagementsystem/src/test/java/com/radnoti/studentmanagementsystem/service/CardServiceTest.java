@@ -194,17 +194,17 @@ public class CardServiceTest {
         user.setId(userDto.getId());
         when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(user));
 
-        Integer cardId = 123;
-        Card card = new Card(cardId);
 
-        //when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(cardId);
-        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
+        Card card = new Card();
+        card.setId(1);
+
+        when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(card);
 
         // Act
         Integer result = cardService.getCardByUserId(userDto.getId().toString()).getId();
 
         // Assert
-        assertEquals(cardId, result);
+        assertEquals(1, result);
     }
 
 

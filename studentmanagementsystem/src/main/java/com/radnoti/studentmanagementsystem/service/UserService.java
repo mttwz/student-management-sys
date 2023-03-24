@@ -169,12 +169,8 @@ public class UserService {
 
     @Transactional
     public void deleteUser(String userIdString) {
-        Integer userId;
-        try {
-            userId = Integer.parseInt(userIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer userId = idValidatorUtil.idValidator(userIdString);
+
 
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
@@ -198,12 +194,8 @@ public class UserService {
 
     @Transactional
     public UserInfoDto getUserInfo(String userIdString) {
-        Integer userId;
-        try {
-            userId = Integer.parseInt(userIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
+        Integer userId = idValidatorUtil.idValidator(userIdString);
+
 
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
@@ -214,12 +206,9 @@ public class UserService {
     @Transactional
     public ResponseDto editUserInfo(String pathVariableUserId, UserInfoDto userInfoDto) {
 
-        Integer userId;
-        try{
-            userId = Integer.parseInt(pathVariableUserId);
-        }catch (NumberFormatException ex){
-            throw new InvalidFormValueException();
-        }
+
+        Integer userId = idValidatorUtil.idValidator(pathVariableUserId);
+
 
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
