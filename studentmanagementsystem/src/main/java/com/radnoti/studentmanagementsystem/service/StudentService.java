@@ -36,7 +36,6 @@ public class StudentService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
 
-
     @Transactional
     public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);

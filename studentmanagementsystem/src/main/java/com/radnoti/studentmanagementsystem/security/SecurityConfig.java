@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/password-reset/**").permitAll()
                 .and()
                 .userDetailsService(userDetailsService())
                 .exceptionHandling()
