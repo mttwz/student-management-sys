@@ -67,11 +67,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).SUPERADMIN.id}")
     Page<User>  searchSuperadmins(String userSearchString,Pageable pageable);
 
-    @Query("select w from Workgroup w where " +
-            "w.groupName like concat('%',:searchString,'%') or " +
-            "w.institution like concat('%',:searchString,'%')")
-    Page<Workgroup> searchWorkgroups(String searchString, Pageable pageable);
-
     @Query("select u from User u " +
             "join Workgroupmembers wm on wm.userId.id = u.id " +
             "join Workgroup w on w.id = wm.workgroupId.id " +

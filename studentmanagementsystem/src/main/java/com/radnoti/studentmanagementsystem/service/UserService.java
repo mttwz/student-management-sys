@@ -281,7 +281,7 @@ public class UserService {
             pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
 
         } else if (Objects.equals(category, SearchFilterEnum.Types.WORKGROUP)) {
-            workgroupPage = userRepository.searchWorkgroups(q,pageable);
+            workgroupPage = workgroupRepository.searchWorkgroups(q,pageable);
             totalPages = workgroupPage.getTotalPages();
             pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
 

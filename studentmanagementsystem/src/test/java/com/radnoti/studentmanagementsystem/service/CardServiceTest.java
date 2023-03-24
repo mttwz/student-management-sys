@@ -114,7 +114,7 @@ public class CardServiceTest {
         mockCard.setId(1);
         mockCard.setIsDeleted(false);
         mockCard.setIsAssigned(false);
-        mockCard.setAssignedTo(null);
+        mockCard.setLastAssignedTo(null);
 
         // mock the behavior of your repositories
         when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(mockCard));
@@ -124,7 +124,7 @@ public class CardServiceTest {
         // act and assert
         verify(mockStudent,times(1)).setCardId(mockCard);
         verify(mockCard,times(1)).setIsAssigned(true);
-        verify(mockCard,times(1)).setAssignedTo(mockStudent.getId());
+        verify(mockCard,times(1)).setLastAssignedTo(mockStudent.getId());
     }
 
     @Test

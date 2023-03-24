@@ -130,7 +130,7 @@ public class AuthServiceTest {
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
         when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.of(user));
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
 
         // Act & Assert
         assertThrows(UserDeletedException.class, () -> authService.login(userDto));

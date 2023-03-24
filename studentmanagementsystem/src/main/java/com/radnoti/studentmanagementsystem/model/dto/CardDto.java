@@ -33,7 +33,7 @@ public class CardDto {
 
     private Boolean isAssigned;
 
-    private Integer assignedTo;
+    private Integer lastAssignedTo;
 
 
 }

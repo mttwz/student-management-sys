@@ -20,7 +20,7 @@ public class CardController {
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/connect-card-to-student", consumes = {"application/json"}, produces = {"application/json"})
+    @PostMapping(path = "/assign-card-to-student", consumes = {"application/json"}, produces = {"application/json"})
     public void connectCardToStudent(@RequestBody StudentDto studentDto) {
         cardService.assignCardToStudent(studentDto);
     }

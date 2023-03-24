@@ -16,7 +16,7 @@ CREATE TABLE `User` (
   `activated_at` datetime DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 
 ALTER TABLE `User`

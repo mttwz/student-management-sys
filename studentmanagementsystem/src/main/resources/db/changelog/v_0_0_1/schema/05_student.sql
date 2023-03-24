@@ -6,7 +6,7 @@ CREATE TABLE `Student` (
   `id` int(11) NOT NULL,
   `card_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 
 ALTER TABLE `Student`

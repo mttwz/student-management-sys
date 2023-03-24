@@ -6,6 +6,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.*;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
@@ -61,6 +62,15 @@ public class CardService {
         return new ResponseDto(card.getId());
     }
 
+    /**
+     * This method sets the deleted flag of the card in the database based on the provided id.
+     * The method checks the card existence and the deleted status.
+     * If the card assigned to a student then removes the connection
+     *
+     * @param cardIdString a string representing the ID of the card
+     * @throws InvalidIdException  if the provided card's id is invalid eg: if the id contains a string
+     * @throws CardNotExistException if the provided DTO object is null or its hash value is null or empty.
+     */
     @Transactional
     public void deleteCard(String cardIdString) {
         Integer cardId = idValidatorUtil.idValidator(cardIdString);
@@ -71,10 +81,9 @@ public class CardService {
             throw new CardAlreadyDeletedException();
         }
 
-        Student student = studentRepository.findById(card.getAssignedTo())
-                .orElseThrow(StudentNotExistException::new);
+        studentRepository.findById(card.getLastAssignedTo())
+                .ifPresent(s -> s.setCardId(null));
 
-        student.setCardId(null);
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         card.setIsDeleted(true);
@@ -89,7 +98,7 @@ public class CardService {
 
         Card card = cardRepository.findById(cardId).orElseThrow(CardNotExistException::new);
 
-        Optional<Student> student = studentRepository.findById(card.getAssignedTo());
+        Optional<Student> student = studentRepository.findById(card.getLastAssignedTo());
 
         if (student.isPresent() && student.get().getCardId() == null){
             student.get().setCardId(card);
@@ -130,12 +139,16 @@ public class CardService {
         }
 
         if (card.getIsDeleted()){
-            throw new CardAlreadyAssignedException();
+            throw new CardAlreadyDeletedException();
+        }
+
+        if(student.getCardId() != null){
+            throw new AnotherCardAlreadyAssignedException();
         }
 
         student.setCardId(card);
         card.setIsAssigned(true);
-        card.setAssignedTo(student.getId());
+        card.setLastAssignedTo(student.getId());
     }
 
     /**
