@@ -7,6 +7,8 @@ package com.radnoti.studentmanagementsystem.repository;
 import java.util.*;
 
 import com.radnoti.studentmanagementsystem.model.entity.User;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
+import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,54 +28,55 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("select u from User u " +
             "where u.email = :email and " +
             "u.password = :password")
-    User login(String email, String password);
+    Optional<User> login(String email, String password);
 
+    //= null then :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).STUDENT.id}
     @Modifying
     @Query("update User u set u.roleId.id = " +
-            "case when (select r.id from Role r where r.roleType = :roleName) = null then :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).STUDENT.id} " +
-            "else (select r.id from Role r where r.roleType = :roleName) end " +
+            "(select r.id from Role r where r.roleType = :roleName) " +
             "where u.id = :userId")
     void setUserRole(Integer userId, String roleName);
-
-
-
 
     @Query("select u from User u where u.email = :email")
     Optional<User> findByUsername(String email);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:searchString,'%') or " +
-            "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%'))")
-    Page<User> searchAllUser(String searchString, Pageable pageable);
+            "(u.firstName like concat('%',:userSearchString,'%') or " +
+            "u.lastName like concat('%',:userSearchString,'%') or " +
+            "u.email like concat('%',:userSearchString,'%'))")
+    Page<User> searchAllUser(String userSearchString, Pageable pageable);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:searchString,'%') or " +
-            "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%')) and " +
-            "u.roleId.id = 3")
-    Page<User>  searchStudents(String searchString,Pageable pageable);
+            "(u.firstName like concat('%',:userSearchString,'%') or " +
+            "u.lastName like concat('%',:userSearchString,'%') or " +
+            "u.email like concat('%',:userSearchString,'%')) and " +
+            "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).STUDENT.id}")
+    Page<User>  searchStudents(String userSearchString,Pageable pageable);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:searchString,'%') or " +
-            "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%')) and " +
-            "u.roleId.id = 2")
-    Page<User>  searchAdmins(String searchString,Pageable pageable);
+            "(u.firstName like concat('%',:userSearchString,'%') or " +
+            "u.lastName like concat('%',:userSearchString,'%') or " +
+            "u.email like concat('%',:userSearchString,'%')) and " +
+            "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).ADMIN.id}")
+    Page<User>  searchAdmins(String userSearchString,Pageable pageable);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:searchString,'%') or " +
-            "u.lastName like concat('%',:searchString,'%') or " +
-            "u.email like concat('%',:searchString,'%')) and " +
-            "u.roleId.id = 1")
-    Page<User>  searchSuperadmins(String searchString,Pageable pageable);
+            "(u.firstName like concat('%',:userSearchString,'%') or " +
+            "u.lastName like concat('%',:userSearchString,'%') or " +
+            "u.email like concat('%',:userSearchString,'%')) and " +
+            "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).SUPERADMIN.id}")
+    Page<User>  searchSuperadmins(String userSearchString,Pageable pageable);
 
     @Query("select u from User u " +
-            "join Workgroupmembers wm on u.id = wm.userId.id " +
+            "join Workgroupmembers wm on wm.userId.id = u.id " +
             "join Workgroup w on w.id = wm.workgroupId.id " +
-            "where u.firstName like concat('%',:searchString,'%') or " +
-            "u.lastName like concat('%',:searchString,'%')")
-    Page<User>  searchWorkgroups(String searchString,Pageable pageable);
+            "where (u.firstName like concat('%',:userSearchString,'%') or " +
+            "u.lastName like concat('%',:userSearchString,'%') or " +
+            "u.email like concat('%',:userSearchString,'%')) and " +
+            "w.groupName = :groupName")
+    Page<User> searchUsersInWorkgroups(String userSearchString, String groupName, Pageable pageable);
+
+
 
     @Procedure
     List<User> getUserFromWorkgroup(Integer id);

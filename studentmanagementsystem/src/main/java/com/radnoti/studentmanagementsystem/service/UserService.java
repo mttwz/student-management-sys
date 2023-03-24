@@ -18,6 +18,7 @@ import com.radnoti.studentmanagementsystem.exception.user.*;
 import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
+import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
@@ -70,6 +71,7 @@ public class UserService {
 
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
     private final WorkgroupMembersMapper workgroupMembersMapper;
+    private final WorkgroupMapper workgroupMapper;
 
 
     /**
@@ -171,14 +173,30 @@ public class UserService {
     public void deleteUser(String userIdString) {
         Integer userId = idValidatorUtil.idValidator(userIdString);
 
-
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
         if (user.getIsDeleted()) {
             throw new UserAlreadyDeletedException();
         }
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
         user.setIsDeleted(true);
+        user.setDeletedAt(currDate);
+
+    }
+
+    @Transactional
+    public void restoreDeletedUser(String userIdString) {
+        Integer userId = idValidatorUtil.idValidator(userIdString);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotExistException::new);
+
+        if (!user.getIsDeleted()) {
+            throw new UserNotDeletedException();
+        }
+        user.setIsDeleted(false);
+        user.setDeletedAt(null);
 
     }
 
@@ -196,7 +214,6 @@ public class UserService {
     public UserInfoDto getUserInfo(String userIdString) {
         Integer userId = idValidatorUtil.idValidator(userIdString);
 
-
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
         return userMapper.fromEntityToInfoDto(user);
@@ -204,11 +221,9 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseDto editUserInfo(String pathVariableUserId, UserInfoDto userInfoDto) {
+    public ResponseDto editUserInfo(String userIdString, UserInfoDto userInfoDto) {
 
-
-        Integer userId = idValidatorUtil.idValidator(pathVariableUserId);
-
+        Integer userId = idValidatorUtil.idValidator(userIdString);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
@@ -237,28 +252,49 @@ public class UserService {
     }
 
     @Transactional
-    public PagingDto searchSuperadmin(String filter,String q,Pageable pageable) {
+    public PagingDto searchSuperadmin(String groupName, String category,String q,Pageable pageable) {
 
 
-        Page<User> userPage = userRepository.searchAllUser(q,pageable);
+        Page<User> userPage;
+        Page<Workgroup> workgroupPage;
+        Integer totalPages = null;
         PagingDto pagingDto = new PagingDto();
 
-        if (Objects.equals(filter, SearchFilterEnum.Types.SUPERADMIN)) {
+        if(Objects.equals(category, SearchFilterEnum.Types.ALL_USERS)){
+            userPage = userRepository.searchAllUser(q,pageable);
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
+        } else if (Objects.equals(category, SearchFilterEnum.Types.SUPERADMIN)) {
             userPage = userRepository.searchSuperadmins(q,pageable);
-        } else if (Objects.equals(filter, SearchFilterEnum.Types.STUDENT)) {
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
+        } else if (Objects.equals(category, SearchFilterEnum.Types.STUDENT)) {
             userPage = userRepository.searchStudents(q,pageable);
-        } else if (Objects.equals(filter, SearchFilterEnum.Types.ADMIN)) {
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
+        } else if (Objects.equals(category, SearchFilterEnum.Types.ADMIN)) {
             userPage = userRepository.searchAdmins(q,pageable);
-        } else if (Objects.equals(filter, SearchFilterEnum.Types.WORKGROUP)) {
-            userPage = userRepository.searchWorkgroups(q,pageable);
-        } else if (Objects.equals(filter, SearchFilterEnum.Types.INSTITUTION)) {
-            userPage = userRepository.searchWorkgroups(q,pageable);
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
+        } else if (Objects.equals(category, SearchFilterEnum.Types.WORKGROUP)) {
+            workgroupPage = workgroupRepository.searchWorkgroups(q,pageable);
+            totalPages = workgroupPage.getTotalPages();
+            pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
+
+        }else if (Objects.equals(category, SearchFilterEnum.Types.USERS_IN_WORKGROUP)) {
+            userPage = userRepository.searchUsersInWorkgroups(q,groupName,pageable);
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
         }
 
-        Integer totalPages = userPage.getTotalPages();
+
 
         pagingDto.setAllPages(totalPages);
-        pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
 
         return pagingDto;
     }

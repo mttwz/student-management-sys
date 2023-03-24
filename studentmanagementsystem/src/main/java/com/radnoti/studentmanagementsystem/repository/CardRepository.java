@@ -9,12 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 /**
  *
  * @author matevoros
  */
 public interface CardRepository extends CrudRepository<Card, Integer> {
 
-    @Query("select s.cardId from Student s where s.userId.id = :userId")
-    Card getCardByUserId(Integer userId);
+    @Query("select s.cardId from Student s " +
+            "where s.userId.id = :userId")
+    Optional<Card> getCardByUserId(Integer userId);
 }

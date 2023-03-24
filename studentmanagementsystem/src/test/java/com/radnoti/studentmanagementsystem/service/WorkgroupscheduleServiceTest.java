@@ -144,40 +144,38 @@ public class WorkgroupscheduleServiceTest {
 
     }
 
-
     @Test
     public void getWorkgroupScheduleByUserIdTest_valid(){
-        // TODO: Atirni
-//        // Arrange
-//        String authHeader = "test-auth-header";
-//        UserDto userDto = new UserDto();
-//        userDto.setId(1);
-//
-//        String userId = userDto.getId().toString();
-//
-//        User user = new User();
-//        user.setId(1);
-//
-//        List<Integer> workgroupScheduleList = Arrays.asList(1, 2, 3);
-//        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-//
-//        when(jwtUtil.getRoleFromJwt(any())).thenReturn(RoleEnum.Types.SUPERADMIN);
-//        when(workgroupscheduleRepository.getWorkgroupScheduleByUserId(any())).thenReturn(workgroupScheduleList);
-//
-//        Workgroupschedule workgroupschedule1 = new Workgroupschedule();
-//        WorkgroupscheduleDto workgroupscheduleDto1 = new WorkgroupscheduleDto();
-//        when(workgroupscheduleRepository.findAllById(any())).thenReturn(List.of(workgroupschedule1));
-//        when(workgroupScheduleMapper.fromEntityToDto(any())).thenReturn(workgroupscheduleDto1);
-//
-//        // Act
-//        List<WorkgroupscheduleDto> result = workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userId);
-//
-//        // Assert
-//        assertEquals(1, result.size());
+        // Arrange
+        String authHeader = "test-auth-header";
+        UserDto userDto = new UserDto();
+        userDto.setId(1);
+
+        String userId = userDto.getId().toString();
+
+        User user = new User();
+        user.setId(1);
+
+        List<Integer> workgroupScheduleList = Arrays.asList(1, 2, 3);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+
+        when(jwtUtil.getRoleFromJwt(any())).thenReturn(RoleEnum.Types.SUPERADMIN);
+        //when(userRepository.getWorkgroupScheduleByUserId(any())).thenReturn(workgroupScheduleList);
+
+        Workgroupschedule workgroupschedule1 = new Workgroupschedule();
+        WorkgroupscheduleDto workgroupscheduleDto1 = new WorkgroupscheduleDto();
+        when(workgroupscheduleRepository.findAllById(any())).thenReturn(List.of(workgroupschedule1));
+        when(workgroupScheduleMapper.fromEntityToDto(any())).thenReturn(workgroupscheduleDto1);
+
+        // Act
+        //List<WorkgroupscheduleDto> result = workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userId);
+
+        // Assert
+        //assertEquals(1, result.size());
     }
 
-    @Test
-    public void getWorkgroupScheduleByUserIdTest_user_not_exist(){
+//    @Test
+//    public void getWorkgroupScheduleByUserIdTest_user_not_exist(){
 //        String authHeader = "test-auth-header";
 //
 //        UserDto userDto = new UserDto();
@@ -187,9 +185,9 @@ public class WorkgroupscheduleServiceTest {
 //
 //        when(userRepository.findById(any())).thenReturn(Optional.empty());
 //
-//        assertThrows(UserNotExistException.class,()->workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userId));
-
-    }
+//        //assertThrows(UserNotExistException.class,()->workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userId));
+//
+//    }
 
     @Test
     public void deleteWorkgroupScheduleTest_valid(){
@@ -259,7 +257,7 @@ public class WorkgroupscheduleServiceTest {
 
         when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.of(mockWorkgroupschedule));
 
-        workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto);
+        workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto.getId().toString());
 
         verify(mockWorkgroupschedule,times(1)).setIsDeleted(false);
         verify(mockWorkgroupschedule,times(1)).setDeletedAt(null);
@@ -275,7 +273,7 @@ public class WorkgroupscheduleServiceTest {
         when(workgroupscheduleRepository.findById(any())).thenReturn(Optional.empty());
 
 
-        assertThrows(WorkgroupScheduleNotExistException.class,()->workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto));
+        assertThrows(WorkgroupScheduleNotExistException.class,()->workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupscheduleDto.getId().toString()));
 
     }
 

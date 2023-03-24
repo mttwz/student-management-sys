@@ -7,8 +7,8 @@ CREATE TABLE `Password_reset` (
   `user_id` int(11) DEFAULT NULL,
   `reset_code` varchar(255) DEFAULT NULL,
   `expire_date` datetime DEFAULT NULL,
-  `is_used` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `is_used` tinyint(1) NOT NULL DEFAULT '0'
+);
 
 
 ALTER TABLE `Password_reset`

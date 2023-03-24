@@ -35,6 +35,12 @@ public class WorkgroupController {
         workgroupService.deleteWorkgroup(workgroupId);
     }
 
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/restore-deleted-workgroup/{workgroupId}")
+    public void restoreDeleteWorkgroup(@PathVariable String workgroupId) {
+        workgroupService.restoreDeletedWorkgroup(workgroupId);
+    }
+
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/add-user-to-workgroup", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseDto addUserToWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {

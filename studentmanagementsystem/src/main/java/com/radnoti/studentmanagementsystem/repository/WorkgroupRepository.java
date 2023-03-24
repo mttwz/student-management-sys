@@ -6,6 +6,9 @@ package com.radnoti.studentmanagementsystem.repository;
 
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
@@ -17,7 +20,10 @@ import java.util.ArrayList;
  * @author matevoros
  */
 public interface WorkgroupRepository extends CrudRepository<Workgroup, Integer> {
-    
 
+    @Query("select w from Workgroup w where " +
+            "w.groupName like concat('%',:searchString,'%') or " +
+            "w.institution like concat('%',:searchString,'%')")
+    Page<Workgroup> searchWorkgroups(String searchString, Pageable pageable);
     
 }

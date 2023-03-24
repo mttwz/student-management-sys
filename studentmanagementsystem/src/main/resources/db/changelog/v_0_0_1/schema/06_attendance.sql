@@ -6,7 +6,7 @@ CREATE TABLE `Attendance` (
   `student_id` int(11) DEFAULT NULL,
   `arrival` datetime DEFAULT NULL,
   `leaving` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 ALTER TABLE `Attendance`
   ADD PRIMARY KEY (`id`),

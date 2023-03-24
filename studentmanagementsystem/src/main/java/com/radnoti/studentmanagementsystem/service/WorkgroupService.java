@@ -9,7 +9,9 @@ import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueExcept
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
@@ -22,6 +24,7 @@ import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
+import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,8 @@ public class WorkgroupService {
     private final WorkgroupMembersRepository workgroupMembersRepository;
     private final UserRepository userRepository;
 
+    private final IdValidatorUtil idValidatorUtil;
+
 
     @Transactional
     public ResponseDto createWorkgroup(WorkgroupDto workgroupDto) {
@@ -65,23 +70,34 @@ public class WorkgroupService {
 
     @Transactional
     public void deleteWorkgroup(String workgroupIdString) {
-        Integer workgroupId;
-        try {
-            workgroupId = Integer.parseInt(workgroupIdString);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
-
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
 
         Workgroup workgroup = workgroupRepository.findById(workgroupId).orElseThrow(WorkgroupNotExistException::new);
 
         if(workgroup.getIsDeleted()){
-            throw new InvalidFormValueException();
+            throw new WorkgroupAlreadyDeletedException();
         }
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         workgroup.setIsDeleted(true);
         workgroup.setDeletedAt(currDate);
+
+
+    }
+
+    @Transactional
+    public void restoreDeletedWorkgroup(String workgroupIdString) {
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
+
+        Workgroup workgroup = workgroupRepository.findById(workgroupId)
+                .orElseThrow(WorkgroupNotExistException::new);
+
+        if(!workgroup.getIsDeleted()){
+            throw new WorkgroupNotDeletedException();
+        }
+
+        workgroup.setIsDeleted(false);
+        workgroup.setDeletedAt(null);
 
 
     }
@@ -121,9 +137,5 @@ public class WorkgroupService {
 //
 //        return userDtoList;
 //    }
-
-
-
-
 
 }

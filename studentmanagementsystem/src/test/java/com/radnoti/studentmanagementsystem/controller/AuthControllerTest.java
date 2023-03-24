@@ -34,8 +34,6 @@ public class AuthControllerTest {
 
 
 
-
-
     @Sql({ "AuthLogin.sql" })
     @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test

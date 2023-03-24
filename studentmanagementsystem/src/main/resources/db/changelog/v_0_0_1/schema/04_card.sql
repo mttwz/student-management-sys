@@ -10,7 +10,7 @@ CREATE TABLE `Card` (
   `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` datetime DEFAULT NULL,
   `is_assigned` tinyint(1) NOT NULL DEFAULT '0',
-  `assigned_to` int(11) DEFAULT NULL
+  `last_assigned_to` int(11) DEFAULT NULL
 );
 
 

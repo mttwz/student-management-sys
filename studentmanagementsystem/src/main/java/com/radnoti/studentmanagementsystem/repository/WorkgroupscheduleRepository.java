@@ -8,16 +8,17 @@ import org.springframework.data.repository.CrudRepository;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 
 import java.util.Date;
-import java.util.List;
 
 public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupschedule, Integer> {
 
-    @Query("select ws from Workgroupschedule ws where ws.workgroupId.id = :workgroupId")
+    @Query("select ws from Workgroupschedule ws " +
+            "where ws.workgroupId.id = :workgroupId")
     Page<Workgroupschedule> getWorkgroupScheduleByWorkgroupId(Integer workgroupId, Pageable pageable);
 
     @Query("select ws from Workgroupmembers wm " +
             "join Workgroupschedule ws on wm.workgroupId.id = ws.workgroupId.id " +
             "join Workgroup w on wm.workgroupId.id = w.id " +
             "where wm.userId.id = :userId")
-    Page<Workgroupschedule>  getWorkgroupScheduleByUserId(Integer userId,Pageable pageable);
+    Page<Workgroupschedule>getWorkgroupScheduleByUserId(Integer userId,Pageable pageable);
+
 }

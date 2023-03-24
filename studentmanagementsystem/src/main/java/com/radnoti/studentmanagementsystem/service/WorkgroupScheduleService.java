@@ -44,38 +44,37 @@ public class WorkgroupScheduleService {
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
     private final JwtUtil jwtUtil;
 
-    private IdValidatorUtil idValidatorUtil;
+    private final IdValidatorUtil idValidatorUtil;
+
 
     @Transactional
-    public List<WorkgroupscheduleDto> getWorkgroupScheduleByUserId(String authHeader, String stringUserId, Pageable pageable) {
+    public PagingDto getWorkgroupScheduleByUserId(String authHeader, String userIdString, Pageable pageable) {
 
-        Integer userId = idValidatorUtil.idValidator(stringUserId);
+        Integer userId = idValidatorUtil.idValidator(userIdString);
 
+        Page<Workgroupschedule> workgroupSchedulePage;
+        PagingDto pagingDto = new PagingDto();
 
-        List<Integer> workgroupScheduleList;
         userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-            workgroupScheduleList = workgroupscheduleRepository.getWorkgroupScheduleByUserId(userId);
+        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(userId,pageable);
         } else {
-            workgroupScheduleList = workgroupscheduleRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader));
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader),pageable);
         }
 
-        List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
-        Iterable<Workgroupschedule> workgroupscheduleIterable = workgroupscheduleRepository.findAllById(workgroupScheduleList);
 
-        workgroupscheduleIterable.forEach(workgroupschedule -> {
-            WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
-            workgroupscheduleDtoList.add(workgroupscheduleDto);
-        });
+        pagingDto.setWorkgroupscheduleDtoList(workgroupSchedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList());
+        pagingDto.setAllPages(workgroupSchedulePage.getTotalPages());
 
-        return workgroupscheduleDtoList;
+
+        return pagingDto;
     }
 
     @Transactional
-    public List<WorkgroupscheduleDto> getWorkgroupScheduleByWorkgroupId(String stringWorkgroupId, Pageable pageable) {
-        Integer workgroupId = idValidatorUtil.idValidator(stringWorkgroupId);
+    public List<WorkgroupscheduleDto> getWorkgroupScheduleByWorkgroupId(String workgroupIdString, Pageable pageable) {
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
 
         Workgroup workgroup = workgroupRepository.findById(workgroupId)
                 .orElseThrow(WorkgroupNotExistException::new);
@@ -116,15 +115,9 @@ public class WorkgroupScheduleService {
 
     }
     @Transactional
-    public void deleteWorkgroupSchedule(String stringWorkgroupScheduleId) {
+    public void deleteWorkgroupSchedule(String workgroupScheduleIdString) {
 
-        Integer workgroupScheduleId;
-        try {
-            workgroupScheduleId = Integer.parseInt(stringWorkgroupScheduleId);
-        }catch (NumberFormatException e){
-            throw new InvalidIdException();
-        }
-
+        Integer workgroupScheduleId = idValidatorUtil.idValidator(workgroupScheduleIdString);
 
         Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId)
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
@@ -139,9 +132,13 @@ public class WorkgroupScheduleService {
     }
 
     @Transactional
-    public void restoreDeletedWorkgroupSchedule(WorkgroupscheduleDto workgroupscheduleDto) {
-        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupscheduleDto.getId())
+    public void restoreDeletedWorkgroupSchedule(String workgroupScheduleIdString) {
+
+        Integer workgroupScheduleId = idValidatorUtil.idValidator(workgroupScheduleIdString);
+
+        Workgroupschedule workgroupschedule = workgroupscheduleRepository.findById(workgroupScheduleId)
                 .orElseThrow(WorkgroupScheduleNotExistException::new);
+
         workgroupschedule.setIsDeleted(false);
         workgroupschedule.setDeletedAt(null);
 

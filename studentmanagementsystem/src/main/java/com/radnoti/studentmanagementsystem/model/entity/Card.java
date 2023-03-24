@@ -45,8 +45,8 @@ public class Card implements Serializable {
     @Column(name = "is_assigned")
     private Boolean isAssigned;
 
-    @Column(name = "assigned_to")
-    private Integer assignedTo;
+    @Column(name = "last_assigned_to")
+    private Integer lastAssignedTo;
     @OneToOne(mappedBy = "cardId")
     @ToString.Exclude
     private Student student;
