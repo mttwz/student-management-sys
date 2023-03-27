@@ -26,6 +26,8 @@ import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,6 +128,15 @@ public class WorkgroupService {
 
         return new ResponseDto( savedWorkgroupmembers.getId());
 
+    }
+
+    @Transactional
+    public PagingDto getAllWorkgroup(Pageable pageable) {
+        Page<Workgroup> workgroupPage=  workgroupRepository.getAllWorkgroup(pageable);
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setAllPages(workgroupPage.getTotalPages());
+        pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
+        return pagingDto;
     }
 
 //    @Transactional

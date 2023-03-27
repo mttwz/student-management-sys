@@ -25,5 +25,8 @@ public interface WorkgroupRepository extends CrudRepository<Workgroup, Integer> 
             "w.groupName like concat('%',:searchString,'%') or " +
             "w.institution like concat('%',:searchString,'%')")
     Page<Workgroup> searchWorkgroups(String searchString, Pageable pageable);
+
+    @Query("select w from Workgroup w")
+    Page<Workgroup> getAllWorkgroup(Pageable pageable);
     
 }

@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,13 @@ public class PasswordResetController {
 
     @PostMapping(path = "/{userEmail}")
     public void resetPassword(@PathVariable String userEmail) {
-        passwordResetService.resetPassword(userEmail);
+        passwordResetService.generatePasswordResetCode(userEmail);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @GetMapping(path = "/get-reset-code/{userId}")
+    public ResponseDto getLastValidResetCode(@PathVariable String userId) {
+        return passwordResetService.getLastValidResetCode(userId);
     }
 
 

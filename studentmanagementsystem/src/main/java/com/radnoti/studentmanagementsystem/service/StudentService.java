@@ -39,6 +39,11 @@ public class StudentService {
     @Transactional
     public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
+
+        if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
+            throw new InvalidFormValueException();
+        }
+
         ResponseDto savedUserIdResponse = userService.adduser(userDto);
 
         Student student = new Student();

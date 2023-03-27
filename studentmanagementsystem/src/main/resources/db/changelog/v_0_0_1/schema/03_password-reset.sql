@@ -15,6 +15,9 @@ ALTER TABLE `Password_reset`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
+ALTER TABLE `Password_reset`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 
 ALTER TABLE `Password_reset`
   ADD CONSTRAINT `password_reset_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`id`);

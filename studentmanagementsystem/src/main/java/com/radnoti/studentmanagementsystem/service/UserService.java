@@ -12,6 +12,7 @@ import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueExceptio
 import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.passwordReset.ResetCodeNotExistException;
 import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
@@ -72,6 +73,7 @@ public class UserService {
     private final WorkgroupScheduleMapper workgroupScheduleMapper;
     private final WorkgroupMembersMapper workgroupMembersMapper;
     private final WorkgroupMapper workgroupMapper;
+    private final JwtUtil jwtUtil;
 
 
     /**
@@ -99,15 +101,17 @@ public class UserService {
                 userDto.getPhone() == null||
                 userDto.getBirth() == null ||
                 userDto.getEmail() == null ||
-                userDto.getPassword() == null ||
                 userDto.getRoleName().isBlank() ||
                 userDto.getFirstName().isBlank() ||
                 userDto.getLastName().isBlank() ||
                 userDto.getPhone().isBlank() ||
                 userDto.getBirth().toString().isBlank() ||
-                userDto.getEmail().isBlank() ||
-                userDto.getPassword().isBlank())) {
+                userDto.getEmail().isBlank())) {
             throw new InvalidFormValueException();
+        }
+
+        if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
+            userDto.setPassword(userDto.getFirstName()+userDto.getBirth().getYear());
         }
 
         userRepository.findByUsername(userDto.getEmail())
@@ -152,18 +156,25 @@ public class UserService {
      *
      */
     @Transactional
-    public void setUserIsActivated(String userIdString) {
-        Integer userId = idValidatorUtil.idValidator(userIdString);
+    public void setUserIsActivated(UserDto userDto) throws NoSuchAlgorithmException {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotExistException::new);
-        if (Boolean.TRUE.equals(user.getIsDeleted())){
+        User userByCode = userRepository.findByActivationCode(userDto.getActivationCode())
+                .orElseThrow(UserNotActivatedException::new);
+
+        if (!Objects.equals(userByCode.getPassword(), hashUtil.getSHA256Hash(userDto.getPassword()))){
+            throw new UserNotActivatedException();
+        }
+
+        if (Boolean.TRUE.equals(userByCode.getIsDeleted())){
             throw new UserAlreadyDeletedException();
         }
-        if (Boolean.TRUE.equals(user.getIsActivated())){
+        if (Boolean.TRUE.equals(userByCode.getIsActivated())){
             throw new UserAlreadyActivatedException();
         }
-        user.setIsActivated(true);
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
+        userByCode.setActivatedAt(currDate);
+
+        userByCode.setIsActivated(true);
     }
 
 
@@ -199,8 +210,6 @@ public class UserService {
         user.setDeletedAt(null);
 
     }
-
-
 
     @Transactional
     public List<UserInfoDto> getAllUser() {
