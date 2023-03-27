@@ -40,6 +40,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("select u from User u where u.email = :email")
     Optional<User> findByUsername(String email);
 
+    @Query("select u from User u where u.activationCode = :activationCode")
+    Optional<User> findByActivationCode(String activationCode);
+
     @Query("select u from User u where " +
             "(u.firstName like concat('%',:userSearchString,'%') or " +
             "u.lastName like concat('%',:userSearchString,'%') or " +

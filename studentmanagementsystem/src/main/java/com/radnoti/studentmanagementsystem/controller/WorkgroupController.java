@@ -4,6 +4,7 @@ import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,12 @@ public class WorkgroupController {
     @PostMapping(path = "/add-user-to-workgroup", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseDto addUserToWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {
         return workgroupService.addUserToWorkgroup(workgroupmembersDto);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @GetMapping(path = "/get-all-workgroups")
+    public PagingDto addUserToWorkgroup(Pageable pageable) {
+        return workgroupService.getAllWorkgroup(pageable);
     }
 
 //    @RolesAllowed({RoleEnum.Types.SUPERADMIN})

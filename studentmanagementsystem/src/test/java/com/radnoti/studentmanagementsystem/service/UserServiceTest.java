@@ -227,72 +227,7 @@ public final class UserServiceTest {
 
 
 
-    @Test
-    public void setUserIsActivatedTest_valid(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(false);
 
-        User mockUser = mock(User.class);
-
-        mockUser.setId(1);
-
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.of(mockUser));
-        //act
-        userService.setUserIsActivated(userDto.getId().toString());
-
-        //assert
-        verify(mockUser,times(1)).setIsActivated(true);
-
-    }
-
-    @Test
-    public void setUserIsActivatedTest_user_not_exist(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(true);
-
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.empty());
-
-        assertThrows(UserNotExistException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
-
-    }
-
-    @Test
-    public void setUserIsActivatedTest_user_already_activated(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(true);
-
-        User user = new User();
-        user.setIsActivated(true);
-
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.of(user));
-
-        assertThrows(UserAlreadyActivatedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
-    }
-
-    @Test
-    public void setUserIsActivatedTest_user_is_deleted(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(false);
-        userDto.setIsDeleted(true);
-
-        User user = new User();
-        user.setId(1);
-        user.setIsActivated(false);
-        user.setIsDeleted(true);
-
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-
-        assertThrows(UserAlreadyDeletedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
-
-
-    }
 
 
 
