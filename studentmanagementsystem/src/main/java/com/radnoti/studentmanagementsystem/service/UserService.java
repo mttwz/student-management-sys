@@ -99,15 +99,17 @@ public class UserService {
                 userDto.getPhone() == null||
                 userDto.getBirth() == null ||
                 userDto.getEmail() == null ||
-                userDto.getPassword() == null ||
                 userDto.getRoleName().isBlank() ||
                 userDto.getFirstName().isBlank() ||
                 userDto.getLastName().isBlank() ||
                 userDto.getPhone().isBlank() ||
                 userDto.getBirth().toString().isBlank() ||
-                userDto.getEmail().isBlank() ||
-                userDto.getPassword().isBlank())) {
+                userDto.getEmail().isBlank())) {
             throw new InvalidFormValueException();
+        }
+
+        if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
+            userDto.setPassword(userDto.getFirstName()+userDto.getBirth().getYear());
         }
 
         userRepository.findByUsername(userDto.getEmail())

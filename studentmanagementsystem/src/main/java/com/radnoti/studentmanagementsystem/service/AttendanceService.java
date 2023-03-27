@@ -1,5 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
@@ -53,7 +54,7 @@ public class AttendanceService {
      * and creates an attendance record with the current date and time. The method also checks if there is an
      * existing attendance record for the student on the same day, and if so, updates it with the leaving time.
      *
-     * @param studentIdString a string representing the ID of the student
+     * @param cardHash ........
      * @return a ResponseDto object containing the ID of the created or updated attendance record
      * @throws InvalidIdException  if the provided student id is invalid eg: if the id contains a string
      * @throws StudentNotExistException  if the student with the given ID does not exist in the database
@@ -67,8 +68,12 @@ public class AttendanceService {
 
         Card card = cardRepository.findByHash(cardHash)
                 .orElseThrow(CardNotExistException::new);
-        System.err.println(card.getId());
-        Pageable pageable = PageRequest.of(0, 1);
+
+        if(card.getIsDeleted()){
+            throw new CardAlreadyDeletedException();
+        }
+
+
 
         Student student = studentRepository.findById(card.getLastAssignedTo())
                 .orElseThrow(StudentNotExistException::new);
@@ -80,6 +85,8 @@ public class AttendanceService {
         if (!student.getUserId().getIsActivated()) {
             throw new UserNotActivatedException();
         }
+
+        Pageable pageable = PageRequest.of(0, 1);
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
