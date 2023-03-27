@@ -12,6 +12,7 @@ import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistExce
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
@@ -21,6 +22,8 @@ import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -198,6 +201,18 @@ public class CardService {
 
         return new ResponseDto(student.getCardId().getId());
     }
+
+    @Transactional
+    public PagingDto getAllCard(Pageable pageable) {
+        Page<Card> cardPage = cardRepository.findAll(pageable);
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setAllPages(cardPage.getTotalPages());
+        pagingDto.setCardDtoList(cardPage.stream().map(cardMapper::fromEntityToDto).toList());
+
+        return pagingDto;
+    }
+
+
 
 
 }
