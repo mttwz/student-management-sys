@@ -37,5 +37,6 @@ public class UserDto {
     private Boolean isDeleted;
     private ZonedDateTime deletedAt;
     private String jwt;
+    private String resetCode;
 
 }

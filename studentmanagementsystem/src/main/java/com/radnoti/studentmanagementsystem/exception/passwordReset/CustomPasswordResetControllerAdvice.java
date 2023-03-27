@@ -39,6 +39,12 @@ public class CustomPasswordResetControllerAdvice {
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "PWR_002_ERR"), status);
     }
 
+    @ExceptionHandler(ResetCodeInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleException(ResetCodeInvalidException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "PWR_003_ERR"), status);
+    }
+
 
 
 }

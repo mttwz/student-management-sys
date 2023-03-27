@@ -17,4 +17,6 @@ public interface PasswordResetRepository  extends CrudRepository<Passwordreset, 
             "order by pwr.expireDate desc")
     List<Passwordreset> getLastValidResetCode(Integer userId, Pageable pageable);
 
+
+
 }

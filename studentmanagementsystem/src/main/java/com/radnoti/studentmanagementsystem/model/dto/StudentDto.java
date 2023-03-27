@@ -24,8 +24,6 @@ public class StudentDto {
 
     private Integer id;
 
-    private Collection<AttendanceDto> attendanceCollection;
-
     private Integer cardId;
 
     private Integer userId;

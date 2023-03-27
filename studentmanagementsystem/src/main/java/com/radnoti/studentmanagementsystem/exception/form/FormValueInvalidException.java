@@ -1,7 +1,7 @@
 package com.radnoti.studentmanagementsystem.exception.form;
 
-public class InvalidFormValueException extends RuntimeException{
-    public InvalidFormValueException() {
+public class FormValueInvalidException extends RuntimeException{
+    public FormValueInvalidException() {
         super("One or more values are invalid");
     }
 }

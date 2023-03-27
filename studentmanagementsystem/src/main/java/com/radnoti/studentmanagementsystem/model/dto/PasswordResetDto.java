@@ -28,6 +28,4 @@ public class PasswordResetDto {
 
     private boolean isUsed;
 
-    private UserDto userDto;
-
 }

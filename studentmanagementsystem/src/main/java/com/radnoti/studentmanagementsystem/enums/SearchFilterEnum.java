@@ -3,6 +3,7 @@ package com.radnoti.studentmanagementsystem.enums;
 public enum SearchFilterEnum {
 
     ALL_USERS(1, SearchFilterEnum.Types.ALL_USERS),
+
     SUPERADMIN(2, SearchFilterEnum.Types.SUPERADMIN),
     STUDENT(3, SearchFilterEnum.Types.STUDENT),
     ADMIN(4, SearchFilterEnum.Types.ADMIN),
