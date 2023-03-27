@@ -34,13 +34,13 @@ public class CustomStudentControllerAdvice {
     @ExceptionHandler(StudentNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(StudentNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "STUD-001-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "STUD_001_ERR"), status);
     }
 
     @ExceptionHandler(StudentNotSavedException.class)
     public ResponseEntity<ErrorResponse> handleException(StudentNotSavedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "STUD-002-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "STUD_002_ERR"), status);
     }
 
 }

@@ -32,6 +32,7 @@ public class PasswordResetService {
 
     @Transactional
     public void resetPassword(String userName){
+        // TODO: 2023. 03. 26. ez meg nemjo 
         Integer userId = userRepository.findByUsername(userName)
                 .orElseThrow(UserNotExistException::new)
                 .getId();
@@ -53,6 +54,7 @@ public class PasswordResetService {
         passwordreset.setExpireDate(currDate.plusHours(ACTIVATION_CODE_VALID_IN_HOURS));
         passwordreset.setIsUsed(false);
         passwordResetRepository.save(passwordreset);
+        
 
     }
 }

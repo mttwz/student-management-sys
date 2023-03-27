@@ -1,6 +1,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
+import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
 import com.radnoti.studentmanagementsystem.exception.user.InvalidCredentialsException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
@@ -45,6 +46,12 @@ public class AuthService {
 
     @Transactional
     public UserLoginDto login(UserDto userDto) throws NoSuchAlgorithmException {
+        if (userDto.getEmail() == null ||
+                userDto.getPassword() == null ||
+                userDto.getEmail().isBlank() ||
+                userDto.getPassword().isBlank()){
+            throw new InvalidFormValueException();
+        }
         String password = hashUtil.getSHA256Hash(userDto.getPassword());
 
         User user = userRepository.login(userDto.getEmail(), password)

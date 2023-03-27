@@ -13,15 +13,16 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/attendance")
-@CrossOrigin(origins = "http://localhost:4200/")
 @RequiredArgsConstructor
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
-    @PostMapping(path = "/log-student/{studentId}")
-    public ResponseDto logStudent(@PathVariable String studentId){
-        return attendanceService.logStudent(studentId);
+    @PostMapping(path = "/log-student", consumes = {"text/plain"})
+    public ResponseDto logStudent(@RequestBody String cardHash){
+        return attendanceService.logStudent(cardHash);
     }
+
+
 
 
 }

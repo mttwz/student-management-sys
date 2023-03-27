@@ -20,4 +20,8 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     @Query("select s.cardId from Student s " +
             "where s.userId.id = :userId")
     Optional<Card> getCardByUserId(Integer userId);
+
+    @Query("select c from Card c " +
+            "where c.hash = :hash")
+    Optional<Card> findByHash(String hash);
 }

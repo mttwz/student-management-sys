@@ -30,55 +30,55 @@ public class CustomUserControllerAdvice {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleException(InvalidCredentialsException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-001-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_001_ERR"), status);
     }
 
     @ExceptionHandler(UserAlreadyActivatedException.class)
     public ResponseEntity<ErrorResponse> handleException(UserAlreadyActivatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-002-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_002_ERR"), status);
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleException(UserAlreadyExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-003-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_003_ERR"), status);
     }
 
     @ExceptionHandler(UserDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(UserDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-004-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_004_ERR"), status);
     }
 
     @ExceptionHandler(UserNotActivatedException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotActivatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-005-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_005_ERR"), status);
     }
 
     @ExceptionHandler(UserNotDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-006-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_006_ERR"), status);
     }
 
     @ExceptionHandler(UserNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-007-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_007_ERR"), status);
     }
 
     @ExceptionHandler(UserNotSavedException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotSavedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-008-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_008_ERR"), status);
     }
 
     @ExceptionHandler(UserAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(UserAlreadyDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER-009-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "USER_009_ERR"), status);
     }
 
 

@@ -1,5 +1,6 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
@@ -9,8 +10,10 @@ import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedExcept
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
+import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
+import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
@@ -41,6 +44,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
 
     private final IdValidatorUtil idValidatorUtil;
+    private final CardRepository cardRepository;
 
 
     /**
@@ -57,12 +61,16 @@ public class AttendanceService {
      * @throws UserNotActivatedException if the student's user account has not been activated
      */
     @Transactional
-    public ResponseDto logStudent(String studentIdString) {
-        Integer studentId = idValidatorUtil.idValidator(studentIdString);
+    public ResponseDto logStudent(String cardHash) {
 
+        System.err.println(cardHash);
+
+        Card card = cardRepository.findByHash(cardHash)
+                .orElseThrow(CardNotExistException::new);
+        System.err.println(card.getId());
         Pageable pageable = PageRequest.of(0, 1);
 
-        Student student = studentRepository.findById(studentId)
+        Student student = studentRepository.findById(card.getLastAssignedTo())
                 .orElseThrow(StudentNotExistException::new);
 
         if (student.getUserId().getIsDeleted()) {
@@ -75,8 +83,7 @@ public class AttendanceService {
 
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
-        List<Attendance> lastAttendanceList = attendanceRepository.getLastAttendanceByStudentId(studentId, pageable);
-
+        List<Attendance> lastAttendanceList = attendanceRepository.getLastAttendanceByStudentId(student.getId(), pageable);
         if (!lastAttendanceList.isEmpty()) {
             Attendance lastAttendance = lastAttendanceList.get(0);
             ZonedDateTime lastArrival = lastAttendance.getArrival();
@@ -84,6 +91,7 @@ public class AttendanceService {
             if (lastLeaving == null && isSameDay(currDate, lastArrival)) {
                 lastAttendance.setLeaving(currDate);
                 attendanceRepository.save(lastAttendance);
+                System.err.println(cardHash);
                 return new ResponseDto(lastAttendance.getId());
             }
         }
@@ -92,6 +100,7 @@ public class AttendanceService {
         newAttendance.setArrival(currDate);
         newAttendance.setStudentId(student);
         attendanceRepository.save(newAttendance);
+        System.err.println(cardHash);
         return new ResponseDto(newAttendance.getId());
 
     }
