@@ -65,7 +65,7 @@ public class CardService {
     /**
      * This method sets the deleted flag of the card in the database based on the provided id.
      * The method checks the card existence and the deleted status.
-     * If the card assigned to a student then removes the connection
+     * If the card assigned to a student then removes the connection.
      *
      * @param cardIdString a string representing the ID of the card
      * @throws InvalidIdException  if the provided card's id is invalid eg: if the id contains a string

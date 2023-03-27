@@ -22,8 +22,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(path = "/login", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<UserLoginDto> login(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
-        return ResponseEntity.ok(authService.login(userDto));
+    public UserLoginDto login(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
+        return authService.login(userDto);
     }
 
     @PostMapping(path = "/validate-jwt", consumes = {"application/json"}, produces = {"application/json"})

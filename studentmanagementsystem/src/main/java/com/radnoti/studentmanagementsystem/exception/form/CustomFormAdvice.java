@@ -32,24 +32,24 @@ public class CustomFormAdvice {
     @ExceptionHandler(EmptyFormValueException.class)
     public ResponseEntity<ErrorResponse> handleException(EmptyFormValueException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM-001-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_001_ERR"), status);
     }
 
     @ExceptionHandler(InvalidIdException.class)
     public ResponseEntity<ErrorResponse> handleException(InvalidIdException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM-002-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_002_ERR"), status);
     }
 
     @ExceptionHandler(NullFormValueException.class)
     public ResponseEntity<ErrorResponse> handleException(NullFormValueException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM-003-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_003_ERR"), status);
     }
 
     @ExceptionHandler(InvalidFormValueException.class)
     public ResponseEntity<ErrorResponse> handleException(InvalidFormValueException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM-004-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_004_ERR"), status);
     }
 }

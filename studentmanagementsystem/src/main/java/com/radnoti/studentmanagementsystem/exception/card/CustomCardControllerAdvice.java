@@ -31,42 +31,42 @@ public class CustomCardControllerAdvice {
     @ExceptionHandler(CardNotCreatedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotCreatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-001-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_001_ERR"), status);
     }
 
     @ExceptionHandler(CardNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-002-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_002_ERR"), status);
     }
 
     @ExceptionHandler(CardNotAssignedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotAssignedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-003-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_003_ERR"), status);
     }
 
     @ExceptionHandler(CardAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardAlreadyDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-004-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_004_ERR"), status);
     }
 
     @ExceptionHandler(CardAlreadyAssignedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardAlreadyAssignedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-005-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_005_ERR"), status);
     }
 
     @ExceptionHandler(CardNotDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(CardNotDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-006-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_006_ERR"), status);
     }
 
     @ExceptionHandler(AnotherCardAlreadyAssignedException.class)
     public ResponseEntity<ErrorResponse> handleException(AnotherCardAlreadyAssignedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD-006-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_006_ERR"), status);
     }
 }

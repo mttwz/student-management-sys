@@ -31,31 +31,31 @@ public class CustomWorkgroupControllerAdvice {
     @ExceptionHandler(UserNotAddedToWorkgroupException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotAddedToWorkgroupException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-001-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_001_ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupNotCreatedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupNotCreatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-002-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_002_ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-003-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_003_ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupAlreadyDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-004-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_004_ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupNotDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupNotDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG-005-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_005_ERR"), status);
     }
 
 }

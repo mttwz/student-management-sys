@@ -33,19 +33,19 @@ public class CustomWorkgroupScheduleControllerAdvice {
     @ExceptionHandler(WorkgroupScheduleNotCreatedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupScheduleNotCreatedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WGS-001-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WGS_001_ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupScheduleNotDeletedException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupScheduleNotDeletedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WGS-002-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WGS_002_ERR"), status);
     }
 
     @ExceptionHandler(WorkgroupScheduleNotExistException.class)
     public ResponseEntity<ErrorResponse> handleException(WorkgroupScheduleNotExistException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WGS-003-ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WGS_003_ERR"), status);
     }
 
 }
