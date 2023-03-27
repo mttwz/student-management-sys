@@ -5,6 +5,8 @@
 package com.radnoti.studentmanagementsystem.repository;
 
 import com.radnoti.studentmanagementsystem.model.entity.Card;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
@@ -24,4 +26,9 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     @Query("select c from Card c " +
             "where c.hash = :hash")
     Optional<Card> findByHash(String hash);
+
+
+    @Query("select c from Card c " +
+            "join User u on u.id = c.student.userId.id")
+    Page<Card> findAll(Pageable pageable);
 }

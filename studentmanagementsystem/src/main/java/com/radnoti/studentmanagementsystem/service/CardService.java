@@ -5,9 +5,9 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.*;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueNullException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
@@ -47,12 +47,12 @@ public class CardService {
      *
      * @param cardDto The DTO object representing the new card.
      * @return The ID of the newly created card.
-     * @throws InvalidFormValueException if the provided DTO object is null or its hash value is null or empty.
+     * @throws FormValueInvalidException if the provided DTO object is null or its hash value is null or empty.
      */
     @Transactional
     public ResponseDto createCard(CardDto cardDto) {
         if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
         Card card = cardMapper.fromDtoToEntity(cardDto);
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
@@ -118,14 +118,14 @@ public class CardService {
      * Connects a card to a student in the database based on the provided DTO object.
      *
      * @param studentDto The DTO object containing the student's id and the card's id.
-     * @throws InvalidFormValueException if the provided ID or card ID value is null.
+     * @throws FormValueInvalidException if the provided ID or card ID value is null.
      * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
      * @throws CardNotExistException if the card with the provided card ID does not exist in the database.
      */
     @Transactional
     public void assignCardToStudent(StudentDto studentDto) {
         if (studentDto.getId() == null || studentDto.getCardId() == null) {
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
 
         Student student = studentRepository.findById(studentDto.getId())
@@ -156,7 +156,7 @@ public class CardService {
      *
      * @param userIdString User id as String.
      * @return The ID of the card assigned to the user.
-     * @throws NullFormValueException if the provided ID value is null.
+     * @throws FormValueNullException if the provided ID value is null.
      * @throws UserNotExistException if the user with the provided ID does not exist in the database.
      * @throws CardNotAssignedException if the user with the provided ID does not have a card assigned to them.
      */
@@ -181,7 +181,7 @@ public class CardService {
      *
      * @param studentIdString User id as String.
      * @return The ID of the card assigned to the student.
-     * @throws NullFormValueException if the provided ID value is null.
+     * @throws FormValueNullException if the provided ID value is null.
      * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
      * @throws CardNotAssignedException if the student with the provided ID does not have a card assigned to them.
      */

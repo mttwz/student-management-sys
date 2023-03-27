@@ -25,12 +25,10 @@ public class CardController {
         cardService.assignCardToStudent(studentDto);
     }
 
-
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/create-card", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseDto createCard(@RequestBody CardDto cardDto) {
         return cardService.createCard(cardDto);
-
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})

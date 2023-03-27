@@ -3,37 +3,26 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
-import com.radnoti.studentmanagementsystem.exception.user.InvalidCredentialsException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
-import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
-import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 
-import java.security.NoSuchAlgorithmException;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

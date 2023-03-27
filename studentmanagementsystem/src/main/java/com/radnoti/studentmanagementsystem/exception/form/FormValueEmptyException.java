@@ -1,7 +1,7 @@
 package com.radnoti.studentmanagementsystem.exception.form;
 
-public class EmptyFormValueException extends RuntimeException{
-    public EmptyFormValueException() {
+public class FormValueEmptyException extends RuntimeException{
+    public FormValueEmptyException() {
         super("One of the fields is empty");
     }
 }

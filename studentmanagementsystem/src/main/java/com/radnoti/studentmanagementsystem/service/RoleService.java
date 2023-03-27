@@ -1,10 +1,9 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
-import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.repository.RoleRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class RoleService {
     @Transactional
     public void setUserRole(UserDto userDto) {
         if (userDto.getId() == null || userDto.getRoleName() == null || userDto.getRoleName().isBlank()){
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
         userRepository.findById(userDto.getId())
                 .orElseThrow(UserNotExistException::new);
