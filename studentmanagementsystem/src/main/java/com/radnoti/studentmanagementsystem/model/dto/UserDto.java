@@ -38,4 +38,6 @@ public class UserDto {
     private ZonedDateTime deletedAt;
     private String jwt;
 
+    private String resetCode;
+
 }
