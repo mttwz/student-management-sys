@@ -22,9 +22,8 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class WorkgroupDto implements Serializable {
+public class WorkgroupDto{
 
-    private static final long serialVersionUID = 1L;
 
     private Integer id;
 

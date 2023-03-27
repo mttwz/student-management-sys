@@ -27,6 +27,4 @@ public class AttendanceDto {
 
     private ZonedDateTime leaving;
 
-    private StudentDto studentId;
-
 }

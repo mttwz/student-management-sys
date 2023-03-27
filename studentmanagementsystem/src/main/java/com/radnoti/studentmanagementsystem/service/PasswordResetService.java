@@ -113,11 +113,6 @@ public class PasswordResetService {
         if (passwordresetList.get(0).getExpireDate().isBefore(currDate)){
             throw new ResetCodeExpiredException();
         }
-
-
-
-
-
         return passwordresetList.get(0);
 
     }

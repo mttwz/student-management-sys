@@ -6,6 +6,8 @@ import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
+import com.radnoti.studentmanagementsystem.mapper.AttendanceMapper;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
@@ -15,6 +17,7 @@ import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -35,6 +38,7 @@ public class AttendanceService {
 
     private final IdValidatorUtil idValidatorUtil;
     private final CardRepository cardRepository;
+    private final AttendanceMapper attendanceMapper;
 
 
     /**
@@ -100,14 +104,30 @@ public class AttendanceService {
         return new ResponseDto(newAttendance.getId());
 
     }
+    @Transactional
+    public PagingDto getAttendanceByUserId(String userIdString,Pageable pageable){
+        Integer userId = idValidatorUtil.idValidator(userIdString);
+        Page<Attendance> attendancePage = attendanceRepository.getAttendanceByUserId(userId,pageable);
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setAllPages(attendancePage.getTotalPages());
+        pagingDto.setAttendanceDtoList(attendancePage.stream().map(attendanceMapper::fromEntityToDto).toList());
 
-    /**
-     *
-     *
-     * @param date1
-     * @param date2
-     * @return
-     */
+        return pagingDto;
+
+    }
+    @Transactional
+    public PagingDto getAttendanceByStudentId(String studentIdString,Pageable pageable){
+        Integer studentId = idValidatorUtil.idValidator(studentIdString);
+        Page<Attendance> attendancePage = attendanceRepository.getAttendanceByStudentId(studentId,pageable);
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setAllPages(attendancePage.getTotalPages());
+        pagingDto.setAttendanceDtoList(attendancePage.stream().map(attendanceMapper::fromEntityToDto).toList());
+
+        return pagingDto;
+
+    }
+
+
 
     public static boolean isSameDay(ZonedDateTime date1, ZonedDateTime date2) {
         LocalDate localDate1 = date1.toInstant()
