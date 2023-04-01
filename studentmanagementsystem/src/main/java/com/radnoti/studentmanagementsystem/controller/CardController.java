@@ -26,10 +26,10 @@ public class CardController {
     }
 
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/create-card", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseDto createCard(@RequestBody CardDto cardDto) {
-        return cardService.createCard(cardDto);
+
+    @PostMapping(path = "/create-card", consumes = {"text/plain"}, produces = {"application/json"})
+    public ResponseDto createCard(@RequestBody String cardHash) {
+        return cardService.createCard(cardHash);
 
     }
 

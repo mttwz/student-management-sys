@@ -61,7 +61,7 @@ public class CardServiceTest {
         when(cardMapper.fromDtoToEntity(any())).thenReturn(card);
 
         // Act
-        Integer cardId = cardService.createCard(cardDto).getId();
+        Integer cardId = cardService.createCard("valid-hash").getId();
 
         // Assert
         assertNotNull(cardId);
@@ -73,7 +73,7 @@ public class CardServiceTest {
         CardDto cardDto = null;
 
         // Act and Assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+        assertThrows(InvalidFormValueException.class, () -> cardService.createCard("valid-hash"));
         verifyNoInteractions(cardRepository);
     }
 
@@ -84,7 +84,7 @@ public class CardServiceTest {
         cardDto.setHash(null);
 
         // Act and Assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+        assertThrows(InvalidFormValueException.class, () -> cardService.createCard("valid-hash"));
         verifyNoInteractions(cardRepository);
     }
 
@@ -95,7 +95,7 @@ public class CardServiceTest {
         cardDto.setHash("");
 
         // Act and Assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard(cardDto));
+        assertThrows(InvalidFormValueException.class, () -> cardService.createCard("valid-hash"));
         verifyNoInteractions(cardRepository);
     }
 

@@ -50,14 +50,22 @@ public class CardService {
      * @throws InvalidFormValueException if the provided DTO object is null or its hash value is null or empty.
      */
     @Transactional
-    public ResponseDto createCard(CardDto cardDto) {
-        if (cardDto == null || cardDto.getHash() == null || cardDto.getHash().trim().isEmpty()) {
+    public ResponseDto createCard(String cardHash) {
+        if (cardHash == null || cardHash.isEmpty()) {
             throw new InvalidFormValueException();
         }
-        Card card = cardMapper.fromDtoToEntity(cardDto);
+        Optional<Card> optionalCard = cardRepository.findByHash(cardHash);
+        if(optionalCard.isPresent()){
+            throw new CardAlreadyAssignedException();
+        }
+
+
+        Card card = new Card();
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
+        card.setHash(cardHash);
         card.setCreatedAt(currDate);
         card.setIsDeleted(false);
+        card.setIsAssigned(false);
         cardRepository.save(card);
         return new ResponseDto(card.getId());
     }
