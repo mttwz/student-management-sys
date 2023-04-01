@@ -16,6 +16,7 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
+import com.radnoti.studentmanagementsystem.util.DateUtil;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,8 @@ public class WorkgroupScheduleService {
     private final JwtUtil jwtUtil;
 
     private final IdValidatorUtil idValidatorUtil;
+    private final DateUtil dateUtil;
+
 
 
     @Transactional
@@ -100,8 +103,8 @@ public class WorkgroupScheduleService {
 
         workgroupschedule.setName(workgroupscheduleDto.getName());
         workgroupschedule.setWorkgroupId(new Workgroup(workgroupscheduleDto.getWorkgroupId()));
-        workgroupschedule.setStart(workgroupscheduleDto.getStart());
-        workgroupschedule.setEnd(workgroupscheduleDto.getEnd());
+        workgroupschedule.setStart(dateUtil.dateConverter(workgroupscheduleDto.getStart()));
+        workgroupschedule.setEnd(dateUtil.dateConverter(workgroupscheduleDto.getEnd()));
         workgroupschedule.setIsOnsite(workgroupschedule.getIsOnsite());
         workgroupschedule.setIsDeleted(false);
 

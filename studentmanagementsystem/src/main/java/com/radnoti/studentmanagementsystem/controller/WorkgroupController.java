@@ -50,7 +50,7 @@ public class WorkgroupController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @GetMapping(path = "/get-all-workgroups")
-    public PagingDto addUserToWorkgroup(Pageable pageable) {
+    public PagingDto getAllWorkgroups(Pageable pageable) {
         return workgroupService.getAllWorkgroup(pageable);
     }
 
