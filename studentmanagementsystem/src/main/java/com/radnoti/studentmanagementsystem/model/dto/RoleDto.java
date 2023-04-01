@@ -23,6 +23,4 @@ public class RoleDto {
 
     private String roleType;
 
-    private Collection<UserDto> userCollection;
-
 }

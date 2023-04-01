@@ -2,19 +2,9 @@
 --changeset myname:create-multiple-tables splitStatements:true endDelimiter:;
 
 CREATE TABLE `Attendance` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `student_id` int(11) DEFAULT NULL,
   `arrival` datetime DEFAULT NULL,
-  `leaving` datetime DEFAULT NULL
+  `leaving` datetime DEFAULT NULL,
+  CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `Student` (`id`)
 );
-
-ALTER TABLE `Attendance`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `student_id` (`student_id`);
-
-ALTER TABLE `Attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-
-ALTER TABLE `Attendance`
-  ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `Student` (`id`);

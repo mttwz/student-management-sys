@@ -7,40 +7,24 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
-import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
-import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
-import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
-import com.radnoti.studentmanagementsystem.mapper.UserMapper;
-import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
-import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
-import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
+import com.radnoti.studentmanagementsystem.mapper.*;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
-import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository;
-import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
-import com.radnoti.studentmanagementsystem.repository.WorkgroupscheduleRepository;
+import com.radnoti.studentmanagementsystem.repository.*;
 import com.radnoti.studentmanagementsystem.security.HashUtil;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
-import com.radnoti.studentmanagementsystem.repository.UserRepository;
 
 import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.*;
 
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,30 +37,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private static final int ACTIVATION_CODE_LENGTH = 8;
-
     private final UserRepository userRepository;
-
-    private final WorkgroupscheduleRepository workgroupscheduleRepository;
-
-    private final WorkgroupMembersRepository workgroupMembersRepository;
-
     private final WorkgroupRepository workgroupRepository;
-
-
     private final HashUtil hashUtil;
-
     private final UserMapper userMapper;
-
+    private final CardMapper cardMapper;
     private final IdValidatorUtil idValidatorUtil;
-
-    private final WorkgroupScheduleMapper workgroupScheduleMapper;
-    private final WorkgroupMembersMapper workgroupMembersMapper;
     private final WorkgroupMapper workgroupMapper;
+    private final CardRepository cardRepository;
 
 
     /**
      * Creates a new user based on the given UserDto object and saves it to the database.
-     * The method first checks if all required fields are present in the UserDto object, and if not, it throws an InvalidFormValueException.
+     * The method first checks if all required fields are present in the UserDto object, and if not, it throws an FormValueInvalidException.
      * It then checks if a user with the same email already exists in the database, and if so, it throws a UserAlreadyExistException.
      * The method sets the user's password to a hash value generated using the SHA-256 algorithm.
      * It also sets an activation code for the user, which is a randomly generated string of length ACTIVATION_CODE_LENGTH.
@@ -86,7 +59,7 @@ public class UserService {
      *
      * @param userDto a Dto object containing the user's information
      * @return the ID of the created user
-     * @throws InvalidFormValueException if a required field is missing or empty in the UserDto object
+     * @throws FormValueInvalidException if a required field is missing or empty in the UserDto object
      * @throws UserAlreadyExistException if a user with the same email already exists in the database
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not available in the environment
      */
@@ -99,15 +72,17 @@ public class UserService {
                 userDto.getPhone() == null||
                 userDto.getBirth() == null ||
                 userDto.getEmail() == null ||
-                userDto.getPassword() == null ||
                 userDto.getRoleName().isBlank() ||
                 userDto.getFirstName().isBlank() ||
                 userDto.getLastName().isBlank() ||
                 userDto.getPhone().isBlank() ||
                 userDto.getBirth().toString().isBlank() ||
-                userDto.getEmail().isBlank() ||
-                userDto.getPassword().isBlank())) {
-            throw new InvalidFormValueException();
+                userDto.getEmail().isBlank())) {
+            throw new FormValueInvalidException();
+        }
+
+        if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
+            userDto.setPassword(userDto.getFirstName()+userDto.getBirth().getYear());
         }
 
         userRepository.findByUsername(userDto.getEmail())
@@ -152,18 +127,25 @@ public class UserService {
      *
      */
     @Transactional
-    public void setUserIsActivated(String userIdString) {
-        Integer userId = idValidatorUtil.idValidator(userIdString);
+    public void setUserIsActivated(UserDto userDto) throws NoSuchAlgorithmException {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(UserNotExistException::new);
-        if (Boolean.TRUE.equals(user.getIsDeleted())){
+        User userByCode = userRepository.findByActivationCode(userDto.getActivationCode())
+                .orElseThrow(UserNotActivatedException::new);
+
+        if (!Objects.equals(userByCode.getPassword(), hashUtil.getSHA256Hash(userDto.getPassword()))){
+            throw new UserNotActivatedException();
+        }
+
+        if (Boolean.TRUE.equals(userByCode.getIsDeleted())){
             throw new UserAlreadyDeletedException();
         }
-        if (Boolean.TRUE.equals(user.getIsActivated())){
+        if (Boolean.TRUE.equals(userByCode.getIsActivated())){
             throw new UserAlreadyActivatedException();
         }
-        user.setIsActivated(true);
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
+        userByCode.setActivatedAt(currDate);
+
+        userByCode.setIsActivated(true);
     }
 
 
@@ -199,8 +181,6 @@ public class UserService {
         user.setDeletedAt(null);
 
     }
-
-
 
     @Transactional
     public List<UserInfoDto> getAllUser() {
@@ -257,6 +237,7 @@ public class UserService {
 
         Page<User> userPage;
         Page<Workgroup> workgroupPage;
+        Page<Card> cardPage;
         Integer totalPages = null;
         PagingDto pagingDto = new PagingDto();
 
@@ -290,7 +271,6 @@ public class UserService {
             totalPages = userPage.getTotalPages();
             pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
         }
-
 
 
         pagingDto.setAllPages(totalPages);

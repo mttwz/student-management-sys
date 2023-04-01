@@ -87,24 +87,24 @@ public class JwtUtil {
 
 
 
-    public String getRoleFromJwt(String token) {
-        String cleanToken = token.split(" ")[1];
+    public String getRoleFromJwt(String header) {
+        String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
         return data.getString("role");
 
     }
 
-    public Integer getIdFromJwt(String token) {
-        String cleanToken = token.split(" ")[1];
+    public Integer getIdFromJwt(String header) {
+        String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
         return data.getInt("id");
 
     }
 
-    public String getEmailFromJwt(String token) {
-        String cleanToken = token.split(" ")[1];
+    public String getEmailFromJwt(String header) {
+        String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
         return data.getString("email");

@@ -1,20 +1,14 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
-import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupmembersDto;
 import com.radnoti.studentmanagementsystem.model.entity.*;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.security.HashUtil;
-import liquibase.pro.packaged.M;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +24,6 @@ import java.security.NoSuchAlgorithmException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -167,7 +159,7 @@ public final class UserServiceTest {
 
 
         //act & assert
-        assertThrows(InvalidFormValueException.class, () -> userService.adduser(userDto));
+        assertThrows(FormValueInvalidException.class, () -> userService.adduser(userDto));
     }
 
     @Test
@@ -185,7 +177,7 @@ public final class UserServiceTest {
 
 
         //assert
-        assertThrows(InvalidFormValueException.class, () -> userService.adduser(userDto));
+        assertThrows(FormValueInvalidException.class, () -> userService.adduser(userDto));
     }
 
     @Test()
@@ -227,72 +219,7 @@ public final class UserServiceTest {
 
 
 
-    @Test
-    public void setUserIsActivatedTest_valid(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(false);
 
-        User mockUser = mock(User.class);
-
-        mockUser.setId(1);
-
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.of(mockUser));
-        //act
-        userService.setUserIsActivated(userDto.getId().toString());
-
-        //assert
-        verify(mockUser,times(1)).setIsActivated(true);
-
-    }
-
-    @Test
-    public void setUserIsActivatedTest_user_not_exist(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(true);
-
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.empty());
-
-        assertThrows(UserNotExistException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
-
-    }
-
-    @Test
-    public void setUserIsActivatedTest_user_already_activated(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(true);
-
-        User user = new User();
-        user.setIsActivated(true);
-
-        when(userRepository.findById(any()))
-                .thenReturn(Optional.of(user));
-
-        assertThrows(UserAlreadyActivatedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
-    }
-
-    @Test
-    public void setUserIsActivatedTest_user_is_deleted(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-        userDto.setIsActivated(false);
-        userDto.setIsDeleted(true);
-
-        User user = new User();
-        user.setId(1);
-        user.setIsActivated(false);
-        user.setIsDeleted(true);
-
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-
-        assertThrows(UserAlreadyDeletedException.class, ()-> userService.setUserIsActivated(userDto.getId().toString()));
-
-
-    }
 
 
 

@@ -5,8 +5,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
@@ -39,6 +38,11 @@ public class StudentService {
     @Transactional
     public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
+
+        if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
+            throw new FormValueInvalidException();
+        }
+
         ResponseDto savedUserIdResponse = userService.adduser(userDto);
 
         Student student = new Student();

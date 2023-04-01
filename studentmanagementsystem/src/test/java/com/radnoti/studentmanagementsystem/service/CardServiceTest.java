@@ -3,7 +3,7 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
@@ -135,7 +135,7 @@ public class CardServiceTest {
         studentDto.setCardId(2);
 
         // act and assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.assignCardToStudent(studentDto));
+        assertThrows(FormValueInvalidException.class, () -> cardService.assignCardToStudent(studentDto));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class CardServiceTest {
         studentDto.setCardId(null);
 
         // act and assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.assignCardToStudent(studentDto));
+        assertThrows(FormValueInvalidException.class, () -> cardService.assignCardToStudent(studentDto));
     }
 
     @Test

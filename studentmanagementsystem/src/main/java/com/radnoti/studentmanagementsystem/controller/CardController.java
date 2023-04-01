@@ -2,10 +2,12 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.service.CardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -55,6 +57,11 @@ public class CardController {
     @GetMapping(path = "/get-card-by-student-id/{studentId}")
     public ResponseDto getCardByStudentId(@PathVariable String studentId) {
         return cardService.getCardByStudentId(studentId);
+    }
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @GetMapping(path = "/get-all-card")
+    public PagingDto getAllCard(Pageable pageable) {
+        return cardService.getAllCard(pageable);
     }
 
 

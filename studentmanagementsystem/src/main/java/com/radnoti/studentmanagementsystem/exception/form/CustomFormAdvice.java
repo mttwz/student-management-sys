@@ -1,8 +1,6 @@
 package com.radnoti.studentmanagementsystem.exception.form;
 
 import com.radnoti.studentmanagementsystem.exception.ErrorResponse;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotCreatedException;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,8 +27,8 @@ public class CustomFormAdvice {
         stackTrace = stringWriter.toString();
     }
 
-    @ExceptionHandler(EmptyFormValueException.class)
-    public ResponseEntity<ErrorResponse> handleException(EmptyFormValueException e) {
+    @ExceptionHandler(FormValueEmptyException.class)
+    public ResponseEntity<ErrorResponse> handleException(FormValueEmptyException e) {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_001_ERR"), status);
     }
@@ -41,14 +39,14 @@ public class CustomFormAdvice {
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_002_ERR"), status);
     }
 
-    @ExceptionHandler(NullFormValueException.class)
-    public ResponseEntity<ErrorResponse> handleException(NullFormValueException e) {
+    @ExceptionHandler(FormValueNullException.class)
+    public ResponseEntity<ErrorResponse> handleException(FormValueNullException e) {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_003_ERR"), status);
     }
 
-    @ExceptionHandler(InvalidFormValueException.class)
-    public ResponseEntity<ErrorResponse> handleException(InvalidFormValueException e) {
+    @ExceptionHandler(FormValueInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleException(FormValueInvalidException e) {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_004_ERR"), status);
     }

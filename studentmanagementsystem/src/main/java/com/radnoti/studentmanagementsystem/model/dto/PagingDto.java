@@ -20,4 +20,6 @@ public class PagingDto{
     private List<UserInfoDto> userInfoDtoList;
     private List<WorkgroupscheduleDto> workgroupscheduleDtoList;
     private List<WorkgroupDto> workgroupDtoList;
+    private List<CardDto> cardDtoList;
+    private List<AttendanceDto> attendanceDtoList;
 }

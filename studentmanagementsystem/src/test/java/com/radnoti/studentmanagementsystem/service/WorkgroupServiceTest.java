@@ -1,9 +1,8 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
@@ -77,7 +76,7 @@ public class WorkgroupServiceTest {
         workgroup.setId(1);
         workgroup.setGroupName("testName");
 
-        assertThrows(InvalidFormValueException.class,()->workgroupService.createWorkgroup(workgroupDto));
+        assertThrows(FormValueInvalidException.class,()->workgroupService.createWorkgroup(workgroupDto));
     }
 
 
@@ -181,7 +180,7 @@ public class WorkgroupServiceTest {
 
         when(workgroupRepository.findById(any())).thenReturn(Optional.of(workgroup));
 
-        assertThrows(InvalidFormValueException.class, () -> workgroupService.deleteWorkgroup(workgroupId));
+        assertThrows(FormValueInvalidException.class, () -> workgroupService.deleteWorkgroup(workgroupId));
 
     }
 

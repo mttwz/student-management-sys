@@ -1,7 +1,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.InvalidCredentialsException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
@@ -13,15 +13,10 @@ import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.security.HashUtil;
 import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +45,7 @@ public class AuthService {
                 userDto.getPassword() == null ||
                 userDto.getEmail().isBlank() ||
                 userDto.getPassword().isBlank()){
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
         String password = hashUtil.getSHA256Hash(userDto.getPassword());
 

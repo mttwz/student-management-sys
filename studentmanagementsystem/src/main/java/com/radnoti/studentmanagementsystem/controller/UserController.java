@@ -5,6 +5,7 @@ import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,10 @@ public class UserController {
         return userService.adduser(userDto);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/set-user-is-activated/{userId}")
-    public void setUserIsActivated(@PathVariable String userId) {
-        userService.setUserIsActivated(userId);
+
+    @PostMapping(path = "/set-user-is-activated")
+    public void setUserIsActivated(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
+        userService.setUserIsActivated(userDto);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})

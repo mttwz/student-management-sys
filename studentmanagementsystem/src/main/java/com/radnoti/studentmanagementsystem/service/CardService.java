@@ -5,13 +5,14 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.*;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueNullException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
 import com.radnoti.studentmanagementsystem.model.dto.CardDto;
+import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
@@ -21,6 +22,8 @@ import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +50,7 @@ public class CardService {
      *
      * @param cardDto The DTO object representing the new card.
      * @return The ID of the newly created card.
-     * @throws InvalidFormValueException if the provided DTO object is null or its hash value is null or empty.
+     * @throws FormValueInvalidException if the provided DTO object is null or its hash value is null or empty.
      */
     @Transactional
     public ResponseDto createCard(String cardHash) {
@@ -126,14 +129,14 @@ public class CardService {
      * Connects a card to a student in the database based on the provided DTO object.
      *
      * @param studentDto The DTO object containing the student's id and the card's id.
-     * @throws InvalidFormValueException if the provided ID or card ID value is null.
+     * @throws FormValueInvalidException if the provided ID or card ID value is null.
      * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
      * @throws CardNotExistException if the card with the provided card ID does not exist in the database.
      */
     @Transactional
     public void assignCardToStudent(StudentDto studentDto) {
         if (studentDto.getId() == null || studentDto.getCardId() == null) {
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
 
         Student student = studentRepository.findById(studentDto.getId())
@@ -164,7 +167,7 @@ public class CardService {
      *
      * @param userIdString User id as String.
      * @return The ID of the card assigned to the user.
-     * @throws NullFormValueException if the provided ID value is null.
+     * @throws FormValueNullException if the provided ID value is null.
      * @throws UserNotExistException if the user with the provided ID does not exist in the database.
      * @throws CardNotAssignedException if the user with the provided ID does not have a card assigned to them.
      */
@@ -189,7 +192,7 @@ public class CardService {
      *
      * @param studentIdString User id as String.
      * @return The ID of the card assigned to the student.
-     * @throws NullFormValueException if the provided ID value is null.
+     * @throws FormValueNullException if the provided ID value is null.
      * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
      * @throws CardNotAssignedException if the student with the provided ID does not have a card assigned to them.
      */
@@ -206,6 +209,18 @@ public class CardService {
 
         return new ResponseDto(student.getCardId().getId());
     }
+
+    @Transactional
+    public PagingDto getAllCard(Pageable pageable) {
+        Page<Card> cardPage = cardRepository.findAll(pageable);
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setAllPages(cardPage.getTotalPages());
+        pagingDto.setCardDtoList(cardPage.stream().map(cardMapper::fromEntityToDto).toList());
+
+        return pagingDto;
+    }
+
+
 
 
 }

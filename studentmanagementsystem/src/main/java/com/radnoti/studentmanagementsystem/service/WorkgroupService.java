@@ -4,21 +4,15 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.exception.form.EmptyFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
-import com.radnoti.studentmanagementsystem.exception.form.NullFormValueException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
-import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.WorkgroupScheduleNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -26,13 +20,12 @@ import com.radnoti.studentmanagementsystem.repository.WorkgroupMembersRepository
 import com.radnoti.studentmanagementsystem.repository.WorkgroupRepository;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZonedDateTime;
-import java.util.*;
 
 /**
  * @author matevoros
@@ -55,12 +48,14 @@ public class WorkgroupService {
     @Transactional
     public ResponseDto createWorkgroup(WorkgroupDto workgroupDto) {
         if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
+
 
         Workgroup workgroup = workgroupMapper.fromDtoToEntity(workgroupDto);
         workgroup.setGroupName(workgroupDto.getGroupName());
         workgroup.setInstitution(workgroupDto.getInstitution());
+        workgroup.setIsDeleted(false);
 
         Workgroup savedWorkgroup =  workgroupRepository.save(workgroup);
 
@@ -126,6 +121,15 @@ public class WorkgroupService {
 
         return new ResponseDto( savedWorkgroupmembers.getId());
 
+    }
+
+    @Transactional
+    public PagingDto getAllWorkgroup(Pageable pageable) {
+        Page<Workgroup> workgroupPage=  workgroupRepository.getAllWorkgroup(pageable);
+        PagingDto pagingDto = new PagingDto();
+        pagingDto.setAllPages(workgroupPage.getTotalPages());
+        pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
+        return pagingDto;
     }
 
 //    @Transactional

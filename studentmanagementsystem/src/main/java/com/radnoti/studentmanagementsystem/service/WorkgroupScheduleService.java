@@ -1,8 +1,7 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidFormValueException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
@@ -10,9 +9,7 @@ import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.Workgroup
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
-import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
-import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -26,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -94,7 +90,7 @@ public class WorkgroupScheduleService {
                 workgroupscheduleDto.getEnd() == null ||
                 workgroupscheduleDto.getIsOnsite() == null ||
                 workgroupscheduleDto.getName().isEmpty()){
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
 
         workgroupRepository.findById(workgroupscheduleDto.getWorkgroupId())
