@@ -51,9 +51,11 @@ public class WorkgroupService {
             throw new FormValueInvalidException();
         }
 
+
         Workgroup workgroup = workgroupMapper.fromDtoToEntity(workgroupDto);
         workgroup.setGroupName(workgroupDto.getGroupName());
         workgroup.setInstitution(workgroupDto.getInstitution());
+        workgroup.setIsDeleted(false);
 
         Workgroup savedWorkgroup =  workgroupRepository.save(workgroup);
 
