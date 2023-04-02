@@ -6,23 +6,21 @@ package com.radnoti.studentmanagementsystem.model.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
-import java.security.PrivilegedAction;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
-/**
- *
- * @author matevoros
- */
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-@AllArgsConstructor
-public class WorkgroupscheduleDto{
+@Data
+public class UserScheduleInfoDto {
 
     private Integer id;
+
+    private Integer userId;
+
+    private ZonedDateTime date;
 
     private String name;
 
@@ -38,13 +36,13 @@ public class WorkgroupscheduleDto{
 
     private ZonedDateTime deletedAt;
 
+    private Boolean isStudentPresent;
+
+    private Long lateInMinutes = 0L;
 
 
 
-
-
-
-    //private Collection<WorkgroupDto> workgroupCollection;
-
-
+    public void updateLateInMinutes(Long lateInMinutes) {
+        this.lateInMinutes += lateInMinutes;
+    }
 }

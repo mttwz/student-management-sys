@@ -1,10 +1,7 @@
 package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
-import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
-import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
-import com.radnoti.studentmanagementsystem.model.dto.UserDto;
-import com.radnoti.studentmanagementsystem.model.dto.WorkgroupscheduleDto;
+import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +15,7 @@ import javax.annotation.security.RolesAllowed;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +56,12 @@ public class WorkgroupScheduleController {
     @PostMapping(path = "/restore-deleted-workgroup-schedule/{workgroupScheduleId}")
     public void restoreDeletedWorkgroupSchedule(@PathVariable String workgroupScheduleId) {
         workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupScheduleId);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @GetMapping(path = "/get-user-schedule")
+    public List<UserScheduleInfoDto> getUserSchedule(@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
+        return workgroupscheduleService.gerUserSchedule(userScheduleInfoDto,pageable);
     }
 
 }

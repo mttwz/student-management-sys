@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 
 public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupschedule, Integer> {
 
@@ -15,10 +17,18 @@ public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupsch
             "where ws.workgroupId.id = :workgroupId")
     Page<Workgroupschedule> getWorkgroupScheduleByWorkgroupId(Integer workgroupId, Pageable pageable);
 
-    @Query("select ws from Workgroupmembers wm " +
-            "join Workgroupschedule ws on wm.workgroupId.id = ws.workgroupId.id " +
+
+
+    @Query("select ws from Workgroupschedule ws " +
+            "join Workgroupmembers wm on wm.workgroupId.id = ws.workgroupId.id " +
             "join Workgroup w on wm.workgroupId.id = w.id " +
             "where wm.userId.id = :userId")
     Page<Workgroupschedule>getWorkgroupScheduleByUserId(Integer userId,Pageable pageable);
 
+    @Query("select ws from Workgroupschedule ws " +
+            "join Workgroupmembers wm on wm.workgroupId.id = ws.workgroupId.id " +
+            "join Workgroup w on wm.workgroupId.id = w.id " +
+            "where wm.userId.id = :userId " +
+            "and ws.start like concat(:dateStr,'%')")
+    Page<Workgroupschedule>getWorkgroupSchedulePerDayByUserId(Integer userId,String dateStr ,Pageable pageable);
 }

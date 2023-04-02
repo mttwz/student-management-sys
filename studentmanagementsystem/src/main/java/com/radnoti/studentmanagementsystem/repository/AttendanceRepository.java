@@ -24,4 +24,11 @@ public interface AttendanceRepository extends CrudRepository<Attendance, Integer
             "join User u on s.userId.id = u.id " +
             "where u.id = :userId")
     Page<Attendance> getAttendanceByUserId(Integer userId, Pageable pageable);
+
+    @Query("select a from Attendance a " +
+            "join Student s on s.id = a.studentId.id " +
+            "join User u on s.userId.id = u.id " +
+            "where u.id = :userId and " +
+            "a.arrival like concat(:dateStr,'%')")
+    List<Attendance> getAttendancePerDayByUserId(Integer userId,String dateStr);
 }

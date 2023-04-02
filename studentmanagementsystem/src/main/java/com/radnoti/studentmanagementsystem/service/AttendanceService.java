@@ -9,14 +9,17 @@ import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistExce
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
 import com.radnoti.studentmanagementsystem.mapper.AttendanceMapper;
+import com.radnoti.studentmanagementsystem.model.dto.AttendanceDto;
 import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
+import com.radnoti.studentmanagementsystem.model.dto.UserScheduleInfoDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
+import com.radnoti.studentmanagementsystem.util.DateUtil;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +47,7 @@ public class AttendanceService {
     private final IdValidatorUtil idValidatorUtil;
     private final CardRepository cardRepository;
     private final AttendanceMapper attendanceMapper;
+    private final DateUtil dateUtil;
 
 
     /**
@@ -98,7 +104,7 @@ public class AttendanceService {
             Attendance lastAttendance = lastAttendanceList.get(0);
             ZonedDateTime lastArrival = lastAttendance.getArrival();
             ZonedDateTime lastLeaving = lastAttendance.getLeaving();
-            if (lastLeaving == null && isSameDay(currDate, lastArrival)) {
+            if (lastLeaving == null && dateUtil.isSameDay(currDate, lastArrival)) {
                 lastAttendance.setLeaving(currDate);
                 attendanceRepository.save(lastAttendance);
                 System.err.println(cardHash);
@@ -138,14 +144,19 @@ public class AttendanceService {
     }
 
 
+    @Transactional
+    public List<AttendanceDto> getAttendancePerDayByUserId(UserScheduleInfoDto userScheduleInfoDto, Pageable pageable){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = userScheduleInfoDto.getDate().format(formatter);
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
+        attendanceRepository.getAttendancePerDayByUserId(userScheduleInfoDto.getUserId(), formattedDate).forEach(attendance -> {
+            attendanceDtoList.add(attendanceMapper.fromEntityToDto(attendance));
+        });
+        return attendanceDtoList;
 
-    public static boolean isSameDay(ZonedDateTime date1, ZonedDateTime date2) {
-        LocalDate localDate1 = date1.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        LocalDate localDate2 = date2.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        return localDate1.isEqual(localDate2);
     }
+
+
+
+
 }
