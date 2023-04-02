@@ -66,7 +66,6 @@ public class AuthServiceTest {
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
         when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.of(user));
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(userMapper.fromEntityToLoginDto(user)).thenReturn(new UserLoginDto());
         when(jwtUtil.generateJwt(user)).thenReturn("jwt_token");
 
@@ -86,7 +85,7 @@ public class AuthServiceTest {
         userDto.setPassword("password");
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
-        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(null);
+        when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(InvalidCredentialsException.class, () -> authService.login(userDto));
@@ -108,7 +107,6 @@ public class AuthServiceTest {
 
         when(hashUtil.getSHA256Hash(userDto.getPassword())).thenReturn("hashedpassword");
         when(userRepository.login(userDto.getEmail(), "hashedpassword")).thenReturn(Optional.of(user));
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         // Act & Assert
         assertThrows(UserNotActivatedException.class, () -> authService.login(userDto));

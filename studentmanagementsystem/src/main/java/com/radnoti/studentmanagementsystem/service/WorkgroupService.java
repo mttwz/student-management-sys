@@ -50,12 +50,14 @@ public class WorkgroupService {
         if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
             throw new FormValueInvalidException();
         }
+        ZonedDateTime currDate = java.time.ZonedDateTime.now();
 
 
         Workgroup workgroup = workgroupMapper.fromDtoToEntity(workgroupDto);
         workgroup.setGroupName(workgroupDto.getGroupName());
         workgroup.setInstitution(workgroupDto.getInstitution());
         workgroup.setIsDeleted(false);
+        workgroup.setCreatedAt(currDate);
 
         Workgroup savedWorkgroup =  workgroupRepository.save(workgroup);
 
