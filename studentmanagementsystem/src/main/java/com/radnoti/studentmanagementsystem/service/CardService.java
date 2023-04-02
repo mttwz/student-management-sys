@@ -55,13 +55,12 @@ public class CardService {
     @Transactional
     public ResponseDto createCard(String cardHash) {
         if (cardHash == null || cardHash.isEmpty()) {
-            throw new InvalidFormValueException();
+            throw new FormValueInvalidException();
         }
         Optional<Card> optionalCard = cardRepository.findByHash(cardHash);
         if(optionalCard.isPresent()){
             throw new CardAlreadyAssignedException();
         }
-
 
         Card card = new Card();
         ZonedDateTime currDate = java.time.ZonedDateTime.now();

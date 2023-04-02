@@ -73,7 +73,7 @@ public class CardServiceTest {
         CardDto cardDto = null;
 
         // Act and Assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard("valid-hash"));
+        assertThrows(FormValueInvalidException.class, () -> cardService.createCard("valid-hash"));
         verifyNoInteractions(cardRepository);
     }
 
@@ -84,7 +84,7 @@ public class CardServiceTest {
         cardDto.setHash(null);
 
         // Act and Assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard("valid-hash"));
+        assertThrows(FormValueInvalidException.class, () -> cardService.createCard("valid-hash"));
         verifyNoInteractions(cardRepository);
     }
 
@@ -95,7 +95,7 @@ public class CardServiceTest {
         cardDto.setHash("");
 
         // Act and Assert
-        assertThrows(InvalidFormValueException.class, () -> cardService.createCard("valid-hash"));
+        assertThrows(FormValueInvalidException.class, () -> cardService.createCard("valid-hash"));
         verifyNoInteractions(cardRepository);
     }
 

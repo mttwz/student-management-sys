@@ -69,4 +69,10 @@ public class CustomCardControllerAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_006_ERR"), status);
     }
+
+    @ExceptionHandler(CardMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleException(CardMismatchException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_007_ERR"), status);
+    }
 }

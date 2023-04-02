@@ -1,6 +1,8 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
+import com.radnoti.studentmanagementsystem.exception.card.CardMismatchException;
+import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -55,7 +58,7 @@ public class AttendanceService {
      * @throws UserNotActivatedException if the student's user account has not been activated
      */
     @Transactional
-    public ResponseDto logStudent(String cardHash) {
+    public ResponseDto logStudent(String cardHash){
 
         System.err.println(cardHash);
 
@@ -65,11 +68,18 @@ public class AttendanceService {
         if(card.getIsDeleted()){
             throw new CardAlreadyDeletedException();
         }
-
+        if (card.getLastAssignedTo() == null){
+            throw new CardNotAssignedException();
+        }
 
 
         Student student = studentRepository.findById(card.getLastAssignedTo())
                 .orElseThrow(StudentNotExistException::new);
+
+        if (student.getCardId() == null || !Objects.equals(student.getCardId().getId(), card.getId())){
+            throw new CardMismatchException();
+        }
+
 
         if (student.getUserId().getIsDeleted()) {
             throw new UserDeletedException();
