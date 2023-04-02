@@ -180,7 +180,7 @@ public class WorkgroupScheduleService {
 
 
         });
-        System.err.println(userScheduleInfoDtoList);
+
 
         calculateLate(attendanceDtoList,workgroupscheduleDtoList,userScheduleInfoDtoList);
 
@@ -197,7 +197,11 @@ public class WorkgroupScheduleService {
 
             for (int j = 0; j < attendanceDtoList.size(); j++) {
                 ZonedDateTime checkIn = attendanceDtoList.get(j).getArrival();
-                ZonedDateTime checkOut = attendanceDtoList.get(j).getLeaving();
+                ZonedDateTime checkOut = null;
+                if(attendanceDtoList.get(j).getLeaving() == null){
+                    checkOut = checkIn.withHour(23).withMinute(59).withSecond(59);
+                }else checkOut = attendanceDtoList.get(j).getLeaving();
+
                 System.err.println(workgroupscheduleDtoList.get(i).getName());
                 System.err.println(scheduleStart);
                 System.err.println(scheduleEnd);
