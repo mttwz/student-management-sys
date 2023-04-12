@@ -1,6 +1,6 @@
 # Student Management System
 
-## Student Attendance Logging System using NFC Cards 
+### Student Attendance Logging System using NFC Cards 
 
 <br>
 <br>

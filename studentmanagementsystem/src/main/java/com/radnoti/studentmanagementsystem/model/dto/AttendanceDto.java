@@ -4,6 +4,7 @@
  */
 package com.radnoti.studentmanagementsystem.model.dto;
 
+import com.radnoti.studentmanagementsystem.model.entity.Student;
 import lombok.*;
 
 import java.time.ZonedDateTime;
@@ -22,6 +23,8 @@ import java.util.Date;
 public class AttendanceDto {
 
     private Integer id;
+
+    private Integer studentId;
 
     private ZonedDateTime arrival;
 

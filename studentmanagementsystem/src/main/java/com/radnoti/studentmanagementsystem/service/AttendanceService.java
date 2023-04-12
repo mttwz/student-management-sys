@@ -41,9 +41,7 @@ public class AttendanceService {
 
 
     private final StudentRepository studentRepository;
-
     private final AttendanceRepository attendanceRepository;
-
     private final IdValidatorUtil idValidatorUtil;
     private final CardRepository cardRepository;
     private final AttendanceMapper attendanceMapper;
@@ -66,8 +64,6 @@ public class AttendanceService {
     @Transactional
     public ResponseDto logStudent(String cardHash){
 
-        System.err.println(cardHash);
-
         Card card = cardRepository.findByHash(cardHash)
                 .orElseThrow(CardNotExistException::new);
 
@@ -87,11 +83,11 @@ public class AttendanceService {
         }
 
 
-        if (student.getUserId().getIsDeleted()) {
+        if (Boolean.TRUE.equals(student.getUserId().getIsDeleted())) {
             throw new UserDeletedException();
         }
 
-        if (!student.getUserId().getIsActivated()) {
+        if (Boolean.FALSE.equals(student.getUserId().getIsActivated())) {
             throw new UserNotActivatedException();
         }
 
@@ -116,10 +112,26 @@ public class AttendanceService {
         newAttendance.setArrival(currDate);
         newAttendance.setStudentId(student);
         attendanceRepository.save(newAttendance);
-        System.err.println(cardHash);
         return new ResponseDto(newAttendance.getId());
 
     }
+
+    @Transactional
+    public void createAttendance(AttendanceDto attendanceDto){
+        Student student = studentRepository.findById(attendanceDto.getStudentId())
+                .orElseThrow(StudentNotExistException::new);
+
+        if (Boolean.TRUE.equals(student.getUserId().getIsDeleted())){
+            throw new UserDeletedException();
+        }
+        if(Boolean.FALSE.equals(student.getUserId().getIsActivated())){
+            throw new UserNotActivatedException();
+        }
+        
+        Attendance attendance = attendanceMapper.fromDtoToEntity(attendanceDto);
+        attendanceRepository.save(attendance);
+    }
+
     @Transactional
     public PagingDto getAttendanceByUserId(String userIdString,Pageable pageable){
         Integer userId = idValidatorUtil.idValidator(userIdString);

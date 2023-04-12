@@ -2,15 +2,10 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.service.AttendanceService;
-import com.radnoti.studentmanagementsystem.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/attendance")
@@ -18,9 +13,15 @@ import java.util.Map;
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
+
     @PostMapping(path = "/log-student", consumes = {"text/plain"})
     public ResponseDto logStudent(@RequestBody String cardHash){
         return attendanceService.logStudent(cardHash);
+    }
+
+    @PostMapping(path = "/create-attendance")
+    public void createAttendance(@RequestBody AttendanceDto attendanceDto){
+        attendanceService.createAttendance(attendanceDto);
     }
 
     @GetMapping(path = "/get-attendance-by-user/{userId}")
