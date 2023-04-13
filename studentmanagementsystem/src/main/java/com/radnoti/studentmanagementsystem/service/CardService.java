@@ -220,6 +220,16 @@ public class CardService {
     }
 
 
+    public void unassignCardfromStudent(String studentIdString) {
+        Integer studentId = idValidatorUtil.idValidator(studentIdString);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(StudentNotExistException::new);
 
+        if (student.getCardId() == null){
+            throw new CardNotAssignedException();
+        }
 
+        student.setCardId(null);
+        studentRepository.save(student);
+    }
 }

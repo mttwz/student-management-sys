@@ -22,9 +22,15 @@ public class CardController {
 
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/assign-card-to-student", consumes = {"application/json"}, produces = {"application/json"})
+    @PostMapping(path = "/assign-card-to-student")
     public void connectCardToStudent(@RequestBody StudentDto studentDto) {
         cardService.assignCardToStudent(studentDto);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/unassign-card-from-student/{studentId}")
+    public void disconnectCardFromStudent(@PathVariable String studentId) {
+        cardService.unassignCardfromStudent(studentId);
     }
 
 
