@@ -1,9 +1,11 @@
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.exception.attendance.AttendanceNotExistException;
 import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardMismatchException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
@@ -168,7 +170,26 @@ public class AttendanceService {
 
     }
 
+    @Transactional
+    public void editAttendance(AttendanceDto attendanceDto) {
+        if(attendanceDto.getId() == null|| attendanceDto.getArrival() == null || attendanceDto.getLeaving() == null ){
+            throw new FormValueInvalidException();
 
+        }
+        Attendance attendance = attendanceRepository.findById(attendanceDto.getId())
+                .orElseThrow(AttendanceNotExistException::new);
+        attendance.setArrival(dateUtil.dateConverter(attendanceDto.getArrival()));
+        attendance.setLeaving(dateUtil.dateConverter(attendanceDto.getLeaving()));
+    }
 
+    public void deleteAttendance(String attendanceIdString) {
+        System.err.println(attendanceIdString);
+        //lehet csak logikai torles kene idk
+        Integer attendanceId = idValidatorUtil.idValidator(attendanceIdString);
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(AttendanceNotExistException::new);
 
+        attendanceRepository.delete(attendance);
+
+    }
 }
