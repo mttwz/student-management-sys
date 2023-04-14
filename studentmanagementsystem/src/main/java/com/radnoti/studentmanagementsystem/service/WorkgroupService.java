@@ -4,15 +4,21 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
+import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
+import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotDeletedException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
+import com.radnoti.studentmanagementsystem.model.entity.Role;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -26,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author matevoros
@@ -132,6 +140,38 @@ public class WorkgroupService {
         pagingDto.setAllPages(workgroupPage.getTotalPages());
         pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
         return pagingDto;
+    }
+
+
+    @Transactional
+    public WorkgroupInfoDto getWorkgroupInfo(String workgroupIdString) {
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
+
+        Workgroup workgroup = workgroupRepository.findById(workgroupId)
+                .orElseThrow(WorkgroupNotExistException::new);
+
+        return workgroupMapper.fromEntityToInfoDto(workgroup);
+    }
+
+    @Transactional
+    public ResponseDto editWorkgroupInfo(String workgroupIdString, WorkgroupInfoDto workgroupInfoDto) {
+
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
+
+        Workgroup workgroup = workgroupRepository.findById(workgroupId)
+                .orElseThrow(WorkgroupNotExistException::new);
+
+        Optional<Workgroup> optionalWorkgroupById = workgroupRepository.findById(workgroupId);
+
+        if(optionalWorkgroupById.isPresent() && !Objects.equals(optionalWorkgroupById.get().getId(), workgroupId)){
+            throw new WorkgroupAlreadyExistException();
+        }
+
+        workgroup.setGroupName(workgroupInfoDto.getGroupName());
+        workgroup.setInstitution(workgroupInfoDto.getInstitution());
+
+
+        return new ResponseDto(workgroupId);
     }
 
 //    @Transactional

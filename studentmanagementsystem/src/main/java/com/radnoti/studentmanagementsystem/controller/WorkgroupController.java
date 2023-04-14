@@ -54,6 +54,19 @@ public class WorkgroupController {
         return workgroupService.getAllWorkgroup(pageable);
     }
 
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @GetMapping(path = "/get-workgroup-info/{workgroupId}")
+    public ResponseEntity<WorkgroupInfoDto> getWorkgroupInfo(@PathVariable String workgroupId){
+        return ResponseEntity.ok(workgroupService.getWorkgroupInfo(workgroupId));
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @PostMapping(path = "/edit-workgroup-info/{workgroupId}", consumes = {"application/json"}, produces = {"application/json"})
+    public @ResponseBody ResponseDto editWorkgroupInfo(@PathVariable String workgroupId, @RequestBody WorkgroupInfoDto workgroupInfoDto) {
+        return workgroupService.editWorkgroupInfo(workgroupId,workgroupInfoDto);
+    }
+
+
 //    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
 //    @GetMapping(path = "/get-user-from-workgroup")
 //    public @ResponseBody List<UserInfoDto> getAllUserIdFromWorkgroup(@RequestBody UserDto userDto){

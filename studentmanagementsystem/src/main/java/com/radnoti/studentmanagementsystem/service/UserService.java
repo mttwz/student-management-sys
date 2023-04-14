@@ -118,14 +118,7 @@ public class UserService {
 
 
 
-    /**
-     * Activates the user in the database based on the provided id.
-     *
-     * @param userIdString The user's id as String.
-     * @throws UserNotExistException if the provided user's ID does not exist in the database.
-     * @throws UserAlreadyActivatedException if the provided user already activated.
-     *
-     */
+
     @Transactional
     public void setUserIsActivated(UserDto userDto) throws NoSuchAlgorithmException {
 
