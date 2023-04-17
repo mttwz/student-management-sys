@@ -17,12 +17,10 @@ public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupsch
             "where ws.workgroupId.id = :workgroupId")
     Page<Workgroupschedule> getWorkgroupScheduleByWorkgroupId(Integer workgroupId, Pageable pageable);
 
-
-
     @Query("select ws from Workgroupschedule ws " +
             "join Workgroupmembers wm on wm.workgroupId.id = ws.workgroupId.id " +
             "join Workgroup w on wm.workgroupId.id = w.id " +
-            "where wm.userId.id = :userId")
+            "where wm.userId.id = :userId ")
     Page<Workgroupschedule>getWorkgroupScheduleByUserId(Integer userId,Pageable pageable);
 
     @Query("select ws from Workgroupschedule ws " +

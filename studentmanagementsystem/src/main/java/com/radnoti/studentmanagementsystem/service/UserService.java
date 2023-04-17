@@ -45,6 +45,7 @@ public class UserService {
     private final IdValidatorUtil idValidatorUtil;
     private final WorkgroupMapper workgroupMapper;
     private final CardRepository cardRepository;
+    private final WorkgroupscheduleRepository workgroupscheduleRepository;
 
 
     /**

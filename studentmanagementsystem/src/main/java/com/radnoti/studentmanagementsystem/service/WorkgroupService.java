@@ -161,11 +161,6 @@ public class WorkgroupService {
         Workgroup workgroup = workgroupRepository.findById(workgroupId)
                 .orElseThrow(WorkgroupNotExistException::new);
 
-        Optional<Workgroup> optionalWorkgroupById = workgroupRepository.findById(workgroupId);
-
-        if(optionalWorkgroupById.isPresent() && !Objects.equals(optionalWorkgroupById.get().getId(), workgroupId)){
-            throw new WorkgroupAlreadyExistException();
-        }
 
         workgroup.setGroupName(workgroupInfoDto.getGroupName());
         workgroup.setInstitution(workgroupInfoDto.getInstitution());

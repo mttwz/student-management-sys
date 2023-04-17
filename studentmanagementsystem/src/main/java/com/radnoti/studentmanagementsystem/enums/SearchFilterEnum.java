@@ -23,6 +23,8 @@ public enum SearchFilterEnum {
         public static final String INSTITUTION = "institution";
         public static final String DELETED_ALL_USERS = "deleted-users";
         public static final String USERS_IN_WORKGROUP = "users-in-workgroup";
+        public static final String WORKGROUP_SCHEDULE = "workgroup-schedule";
+
     }
     private final Integer id;
     private final String label;
