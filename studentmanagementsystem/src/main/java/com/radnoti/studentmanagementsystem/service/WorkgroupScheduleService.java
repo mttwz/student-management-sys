@@ -77,15 +77,28 @@ public class WorkgroupScheduleService {
     }
 
     @Transactional
-    public List<WorkgroupscheduleDto> getWorkgroupScheduleByWorkgroupId(String workgroupIdString, Pageable pageable) {
+    public PagingDto getWorkgroupScheduleByWorkgroupId(String authHeader, String workgroupIdString, Pageable pageable) {
         Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
+        System.err.println(workgroupId);
 
-        Workgroup workgroup = workgroupRepository.findById(workgroupId)
+        Page<Workgroupschedule> workgroupSchedulePage;
+        PagingDto pagingDto = new PagingDto();
+
+        workgroupRepository.findById(workgroupId)
                 .orElseThrow(WorkgroupNotExistException::new);
 
-        Page<Workgroupschedule> workgroupschedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(workgroup.getId(),pageable);
+        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(workgroupId,pageable);
+        } else {
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(jwtUtil.getIdFromJwt(authHeader),pageable);
+        }
 
-        return workgroupschedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList();
+
+        pagingDto.setWorkgroupscheduleDtoList(workgroupSchedulePage.stream().map(workgroupScheduleMapper::fromEntityToDto).toList());
+        pagingDto.setAllPages(workgroupSchedulePage.getTotalPages());
+
+        return pagingDto;
+
     }
 
 

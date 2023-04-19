@@ -35,8 +35,8 @@ public class WorkgroupScheduleController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @GetMapping(path = "/get-workgroup-schedule-by-workgroup-id/{workgroupId}")
-    public ResponseEntity<List<WorkgroupscheduleDto>> getWorkgroupScheduleByWorkgroupId(@PathVariable String workgroupId, Pageable pageable) {
-        return ResponseEntity.ok(workgroupscheduleService.getWorkgroupScheduleByWorkgroupId(workgroupId,pageable));
+    public PagingDto getWorkgroupScheduleByWorkgroupId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable String workgroupId,Pageable pageable) {
+        return workgroupscheduleService.getWorkgroupScheduleByWorkgroupId(authHeader,workgroupId,pageable);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
