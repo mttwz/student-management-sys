@@ -14,6 +14,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -28,5 +29,7 @@ public interface WorkgroupRepository extends CrudRepository<Workgroup, Integer> 
 
     @Query("select w from Workgroup w")
     Page<Workgroup> getAllWorkgroup(Pageable pageable);
+
+
     
 }

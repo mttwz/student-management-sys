@@ -81,8 +81,8 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "where (u.firstName like concat('%',:userSearchString,'%') or " +
             "u.lastName like concat('%',:userSearchString,'%') or " +
             "u.email like concat('%',:userSearchString,'%')) and " +
-            "w.groupName = :groupName")
-    Page<User> searchUsersInWorkgroups(String userSearchString, String groupName, Pageable pageable);
+            "w.id = :groupId")
+    Page<User> searchUsersInWorkgroups(String userSearchString, Integer groupId, Pageable pageable);
 
 
 

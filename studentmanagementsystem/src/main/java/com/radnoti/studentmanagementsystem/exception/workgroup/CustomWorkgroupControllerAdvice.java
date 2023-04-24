@@ -57,5 +57,9 @@ public class CustomWorkgroupControllerAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_005_ERR"), status);
     }
-
+    @ExceptionHandler(UserAlreadyAddedToWorkgroupException.class)
+    public ResponseEntity<ErrorResponse> handleException(UserAlreadyAddedToWorkgroupException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "WG_006_ERR"), status);
+    }
 }

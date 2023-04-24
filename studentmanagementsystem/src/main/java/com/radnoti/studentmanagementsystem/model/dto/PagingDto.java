@@ -22,4 +22,5 @@ public class PagingDto{
     private List<WorkgroupDto> workgroupDtoList;
     private List<CardDto> cardDtoList;
     private List<AttendanceDto> attendanceDtoList;
+
 }

@@ -9,10 +9,7 @@ import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidExcept
 import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyDeletedException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupAlreadyExistException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotDeletedException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
+import com.radnoti.studentmanagementsystem.exception.workgroup.*;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
@@ -120,11 +117,18 @@ public class WorkgroupService {
 
     @Transactional
     public ResponseDto addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
-        userRepository.findById(workgroupmembersDto.getUserId())
+        User user = userRepository.findById(workgroupmembersDto.getUserId())
                 .orElseThrow(UserNotExistException::new);
 
         workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
                 .orElseThrow(WorkgroupNotExistException::new);
+
+
+        if(workgroupMembersRepository.getAllUserIdFromWorkgroup(workgroupmembersDto.getWorkgroupId()).contains(workgroupmembersDto.getUserId())){
+            throw new UserAlreadyAddedToWorkgroupException();
+        }
+
+
 
         Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
         Workgroupmembers savedWorkgroupmembers =  workgroupMembersRepository.save(workgroupmembers);

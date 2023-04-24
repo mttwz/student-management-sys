@@ -75,11 +75,11 @@ public class UserController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/search-super-admin")
-    public @ResponseBody PagingDto searchSuperadmin(@RequestBody(required = false) String groupName, @RequestParam String category,
+    public @ResponseBody PagingDto searchSuperadmin(@RequestParam(required = false) String groupId, @RequestParam String category,
                                                     @RequestParam String q,
                                                     Pageable pageable){
-        System.err.println(groupName);
-        return userService.searchSuperadmin(groupName,category,q,pageable);
+        System.err.println(groupId);
+        return userService.searchSuperadmin(groupId,category,q,pageable);
         
     }
 

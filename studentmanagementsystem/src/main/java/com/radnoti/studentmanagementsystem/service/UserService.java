@@ -10,6 +10,7 @@ import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
+import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.*;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
@@ -226,12 +227,18 @@ public class UserService {
     }
 
     @Transactional
-    public PagingDto searchSuperadmin(String groupName, String category,String q,Pageable pageable) {
+    public PagingDto searchSuperadmin(String groupIdString, String category,String q,Pageable pageable) {
 
+        Integer groupId = null;
+
+        if (groupIdString != null){
+            groupId = idValidatorUtil.idValidator(groupIdString);
+
+        }
 
         Page<User> userPage;
         Page<Workgroup> workgroupPage;
-        Page<Card> cardPage;
+
         Integer totalPages = null;
         PagingDto pagingDto = new PagingDto();
 
@@ -261,7 +268,7 @@ public class UserService {
             pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
 
         }else if (Objects.equals(category, SearchFilterEnum.Types.USERS_IN_WORKGROUP)) {
-            userPage = userRepository.searchUsersInWorkgroups(q,groupName,pageable);
+            userPage = userRepository.searchUsersInWorkgroups(q,groupId,pageable);
             totalPages = userPage.getTotalPages();
             pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
         }
