@@ -59,7 +59,7 @@ public class WorkgroupScheduleController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @GetMapping(path = "/get-user-schedule")
+    @PostMapping(path = "/get-user-schedule")
     public List<UserScheduleInfoDto> getUserSchedule(@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
         return workgroupscheduleService.gerUserSchedule(userScheduleInfoDto,pageable);
     }

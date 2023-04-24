@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/attendance")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -55,8 +56,9 @@ public class AttendanceController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @GetMapping(path = "/get-daily-attendance-by-user-id")
+    @PostMapping(path = "/get-daily-attendance-by-user-id")
     public List<AttendanceDto> getDailyAttendanceByUserId(@RequestBody UserScheduleInfoDto userScheduleInfoDto, Pageable pageable){
+
         return attendanceService.getAttendancePerDayByUserId(userScheduleInfoDto,pageable);
     }
 

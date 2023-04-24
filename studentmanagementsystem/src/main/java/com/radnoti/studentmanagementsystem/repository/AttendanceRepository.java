@@ -30,5 +30,5 @@ public interface AttendanceRepository extends CrudRepository<Attendance, Integer
             "join User u on s.userId.id = u.id " +
             "where u.id = :userId and " +
             "a.arrival like concat(:dateStr,'%')")
-    List<Attendance> getAttendancePerDayByUserId(Integer userId,String dateStr);
+    List<Attendance> getAttendancePerDayByUserId(Integer userId, String dateStr);
 }
