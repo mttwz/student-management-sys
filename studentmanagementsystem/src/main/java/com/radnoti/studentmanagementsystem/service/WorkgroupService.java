@@ -117,7 +117,7 @@ public class WorkgroupService {
 
     @Transactional
     public ResponseDto addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
-        User user = userRepository.findById(workgroupmembersDto.getUserId())
+        userRepository.findById(workgroupmembersDto.getUserId())
                 .orElseThrow(UserNotExistException::new);
 
         workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
@@ -127,8 +127,6 @@ public class WorkgroupService {
         if(workgroupMembersRepository.getAllUserIdFromWorkgroup(workgroupmembersDto.getWorkgroupId()).contains(workgroupmembersDto.getUserId())){
             throw new UserAlreadyAddedToWorkgroupException();
         }
-
-
 
         Workgroupmembers workgroupmembers = workgroupMembersMapper.fromDtoToEntity(workgroupmembersDto);
         Workgroupmembers savedWorkgroupmembers =  workgroupMembersRepository.save(workgroupmembers);

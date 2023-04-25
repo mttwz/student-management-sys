@@ -14,8 +14,9 @@ import java.util.List;
 public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupschedule, Integer> {
 
     @Query("select ws from Workgroupschedule ws " +
-            "where ws.workgroupId.id = :workgroupId")
-    Page<Workgroupschedule> getWorkgroupScheduleByWorkgroupId(Integer workgroupId, Pageable pageable);
+            "where ws.workgroupId.id = :workgroupId and " +
+            "ws.start like concat(:dateStr,'%')")
+    Page<Workgroupschedule> getWorkgroupScheduleByWorkgroupId(Integer workgroupId, String dateStr ,Pageable pageable);
 
     @Query("select ws from Workgroupschedule ws " +
             "join Workgroupmembers wm on wm.workgroupId.id = ws.workgroupId.id " +
@@ -29,4 +30,12 @@ public interface WorkgroupscheduleRepository extends CrudRepository<Workgroupsch
             "where wm.userId.id = :userId " +
             "and ws.start like concat(:dateStr,'%')")
     Page<Workgroupschedule>getWorkgroupSchedulePerDayByUserId(Integer userId,String dateStr ,Pageable pageable);
+
+    @Query("select ws from Workgroupschedule ws " +
+            "join Workgroupmembers wm on wm.workgroupId.id = ws.workgroupId.id " +
+            "join Workgroup w on wm.workgroupId.id = w.id " +
+            "where wm.userId.id = :userId " +
+            "and ws.start like concat(:dateStr,'%') " +
+            "and w.id = :workgroupId")
+    Page<Workgroupschedule>getWorkgroupSchedulePerDayPerWgByUserId(Integer userId, Integer workgroupId, String dateStr ,Pageable pageable);
 }

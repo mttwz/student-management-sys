@@ -34,9 +34,9 @@ public class WorkgroupScheduleController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
-    @GetMapping(path = "/get-workgroup-schedule-by-workgroup-id/{workgroupId}")
-    public PagingDto getWorkgroupScheduleByWorkgroupId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable String workgroupId,Pageable pageable) {
-        return workgroupscheduleService.getWorkgroupScheduleByWorkgroupId(authHeader,workgroupId,pageable);
+    @PostMapping(path = "/get-daily-workgroup-schedule-by-workgroup-id")
+    public PagingDto getWorkgroupScheduleByWorkgroupId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody WorkgroupscheduleDto workgroupscheduleDto,Pageable pageable) {
+        return workgroupscheduleService.getWorkgroupScheduleByWorkgroupId(authHeader,workgroupscheduleDto,pageable);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
@@ -62,6 +62,12 @@ public class WorkgroupScheduleController {
     @PostMapping(path = "/get-user-schedule")
     public List<UserScheduleInfoDto> getUserSchedule(@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
         return workgroupscheduleService.gerUserSchedule(userScheduleInfoDto,pageable);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @PostMapping(path = "/get-user-schedule-in-workgroup")
+    public List<UserScheduleInfoDto> getUserScheduleInWorkgroup(@RequestBody UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
+        return workgroupscheduleService.gerUserScheduleInWorkgroup(userScheduleInfoDto,pageable);
     }
 
 }

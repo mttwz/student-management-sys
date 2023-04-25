@@ -77,20 +77,23 @@ public class WorkgroupScheduleService {
     }
 
     @Transactional
-    public PagingDto getWorkgroupScheduleByWorkgroupId(String authHeader, String workgroupIdString, Pageable pageable) {
-        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
-        System.err.println(workgroupId);
+    public PagingDto getWorkgroupScheduleByWorkgroupId(String authHeader, WorkgroupscheduleDto workgroupscheduleDto, Pageable pageable) {
+
 
         Page<Workgroupschedule> workgroupSchedulePage;
         PagingDto pagingDto = new PagingDto();
 
-        workgroupRepository.findById(workgroupId)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = workgroupscheduleDto.getStart().format(formatter);
+
+        workgroupRepository.findById(workgroupscheduleDto.getWorkgroupId())
                 .orElseThrow(WorkgroupNotExistException::new);
 
         if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
-            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(workgroupId,pageable);
+
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(workgroupscheduleDto.getWorkgroupId(),formattedDate,pageable);
         } else {
-            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(jwtUtil.getIdFromJwt(authHeader),pageable);
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(jwtUtil.getIdFromJwt(authHeader),formattedDate,pageable);
         }
 
 
@@ -182,6 +185,7 @@ public class WorkgroupScheduleService {
         List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
 
 
+
         workgroupschedulePage.forEach(workgroupschedule -> {
             UserScheduleInfoDto currentUserScheduleInfo = workgroupScheduleMapper.fromWorkgroupscheduleToUserScheduleInfoDto(workgroupschedule);
             WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
@@ -192,9 +196,55 @@ public class WorkgroupScheduleService {
             userScheduleInfoDtoList.add(currentUserScheduleInfo);
 
 
+
+
         });
 
 
+        calculateLate(attendanceDtoList,workgroupscheduleDtoList,userScheduleInfoDtoList);
+
+        return userScheduleInfoDtoList;
+    }
+
+    public List<UserScheduleInfoDto> gerUserScheduleInWorkgroup(UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
+        if(userScheduleInfoDto.getUserId() == null || userScheduleInfoDto.getDate() == null || userScheduleInfoDto.getWorkgroupId() == null){
+            throw new FormValueInvalidException();
+        }
+
+        User user =  userRepository.findById(userScheduleInfoDto.getUserId())
+                .orElseThrow(UserNotExistException::new);
+
+        Workgroup workgroup =  workgroupRepository.findById(userScheduleInfoDto.getWorkgroupId())
+                .orElseThrow(WorkgroupNotExistException::new);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = userScheduleInfoDto.getDate().format(formatter);
+
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
+        attendanceRepository.getAttendancePerDayByUserId(user.getId(),formattedDate).forEach(attendance -> {
+            attendanceDtoList.add(attendanceMapper.fromEntityToDto(attendance));
+        });
+
+        Page<Workgroupschedule> workgroupschedulePage = workgroupscheduleRepository.getWorkgroupSchedulePerDayPerWgByUserId(user.getId(), workgroup.getId(), formattedDate,pageable);
+        List<UserScheduleInfoDto> userScheduleInfoDtoList = new ArrayList<>();
+
+        List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
+
+
+
+        workgroupschedulePage.forEach(workgroupschedule -> {
+            UserScheduleInfoDto currentUserScheduleInfo = workgroupScheduleMapper.fromWorkgroupscheduleToUserScheduleInfoDto(workgroupschedule);
+            WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
+            workgroupscheduleDtoList.add(workgroupscheduleDto);
+            currentUserScheduleInfo.setUserId(user.getId());
+            currentUserScheduleInfo.setDate(userScheduleInfoDto.getDate());
+            currentUserScheduleInfo.setIsStudentPresent(false);
+            userScheduleInfoDtoList.add(currentUserScheduleInfo);
+
+
+
+
+        });
         calculateLate(attendanceDtoList,workgroupscheduleDtoList,userScheduleInfoDtoList);
 
         return userScheduleInfoDtoList;
@@ -207,6 +257,12 @@ public class WorkgroupScheduleService {
             ZonedDateTime scheduleEnd = workgroupscheduleDtoList.get(i).getEnd();
             Long scheduleLengthInMinute = Duration.between(scheduleStart,scheduleEnd).toMinutes();
             Long stayInDur = 0L;
+
+            if(attendanceDtoList.isEmpty()){
+                userScheduleInfoDtoList.get(i).setLateInMinutes(scheduleLengthInMinute);
+            }
+
+
 
             for (int j = 0; j < attendanceDtoList.size(); j++) {
                 ZonedDateTime checkIn = attendanceDtoList.get(j).getArrival();
@@ -264,7 +320,10 @@ public class WorkgroupScheduleService {
 
 
                 }
+
+
             }
+
 
         }
     }
@@ -273,8 +332,6 @@ public class WorkgroupScheduleService {
         userScheduleInfoDto.setLateInMinutes(scheduleLengthInMinute-stayInDur);
         userScheduleInfoDto.setIsStudentPresent(true);
     }
-
-
 
 
 
