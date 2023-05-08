@@ -34,19 +34,6 @@ services:
           "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
           "spring.jpa.hibernate.ddl-auto" : "none"
         }'
-  # Liquibase:
-    
-  #   image: liquibase/liquibase:4.9.1
-    
-  #   container_name: Liquibase_container
-    
-  #   depends_on:
-  #     - mysqldb
-        
-  #   # Volume to add the liquibase collection of scripts
-    
-  #   # Command to run the liquibase update service
-  #   command: --url=jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE?createDatabaseIfNotExist=true --username=root --password=root --changeLogFile=/studentmanagementsystem/src/main/resources/db/changelog/db.changelog-master.xml update
     
 
 volumes:

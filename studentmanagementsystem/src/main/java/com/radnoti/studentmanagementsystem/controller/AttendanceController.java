@@ -23,7 +23,7 @@ public class AttendanceController {
         return attendanceService.logStudent(cardHash);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN,RoleEnum.Types.ADMIN})
     @PostMapping(path = "/create-attendance")
     public void createAttendance(@RequestBody AttendanceDto attendanceDto){
         attendanceService.createAttendance(attendanceDto);

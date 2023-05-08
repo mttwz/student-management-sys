@@ -26,6 +26,8 @@ public class AttendanceDto {
 
     private Integer studentId;
 
+    private Integer userId;
+
     private ZonedDateTime arrival;
 
     private ZonedDateTime leaving;

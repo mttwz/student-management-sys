@@ -17,6 +17,7 @@ public interface AttendanceMapper {
 
     @Mapping(target = "arrival", expression = "java(new DateUtil().dateConverter(attendanceDto.getArrival()))")
     @Mapping(target = "leaving", expression = "java(new DateUtil().dateConverter(attendanceDto.getLeaving()))")
+
     @Mapping(source = "studentId",target = "studentId.id")
     Attendance fromDtoToEntity(AttendanceDto attendanceDto);
 

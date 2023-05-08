@@ -10,6 +10,7 @@ import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.AttendanceMapper;
 import com.radnoti.studentmanagementsystem.model.dto.AttendanceDto;
 import com.radnoti.studentmanagementsystem.model.dto.PagingDto;
@@ -18,9 +19,11 @@ import com.radnoti.studentmanagementsystem.model.dto.UserScheduleInfoDto;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
+import com.radnoti.studentmanagementsystem.repository.UserRepository;
 import com.radnoti.studentmanagementsystem.util.DateUtil;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -43,6 +47,7 @@ public class AttendanceService {
 
 
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
     private final IdValidatorUtil idValidatorUtil;
     private final CardRepository cardRepository;
@@ -120,15 +125,24 @@ public class AttendanceService {
 
     @Transactional
     public void createAttendance(AttendanceDto attendanceDto){
-        Student student = studentRepository.findById(attendanceDto.getStudentId())
-                .orElseThrow(StudentNotExistException::new);
+        User user = userRepository.findById(attendanceDto.getUserId())
+                .orElseThrow(UserNotExistException::new);
 
-        if (Boolean.TRUE.equals(student.getUserId().getIsDeleted())){
+
+        if (Boolean.TRUE.equals(user.getIsDeleted())){
             throw new UserDeletedException();
         }
-        if(Boolean.FALSE.equals(student.getUserId().getIsActivated())){
+
+        System.err.println(user.getIsActivated());
+
+        if(Boolean.FALSE.equals(user.getIsActivated())){
             throw new UserNotActivatedException();
         }
+
+        Student student = studentRepository.findByUserId(attendanceDto.getUserId())
+                .orElseThrow(StudentNotExistException::new);
+
+        attendanceDto.setStudentId(student.getId());
         
         Attendance attendance = attendanceMapper.fromDtoToEntity(attendanceDto);
         attendanceRepository.save(attendance);
