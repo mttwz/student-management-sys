@@ -280,4 +280,49 @@ public class UserService {
         return pagingDto;
     }
 
+
+
+    @Transactional
+    public PagingDto searchAdmin(String groupIdString, String category,String q,Pageable pageable) {
+
+        Integer groupId = null;
+
+        if (groupIdString != null){
+            groupId = idValidatorUtil.idValidator(groupIdString);
+
+        }
+
+        Page<User> userPage;
+        Page<Workgroup> workgroupPage;
+
+        Integer totalPages = null;
+        PagingDto pagingDto = new PagingDto();
+
+        if (Objects.equals(category, SearchFilterEnum.Types.STUDENT)) {
+            userPage = userRepository.searchStudents(q,pageable);
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+
+        }else if (Objects.equals(category, SearchFilterEnum.Types.WORKGROUP)) {
+            workgroupPage = workgroupRepository.searchWorkgroups(q,pageable);
+            totalPages = workgroupPage.getTotalPages();
+            pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
+
+        }else if (Objects.equals(category, SearchFilterEnum.Types.USERS_IN_WORKGROUP)) {
+            userPage = userRepository.searchUsersInWorkgroups(q,groupId,pageable);
+            totalPages = userPage.getTotalPages();
+            pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
+        }
+
+
+        pagingDto.setAllPages(totalPages);
+
+
+        return pagingDto;
+    }
+
+
+
+
+
 }

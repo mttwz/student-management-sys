@@ -49,12 +49,18 @@ public class WorkgroupController {
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @PostMapping(path = "/remove-user-from-workgroup", consumes = {"application/json"}, produces = {"application/json"})
+    public void removeUserFromWorkgroup(@RequestBody WorkgroupmembersDto workgroupmembersDto) {
+        workgroupService.removeUserFromWorkgroup(workgroupmembersDto);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @GetMapping(path = "/get-all-workgroups")
     public PagingDto getAllWorkgroups(Pageable pageable) {
         return workgroupService.getAllWorkgroup(pageable);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN,RoleEnum.Types.ADMIN})
     @GetMapping(path = "/get-workgroup-info/{workgroupId}")
     public ResponseEntity<WorkgroupInfoDto> getWorkgroupInfo(@PathVariable String workgroupId){
         return ResponseEntity.ok(workgroupService.getWorkgroupInfo(workgroupId));

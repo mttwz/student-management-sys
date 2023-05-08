@@ -39,13 +39,13 @@ public class UserController {
         userService.setUserIsActivated(userDto);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @DeleteMapping(path = "/delete-user/{userId}")
     public void deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/restore-deleted-user/{userId}")
     public void restoreDeletedUser(@PathVariable String userId) {
         userService.restoreDeletedUser(userId);
@@ -59,7 +59,7 @@ public class UserController {
     }
 
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN,RoleEnum.Types.ADMIN})
     @GetMapping(path = "/get-user-info/{userId}")
     public ResponseEntity<UserInfoDto> getUserInfo(@PathVariable String userId) {
         return ResponseEntity.ok(userService.getUserInfo(userId));
@@ -78,9 +78,17 @@ public class UserController {
     public @ResponseBody PagingDto searchSuperadmin(@RequestParam(required = false) String groupId, @RequestParam String category,
                                                     @RequestParam String q,
                                                     Pageable pageable){
-        System.err.println(groupId);
         return userService.searchSuperadmin(groupId,category,q,pageable);
         
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @PostMapping(path = "/search-admin")
+    public @ResponseBody PagingDto searchAdmin(@RequestParam(required = false) String groupId, @RequestParam String category,
+                                                    @RequestParam String q,
+                                                    Pageable pageable){
+        return userService.searchSuperadmin(groupId,category,q,pageable);
+
     }
 
 }

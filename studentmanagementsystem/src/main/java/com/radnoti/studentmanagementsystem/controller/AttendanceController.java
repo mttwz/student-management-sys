@@ -55,7 +55,7 @@ public class AttendanceController {
         return attendanceService.getAttendanceByStudentId(studentId,pageable);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN,RoleEnum.Types.ADMIN})
     @PostMapping(path = "/get-daily-attendance-by-user-id")
     public List<AttendanceDto> getDailyAttendanceByUserId(@RequestBody UserScheduleInfoDto userScheduleInfoDto, Pageable pageable){
 

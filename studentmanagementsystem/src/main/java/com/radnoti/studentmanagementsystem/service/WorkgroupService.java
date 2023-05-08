@@ -136,6 +136,20 @@ public class WorkgroupService {
     }
 
     @Transactional
+    public void removeUserFromWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
+
+        userRepository.findById(workgroupmembersDto.getUserId())
+                .orElseThrow(UserNotExistException::new);
+
+        workgroupRepository.findById(workgroupmembersDto.getWorkgroupId())
+                .orElseThrow(WorkgroupNotExistException::new);
+
+
+        workgroupMembersRepository.removeUserFromWorkgroup(workgroupmembersDto.getWorkgroupId(),workgroupmembersDto.getUserId());
+
+    }
+
+    @Transactional
     public PagingDto getAllWorkgroup(Pageable pageable) {
         Page<Workgroup> workgroupPage=  workgroupRepository.getAllWorkgroup(pageable);
         PagingDto pagingDto = new PagingDto();
