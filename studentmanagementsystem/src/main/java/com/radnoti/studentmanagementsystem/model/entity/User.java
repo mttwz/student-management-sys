@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "User")
+@Table(name = "user")
 @XmlRootElement
 public class User implements Serializable {
 

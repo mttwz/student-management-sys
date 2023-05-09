@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Workgroup_members")
+@Table(name = "workgroup_members")
 @XmlRootElement
 
 public class Workgroupmembers implements Serializable {

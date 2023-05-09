@@ -39,7 +39,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -132,8 +131,6 @@ public class AttendanceService {
         if (Boolean.TRUE.equals(user.getIsDeleted())){
             throw new UserDeletedException();
         }
-
-        System.err.println(user.getIsActivated());
 
         if(Boolean.FALSE.equals(user.getIsActivated())){
             throw new UserNotActivatedException();

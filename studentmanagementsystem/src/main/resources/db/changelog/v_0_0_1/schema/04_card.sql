@@ -3,7 +3,7 @@
 
 
 
-CREATE TABLE `Card` (
+CREATE TABLE `card` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `hash` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,

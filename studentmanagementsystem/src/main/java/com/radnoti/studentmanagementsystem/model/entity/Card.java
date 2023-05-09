@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Card")
+@Table(name = "card")
 @XmlRootElement
 public class Card implements Serializable {
 

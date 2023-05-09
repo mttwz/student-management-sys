@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Workgroup_schedule")
+@Table(name = "workgroup_schedule")
 @XmlRootElement
 @AllArgsConstructor
 public class Workgroupschedule implements Serializable {

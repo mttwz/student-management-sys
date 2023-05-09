@@ -3,7 +3,7 @@
 
 
 
-CREATE TABLE `Workgroup` (
+CREATE TABLE `workgroup` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `group_name` varchar(255) DEFAULT NULL,
   `institution` varchar(255) DEFAULT NULL,

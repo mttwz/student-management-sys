@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Workgroup")
+@Table(name = "workgroup")
 @XmlRootElement
 public class Workgroup extends UserDto implements Serializable {
 

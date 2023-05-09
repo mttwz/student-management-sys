@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Attendance")
+@Table(name = "attendance")
 @XmlRootElement
 public class Attendance implements Serializable {
     private static final long serialVersionUID = 1L;

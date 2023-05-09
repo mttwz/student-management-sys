@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Password_reset")
+@Table(name = "password_reset")
 @XmlRootElement
 public class Passwordreset implements Serializable {
     private static final long serialVersionUID = 1L;

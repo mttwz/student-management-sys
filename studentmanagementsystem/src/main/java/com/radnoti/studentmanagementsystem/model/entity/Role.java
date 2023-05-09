@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-@Table(name = "Role")
+@Table(name = "role")
 @XmlRootElement
 public class Role implements Serializable {
 

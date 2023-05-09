@@ -42,7 +42,6 @@ public class AttendanceController {
     }
 
 
-
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @GetMapping(path = "/get-attendance-by-user/{userId}")
     public PagingDto getAttendanceByUserId(@PathVariable String userId, Pageable pageable){
