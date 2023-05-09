@@ -31,10 +31,7 @@ services:
           "spring.liquibase.change-log": "classpath:/db/changelog/db.changelog-master.xml",
           "spring.jpa.hibernate.ddl-auto":"none",
           "spring.datasource.driver-class-name":"com.mysql.cj.jdbc.Driver"
-
-
-      }'
-    command: sh -c "echo 'Waiting for database to start...' && sleep 10 && java -jar /tmp/app.jar"
+        }'
     volumes:
       - .m2:/root/.m2
     stdin_open: true

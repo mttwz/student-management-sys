@@ -9,7 +9,6 @@ import com.radnoti.studentmanagementsystem.exception.workgroupSchedule.Workgroup
 import com.radnoti.studentmanagementsystem.mapper.AttendanceMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupScheduleMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
-import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupschedule;
@@ -164,7 +163,7 @@ public class WorkgroupScheduleService {
 
     }
     @Transactional
-    public List<UserScheduleInfoDto> gerUserSchedule(UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
+    public List<UserScheduleInfoDto> getUserSchedule(UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
         if(userScheduleInfoDto.getUserId() == null || userScheduleInfoDto.getDate() == null){
             throw new FormValueInvalidException();
         }
@@ -173,7 +172,49 @@ public class WorkgroupScheduleService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = userScheduleInfoDto.getDate().format(formatter);
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
+        attendanceRepository.getAttendancePerDayByUserId(user.getId(),formattedDate).forEach(attendance -> {
+            attendanceDtoList.add(attendanceMapper.fromEntityToDto(attendance));
+        });
 
+        Page<Workgroupschedule> workgroupschedulePage = workgroupscheduleRepository.getWorkgroupSchedulePerDayByUserId(user.getId(),formattedDate,pageable);
+        List<UserScheduleInfoDto> userScheduleInfoDtoList = new ArrayList<>();
+
+        List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
+
+
+
+        workgroupschedulePage.forEach(workgroupschedule -> {
+            UserScheduleInfoDto currentUserScheduleInfo = workgroupScheduleMapper.fromWorkgroupscheduleToUserScheduleInfoDto(workgroupschedule);
+            WorkgroupscheduleDto workgroupscheduleDto = workgroupScheduleMapper.fromEntityToDto(workgroupschedule);
+            workgroupscheduleDtoList.add(workgroupscheduleDto);
+            currentUserScheduleInfo.setUserId(user.getId());
+            currentUserScheduleInfo.setDate(userScheduleInfoDto.getDate());
+            currentUserScheduleInfo.setIsStudentPresent(false);
+            userScheduleInfoDtoList.add(currentUserScheduleInfo);
+
+
+
+
+        });
+
+
+        calculateLate(attendanceDtoList,workgroupscheduleDtoList,userScheduleInfoDtoList);
+
+        return userScheduleInfoDtoList;
+    }
+
+    @Transactional
+    public List<UserScheduleInfoDto> getOwnUserSchedule(String authHeader, UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
+        Integer userId = jwtUtil.getIdFromJwt(authHeader);
+        if(userScheduleInfoDto.getDate() == null){
+            throw new FormValueInvalidException();
+        }
+        User user =  userRepository.findById(userId)
+                .orElseThrow(UserNotExistException::new);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = userScheduleInfoDto.getDate().format(formatter);
         List<AttendanceDto> attendanceDtoList = new ArrayList<>();
         attendanceRepository.getAttendancePerDayByUserId(user.getId(),formattedDate).forEach(attendance -> {
             attendanceDtoList.add(attendanceMapper.fromEntityToDto(attendance));

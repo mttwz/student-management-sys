@@ -6,19 +6,10 @@ import com.radnoti.studentmanagementsystem.service.WorkgroupScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.security.RolesAllowed;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/workgroupschedule")
@@ -58,10 +49,16 @@ public class WorkgroupScheduleController {
         workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupScheduleId);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN, RoleEnum.Types.STUDENT})
     @PostMapping(path = "/get-user-schedule")
     public List<UserScheduleInfoDto> getUserSchedule(@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
-        return workgroupscheduleService.gerUserSchedule(userScheduleInfoDto,pageable);
+        return workgroupscheduleService.getUserSchedule(userScheduleInfoDto,pageable);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN, RoleEnum.Types.STUDENT})
+    @PostMapping(path = "/get-own-user-schedule")
+    public List<UserScheduleInfoDto> getOwnUserSchedule(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
+        return workgroupscheduleService.getOwnUserSchedule(authHeader,userScheduleInfoDto,pageable);
     }
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
