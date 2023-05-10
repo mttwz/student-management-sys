@@ -35,6 +35,16 @@ public class StudentService {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
 
+
+    /**
+     * Registers a student based on the provided UserDto object.
+     *
+     * @param userDto The UserDto object containing the student's information.
+     * @return A ResponseDto object containing the ID of the registered student.
+     * @throws NoSuchAlgorithmException If the hashing algorithm is not available.
+     * @throws FormValueInvalidException If the password in the UserDto object is null or empty.
+     * @throws UserNotExistException If the user with the provided ID does not exist.
+     */
     @Transactional
     public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);

@@ -76,13 +76,12 @@ public class CardService {
     }
 
     /**
-     * This method sets the deleted flag of the card in the database based on the provided id.
-     * The method checks the card existence and the deleted status.
-     * If the card assigned to a student then removes the connection.
+     * Deletes a card from the database based on the provided card ID.
      *
-     * @param cardIdString a string representing the ID of the card
-     * @throws InvalidIdException  if the provided card's id is invalid eg: if the id contains a string
-     * @throws CardNotExistException if the provided DTO object is null or its hash value is null or empty.
+     * @param cardIdString The ID of the card as a string.
+     * @throws IllegalArgumentException if the provided card ID is invalid.
+     * @throws CardNotExistException if the card with the provided ID does not exist.
+     * @throws CardAlreadyDeletedException if the card has already been marked as deleted.
      */
     @Transactional
     public void deleteCard(String cardIdString) {
@@ -105,6 +104,17 @@ public class CardService {
         cardRepository.save(card);
     }
 
+
+    /**
+     * Restores a deleted card in the database based on the provided card ID.
+     * If the card is assigned to a student who currently does not have a card assigned,
+     * the method re-establishes the connection between the student and the card.
+     *
+     * @param cardIdString The ID of the card as a string.
+     * @throws InvalidIdException If the provided card ID is invalid.
+     * @throws CardNotExistException If the card with the provided ID does not exist.
+     * @throws CardNotDeletedException If the card is not marked as deleted and cannot be restored.
+     */
     @Transactional
     public void restoreDeletedCard(String cardIdString) {
         Integer cardId = idValidatorUtil.idValidator(cardIdString);
@@ -128,12 +138,15 @@ public class CardService {
 
 
     /**
-     * Connects a card to a student in the database based on the provided DTO object.
+     * Assigns a card to a student in the database based on the provided StudentDto object.
      *
-     * @param studentDto The DTO object containing the student's id and the card's id.
-     * @throws FormValueInvalidException if the provided ID or card ID value is null.
-     * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
-     * @throws CardNotExistException if the card with the provided card ID does not exist in the database.
+     * @param studentDto The DTO object representing the student and the card to be assigned.
+     * @throws FormValueInvalidException If the provided StudentDto object is null or if the student's ID or card ID is null.
+     * @throws StudentNotExistException If the student with the provided ID does not exist.
+     * @throws CardNotExistException If the card with the provided ID does not exist.
+     * @throws CardAlreadyAssignedException If the card is already assigned to another student.
+     * @throws CardAlreadyDeletedException If the card is marked as deleted and cannot be assigned.
+     * @throws AnotherCardAlreadyAssignedException If the student already has another card assigned.
      */
     @Transactional
     public void assignCardToStudent(StudentDto studentDto) {
@@ -165,13 +178,14 @@ public class CardService {
     }
 
     /**
-     * Retrieves the ID of the card assigned to the user with the provided ID.
+     * Retrieves the card associated with the provided user ID from the database.
      *
-     * @param userIdString User id as String.
-     * @return The ID of the card assigned to the user.
-     * @throws FormValueNullException if the provided ID value is null.
-     * @throws UserNotExistException if the user with the provided ID does not exist in the database.
-     * @throws CardNotAssignedException if the user with the provided ID does not have a card assigned to them.
+     * @param userIdString A string representing the ID of the user.
+     * @return A ResponseDto object containing the ID of the retrieved card.
+     * @throws InvalidIdException If the provided user ID is invalid.
+     * @throws UserNotExistException If the user with the provided ID does not exist.
+     * @throws CardNotExistException If the card associated with the user ID does not exist.
+     * @throws CardAlreadyDeletedException If the retrieved card is marked as deleted.
      */
     @Transactional
     public ResponseDto getCardByUserId(String userIdString) {
@@ -190,13 +204,13 @@ public class CardService {
     }
 
     /**
-     * Retrieves the ID of the card assigned to the student with the provided ID.
+     * Retrieves the card associated with the provided student ID from the database.
      *
-     * @param studentIdString User id as String.
-     * @return The ID of the card assigned to the student.
-     * @throws FormValueNullException if the provided ID value is null.
-     * @throws StudentNotExistException if the student with the provided ID does not exist in the database.
-     * @throws CardNotAssignedException if the student with the provided ID does not have a card assigned to them.
+     * @param studentIdString A string representing the ID of the student.
+     * @return A ResponseDto object containing the ID of the retrieved card.
+     * @throws InvalidIdException If the provided student ID is invalid.
+     * @throws StudentNotExistException If the student with the provided ID does not exist.
+     * @throws CardNotAssignedException If the student does not have an assigned card.
      */
     @Transactional
     public ResponseDto getCardByStudentId(String studentIdString) {
@@ -212,6 +226,14 @@ public class CardService {
         return new ResponseDto(student.getCardId().getId());
     }
 
+
+
+    /**
+     * Retrieves all cards from the database with pagination.
+     *
+     * @param pageable The pagination information.
+     * @return A PagingDto object containing the list of card DTOs and pagination details.
+     */
     @Transactional
     public PagingDto getAllCard(Pageable pageable) {
         Page<Card> cardPage = cardRepository.findAll(pageable);
@@ -223,6 +245,15 @@ public class CardService {
     }
 
 
+
+    /**
+     * Unassigns the card from the student with the provided student ID.
+     *
+     * @param studentIdString A string representing the ID of the student.
+     * @throws InvalidIdException If the provided student ID is invalid.
+     * @throws StudentNotExistException If the student with the provided ID does not exist.
+     * @throws CardNotAssignedException If the student does not have an assigned card.
+     */
     @Transactional
     public void unassignCardfromStudent(String studentIdString) {
         Integer studentId = idValidatorUtil.idValidator(studentIdString);
@@ -237,6 +268,12 @@ public class CardService {
         studentRepository.save(student);
     }
 
+
+    /**
+     * Retrieves all available cards from the database.
+     *
+     * @return A list of CardDto objects representing the available cards.
+     */
     @Transactional
     public List<CardDto> getAllAvaliableCard() {
         return cardRepository.findAllAvaliableCard().stream().map(cardMapper::fromEntityToMinimalDto).collect(Collectors.toList());

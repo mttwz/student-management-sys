@@ -50,6 +50,14 @@ public class WorkgroupService {
     private final IdValidatorUtil idValidatorUtil;
 
 
+
+    /**
+     * Creates a new workgroup.
+     *
+     * @param workgroupDto The DTO containing the workgroup information.
+     * @return The response DTO containing the ID of the created workgroup.
+     * @throws FormValueInvalidException If any of the required form values are invalid or missing.
+     */
     @Transactional
     public ResponseDto createWorkgroup(WorkgroupDto workgroupDto) {
         if(workgroupDto.getInstitution() == null || workgroupDto.getGroupName()==null || workgroupDto.getInstitution().isEmpty() || workgroupDto.getGroupName().isEmpty()){
@@ -70,6 +78,14 @@ public class WorkgroupService {
 
     }
 
+
+    /**
+     * Deletes a workgroup.
+     *
+     * @param workgroupIdString The string representation of the workgroup ID.
+     * @throws WorkgroupNotExistException      If the workgroup does not exist.
+     * @throws WorkgroupAlreadyDeletedException If the workgroup has already been deleted.
+     */
     @Transactional
     public void deleteWorkgroup(String workgroupIdString) {
         Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
@@ -83,10 +99,16 @@ public class WorkgroupService {
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         workgroup.setIsDeleted(true);
         workgroup.setDeletedAt(currDate);
-
-
     }
 
+
+    /**
+     * Restores a deleted workgroup.
+     *
+     * @param workgroupIdString The string representation of the workgroup ID.
+     * @throws WorkgroupNotExistException    If the workgroup does not exist.
+     * @throws WorkgroupNotDeletedException If the workgroup has not been deleted.
+     */
     @Transactional
     public void restoreDeletedWorkgroup(String workgroupIdString) {
         Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
@@ -100,8 +122,6 @@ public class WorkgroupService {
 
         workgroup.setIsDeleted(false);
         workgroup.setDeletedAt(null);
-
-
     }
 
 
@@ -115,6 +135,16 @@ public class WorkgroupService {
      *
      */
 
+
+    /**
+     * Adds a user to a workgroup.
+     *
+     * @param workgroupmembersDto The DTO containing the user and workgroup information.
+     * @return The response DTO containing the ID of the created workgroup member.
+     * @throws UserNotExistException              If the user does not exist.
+     * @throws WorkgroupNotExistException         If the workgroup does not exist.
+     * @throws UserAlreadyAddedToWorkgroupException If the user has already been added to the workgroup.
+     */
     @Transactional
     public ResponseDto addUserToWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
         userRepository.findById(workgroupmembersDto.getUserId())
@@ -135,6 +165,14 @@ public class WorkgroupService {
 
     }
 
+
+    /**
+     * Removes a user from a workgroup.
+     *
+     * @param workgroupmembersDto The DTO containing the user and workgroup information.
+     * @throws UserNotExistException      If the user does not exist.
+     * @throws WorkgroupNotExistException If the workgroup does not exist.
+     */
     @Transactional
     public void removeUserFromWorkgroup(WorkgroupmembersDto workgroupmembersDto) {
 
@@ -149,6 +187,13 @@ public class WorkgroupService {
 
     }
 
+
+    /**
+     * Retrieves a paginated list of all workgroups.
+     *
+     * @param pageable The pageable object specifying the page number and size.
+     * @return The PagingDto containing the paginated list of workgroup DTOs and pagination information.
+     */
     @Transactional
     public PagingDto getAllWorkgroup(Pageable pageable) {
         Page<Workgroup> workgroupPage=  workgroupRepository.getAllWorkgroup(pageable);
@@ -159,6 +204,14 @@ public class WorkgroupService {
     }
 
 
+
+    /**
+     * Retrieves the information of a workgroup.
+     *
+     * @param workgroupIdString The string representation of the workgroup ID.
+     * @return The WorkgroupInfoDto containing the information of the workgroup.
+     * @throws WorkgroupNotExistException If the workgroup does not exist.
+     */
     @Transactional
     public WorkgroupInfoDto getWorkgroupInfo(String workgroupIdString) {
         Integer workgroupId = idValidatorUtil.idValidator(workgroupIdString);
@@ -169,6 +222,14 @@ public class WorkgroupService {
         return workgroupMapper.fromEntityToInfoDto(workgroup);
     }
 
+    /**
+     * Edits the information of a workgroup.
+     *
+     * @param workgroupIdString The string representation of the workgroup ID.
+     * @param workgroupInfoDto  The WorkgroupInfoDto containing the updated information of the workgroup.
+     * @return The ResponseDto indicating the success of the operation.
+     * @throws WorkgroupNotExistException If the workgroup does not exist.
+     */
     @Transactional
     public ResponseDto editWorkgroupInfo(String workgroupIdString, WorkgroupInfoDto workgroupInfoDto) {
 
