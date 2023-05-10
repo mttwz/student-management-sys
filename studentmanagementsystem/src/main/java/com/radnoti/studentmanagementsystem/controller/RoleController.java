@@ -18,6 +18,11 @@ public class RoleController {
     private final UserService userService;
     private final RoleService roleService;
 
+    /**
+     * Sets the role of a user.
+     *
+     * @param userDto the user DTO containing the user details and the role to be set.
+     */
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/set-user-role", consumes = {"application/json"}, produces = {"application/json"})
     public void setUserRole(@RequestBody UserDto userDto) {
