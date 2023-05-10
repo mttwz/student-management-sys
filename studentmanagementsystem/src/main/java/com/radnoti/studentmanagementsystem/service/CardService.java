@@ -46,11 +46,12 @@ public class CardService {
     private final IdValidatorUtil idValidatorUtil;
 
     /**
-     * Creates a new card in the database based on the provided DTO object.
+     * Creates a new card in the database based on the provided card hash.
      *
-     * @param cardDto The DTO object representing the new card.
-     * @return The ID of the newly created card.
-     * @throws FormValueInvalidException if the provided DTO object is null or its hash value is null or empty.
+     * @param cardHash The hash value of the new card.
+     * @return A ResponseDto object containing the ID of the newly created card.
+     * @throws FormValueInvalidException if the provided card hash is null or empty.
+     * @throws CardAlreadyAssignedException if a card with the provided hash already exists.
      */
     @Transactional
     public ResponseDto createCard(String cardHash) {
