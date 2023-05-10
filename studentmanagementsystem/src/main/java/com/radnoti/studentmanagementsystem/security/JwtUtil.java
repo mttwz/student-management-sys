@@ -38,6 +38,7 @@ public class JwtUtil {
         Integer userId = user.getId();
         String role = user.getRoleId().getRoleType();
         String email = user.getEmail();
+        String fullName = user.getFirstName() + " " + user.getLastName();
 
 
         Instant now = Instant.now();
@@ -47,6 +48,7 @@ public class JwtUtil {
                 .claim("id", userId)
                 .claim("email", email )
                 .claim("role", role)
+                .claim("fullName", fullName)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plus(7, ChronoUnit.DAYS)))
                 .signWith(
@@ -87,7 +89,7 @@ public class JwtUtil {
 
 
 
-    public String getRoleFromJwt(String header) {
+    public String getRoleFromAuthHeader(String header) {
         String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
@@ -95,7 +97,7 @@ public class JwtUtil {
 
     }
 
-    public Integer getIdFromJwt(String header) {
+    public Integer getIdFromAuthHeader(String header) {
         String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));
@@ -103,7 +105,7 @@ public class JwtUtil {
 
     }
 
-    public String getEmailFromJwt(String header) {
+    public String getEmailFromAuthHeader(String header) {
         String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
         JSONObject data = new JSONObject(decode(parts[1]));

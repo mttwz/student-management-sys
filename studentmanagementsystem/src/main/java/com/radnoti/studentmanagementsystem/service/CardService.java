@@ -28,7 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -59,7 +61,7 @@ public class CardService {
         }
         Optional<Card> optionalCard = cardRepository.findByHash(cardHash);
         if(optionalCard.isPresent()){
-            throw new CardAlreadyAssignedException();
+            throw new CardAlreadyAssignedException();//TODO: card already exist exception
         }
 
         Card card = new Card();
@@ -220,6 +222,7 @@ public class CardService {
     }
 
 
+    @Transactional
     public void unassignCardfromStudent(String studentIdString) {
         Integer studentId = idValidatorUtil.idValidator(studentIdString);
         Student student = studentRepository.findById(studentId)
@@ -231,5 +234,10 @@ public class CardService {
 
         student.setCardId(null);
         studentRepository.save(student);
+    }
+
+    @Transactional
+    public List<CardDto> getAllAvaliableCard() {
+        return cardRepository.findAllAvaliableCard().stream().map(cardMapper::fromEntityToMinimalDto).collect(Collectors.toList());
     }
 }

@@ -17,5 +17,8 @@ public interface CardMapper {
 
     CardDto fromEntityToDto(Card card);
 
+    @Mapping(target = "hash", ignore = true)
+    CardDto fromEntityToMinimalDto(Card card);
+
     Card fromDtoToEntity(CardDto cardDto);
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.List;
 
 @RestController
 @RequestMapping("/card")
@@ -68,6 +69,12 @@ public class CardController {
     @GetMapping(path = "/get-all-card")
     public PagingDto getAllCard(Pageable pageable) {
         return cardService.getAllCard(pageable);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN,RoleEnum.Types.ADMIN})
+    @GetMapping(path = "/get-all-avaliable-card")
+    public List<CardDto> getAllAvaliableCard() {
+        return cardService.getAllAvaliableCard();
     }
 
 

@@ -24,6 +24,7 @@ import com.radnoti.studentmanagementsystem.repository.AttendanceRepository;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
+import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import com.radnoti.studentmanagementsystem.util.DateUtil;
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,7 @@ public class AttendanceService {
     private final CardRepository cardRepository;
     private final AttendanceMapper attendanceMapper;
     private final DateUtil dateUtil;
+    private final JwtUtil jwtUtil;
 
 
     /**
@@ -202,5 +204,24 @@ public class AttendanceService {
 
         attendanceRepository.delete(attendance);
 
+    }
+
+    public PagingDto getOwnAttendancePerDay(String authHeader, UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
+
+        Integer userId = jwtUtil.getIdFromAuthHeader(authHeader);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = userScheduleInfoDto.getDate().format(formatter);
+        List<AttendanceDto> attendanceDtoList = new ArrayList<>();
+        Page<Attendance> attendanceDtoPage = attendanceRepository.getOwnAttendancePerDay(userId, formattedDate,pageable);
+        PagingDto pagingDto = new PagingDto();
+
+        attendanceRepository.getOwnAttendancePerDay(userId, formattedDate,pageable).forEach(attendance -> {
+            attendanceDtoList.add(attendanceMapper.fromEntityToDto(attendance));
+        });
+
+        pagingDto.setAllPages(attendanceDtoPage.getTotalPages());
+        pagingDto.setAttendanceDtoList(attendanceDtoList);
+        return pagingDto;
     }
 }

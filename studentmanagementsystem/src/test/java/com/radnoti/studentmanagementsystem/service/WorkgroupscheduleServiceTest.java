@@ -152,7 +152,7 @@ public class WorkgroupscheduleServiceTest {
         List<Integer> workgroupScheduleList = Arrays.asList(1, 2, 3);
         when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
-        when(jwtUtil.getRoleFromJwt(any())).thenReturn(RoleEnum.Types.SUPERADMIN);
+        when(jwtUtil.getRoleFromAuthHeader(any())).thenReturn(RoleEnum.Types.SUPERADMIN);
         //when(userRepository.getWorkgroupScheduleByUserId(any())).thenReturn(workgroupScheduleList);
 
         Workgroupschedule workgroupschedule1 = new Workgroupschedule();

@@ -5,6 +5,7 @@ import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -59,6 +60,12 @@ public class AttendanceController {
     public List<AttendanceDto> getDailyAttendanceByUserId(@RequestBody UserScheduleInfoDto userScheduleInfoDto, Pageable pageable){
 
         return attendanceService.getAttendancePerDayByUserId(userScheduleInfoDto,pageable);
+    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN,RoleEnum.Types.ADMIN,RoleEnum.Types.STUDENT})
+    @PostMapping(path = "/get-own-daily-attendance")
+    public PagingDto getDailyAttendanceByUserId(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,@RequestBody UserScheduleInfoDto userScheduleInfoDto, Pageable pageable){
+        return attendanceService.getOwnAttendancePerDay(authHeader,userScheduleInfoDto,pageable);
     }
 
 }
