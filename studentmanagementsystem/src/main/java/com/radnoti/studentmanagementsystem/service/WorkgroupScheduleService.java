@@ -61,10 +61,10 @@ public class WorkgroupScheduleService {
         userRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
 
-        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+        if (jwtUtil.getRoleFromAuthHeader(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromAuthHeader(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
             workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(userId,pageable);
         } else {
-            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromJwt(authHeader),pageable);
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByUserId(jwtUtil.getIdFromAuthHeader(authHeader),pageable);
         }
 
 
@@ -88,11 +88,11 @@ public class WorkgroupScheduleService {
         workgroupRepository.findById(workgroupscheduleDto.getWorkgroupId())
                 .orElseThrow(WorkgroupNotExistException::new);
 
-        if (jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromJwt(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+        if (jwtUtil.getRoleFromAuthHeader(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromAuthHeader(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
 
             workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(workgroupscheduleDto.getWorkgroupId(),formattedDate,pageable);
         } else {
-            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(jwtUtil.getIdFromJwt(authHeader),formattedDate,pageable);
+            workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(jwtUtil.getIdFromAuthHeader(authHeader),formattedDate,pageable);
         }
 
 
@@ -205,8 +205,8 @@ public class WorkgroupScheduleService {
     }
 
     @Transactional
-    public List<UserScheduleInfoDto> getOwnUserSchedule(String authHeader, UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
-        Integer userId = jwtUtil.getIdFromJwt(authHeader);
+    public PagingDto getOwnUserSchedule(String authHeader, UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {
+        Integer userId = jwtUtil.getIdFromAuthHeader(authHeader);
         if(userScheduleInfoDto.getDate() == null){
             throw new FormValueInvalidException();
         }
@@ -221,10 +221,12 @@ public class WorkgroupScheduleService {
         });
 
         Page<Workgroupschedule> workgroupschedulePage = workgroupscheduleRepository.getWorkgroupSchedulePerDayByUserId(user.getId(),formattedDate,pageable);
+
         List<UserScheduleInfoDto> userScheduleInfoDtoList = new ArrayList<>();
 
         List<WorkgroupscheduleDto> workgroupscheduleDtoList = new ArrayList<>();
 
+        PagingDto pagingDto = new PagingDto();
 
 
         workgroupschedulePage.forEach(workgroupschedule -> {
@@ -244,7 +246,9 @@ public class WorkgroupScheduleService {
 
         calculateLate(attendanceDtoList,workgroupscheduleDtoList,userScheduleInfoDtoList);
 
-        return userScheduleInfoDtoList;
+        pagingDto.setAllPages(workgroupschedulePage.getTotalPages());
+        pagingDto.setUserScheduleInfoDtoList(userScheduleInfoDtoList);
+        return pagingDto;
     }
 
     public List<UserScheduleInfoDto> gerUserScheduleInWorkgroup(UserScheduleInfoDto userScheduleInfoDto, Pageable pageable) {

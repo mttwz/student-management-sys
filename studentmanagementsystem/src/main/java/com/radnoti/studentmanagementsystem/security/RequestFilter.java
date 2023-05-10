@@ -32,7 +32,7 @@ public class RequestFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(jwtUtil.getEmailFromJwt(authHeader));
+        UserDetails userDetails = userDetailsServiceImp.loadUserByUsername(jwtUtil.getEmailFromAuthHeader(authHeader));
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(

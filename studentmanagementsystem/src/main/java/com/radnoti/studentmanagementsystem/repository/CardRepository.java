@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,4 +32,10 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
     @Query("select c from Card c " +
             "join User u on u.id = c.student.userId.id")
     Page<Card> findAll(Pageable pageable);
+
+    @Query("select c from Card c " +
+            "where c.isDeleted = false and " +
+            "c.isAssigned = false " +
+            "order by c.createdAt desc")
+    List<Card> findAllAvaliableCard();
 }

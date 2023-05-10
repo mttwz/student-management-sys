@@ -49,29 +49,29 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByResetCode(String resetCode);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:userSearchString,'%') or " +
-            "u.lastName like concat('%',:userSearchString,'%') or " +
-            "u.email like concat('%',:userSearchString,'%'))")
+            "(u.firstName like concat(:userSearchString,'%') or " +
+            "u.lastName like concat(:userSearchString,'%') or " +
+            "u.email like concat(:userSearchString,'%'))")
     Page<User> searchAllUser(String userSearchString, Pageable pageable);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:userSearchString,'%') or " +
-            "u.lastName like concat('%',:userSearchString,'%') or " +
-            "u.email like concat('%',:userSearchString,'%')) and " +
+            "(u.firstName like concat(:userSearchString,'%') or " +
+            "u.lastName like concat(:userSearchString,'%') or " +
+            "u.email like concat(:userSearchString,'%')) and " +
             "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).STUDENT.id}")
     Page<User>  searchStudents(String userSearchString,Pageable pageable);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:userSearchString,'%') or " +
-            "u.lastName like concat('%',:userSearchString,'%') or " +
-            "u.email like concat('%',:userSearchString,'%')) and " +
+            "(u.firstName like concat(:userSearchString,'%') or " +
+            "u.lastName like concat(:userSearchString,'%') or " +
+            "u.email like concat(:userSearchString,'%')) and " +
             "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).ADMIN.id}")
     Page<User>  searchAdmins(String userSearchString,Pageable pageable);
 
     @Query("select u from User u where " +
-            "(u.firstName like concat('%',:userSearchString,'%') or " +
-            "u.lastName like concat('%',:userSearchString,'%') or " +
-            "u.email like concat('%',:userSearchString,'%')) and " +
+            "(u.firstName like concat(:userSearchString,'%') or " +
+            "u.lastName like concat(:userSearchString,'%') or " +
+            "u.email like concat(:userSearchString,'%')) and " +
             "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).SUPERADMIN.id}")
     Page<User>  searchSuperadmins(String userSearchString,Pageable pageable);
 

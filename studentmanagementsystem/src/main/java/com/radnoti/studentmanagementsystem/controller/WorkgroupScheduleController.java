@@ -49,7 +49,7 @@ public class WorkgroupScheduleController {
         workgroupscheduleService.restoreDeletedWorkgroupSchedule(workgroupScheduleId);
     }
 
-    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN, RoleEnum.Types.STUDENT})
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @PostMapping(path = "/get-user-schedule")
     public List<UserScheduleInfoDto> getUserSchedule(@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
         return workgroupscheduleService.getUserSchedule(userScheduleInfoDto,pageable);
@@ -57,7 +57,7 @@ public class WorkgroupScheduleController {
 
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN, RoleEnum.Types.STUDENT})
     @PostMapping(path = "/get-own-user-schedule")
-    public List<UserScheduleInfoDto> getOwnUserSchedule(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
+    public PagingDto getOwnUserSchedule(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,@RequestBody UserScheduleInfoDto userScheduleInfoDto,Pageable pageable) {
         return workgroupscheduleService.getOwnUserSchedule(authHeader,userScheduleInfoDto,pageable);
     }
 
