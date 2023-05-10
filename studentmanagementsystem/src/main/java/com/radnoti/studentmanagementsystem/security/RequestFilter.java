@@ -25,6 +25,16 @@ public class RequestFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImp userDetailsServiceImp;
 
+
+    /**
+     * Filters incoming requests and performs JWT authentication.
+     *
+     * @param request     The incoming HTTP request.
+     * @param response    The HTTP response.
+     * @param filterChain The filter chain to proceed with the request.
+     * @throws ServletException If an error occurs during the filter execution.
+     * @throws IOException      If an I/O error occurs during the filter execution.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

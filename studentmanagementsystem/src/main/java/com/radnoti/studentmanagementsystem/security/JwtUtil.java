@@ -29,6 +29,13 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String Secret;
 
+
+    /**
+     * Generates a JWT for the given user.
+     *
+     * @param user The user for whom the JWT is generated.
+     * @return The generated JWT.
+     */
     public String generateJwt(User user) {
 
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -61,6 +68,13 @@ public class JwtUtil {
     }
     //enum
 
+
+    /**
+     * Validates a JWT.
+     *
+     * @param token The JWT to validate.
+     * @return true if the JWT is valid, false otherwise.
+     */
     public boolean validateJwt(String token) {
 
         try{
@@ -88,7 +102,12 @@ public class JwtUtil {
     }
 
 
-
+    /**
+     * Retrieves the role from the authentication header of a JWT.
+     *
+     * @param header The authentication header containing the JWT.
+     * @return The role extracted from the JWT.
+     */
     public String getRoleFromAuthHeader(String header) {
         String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
@@ -97,6 +116,12 @@ public class JwtUtil {
 
     }
 
+    /**
+     * Retrieves the ID from the authentication header of a JWT.
+     *
+     * @param header The authentication header containing the JWT.
+     * @return The ID extracted from the JWT.
+     */
     public Integer getIdFromAuthHeader(String header) {
         String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
@@ -105,6 +130,13 @@ public class JwtUtil {
 
     }
 
+
+    /**
+     * Retrieves the email from the authentication header of a JWT.
+     *
+     * @param header The authentication header containing the JWT.
+     * @return The email extracted from the JWT.
+     */
     public String getEmailFromAuthHeader(String header) {
         String cleanToken = header.split(" ")[1];
         String[] parts = cleanToken.split("\\.");
@@ -113,6 +145,12 @@ public class JwtUtil {
 
     }
 
+    /**
+     * Decodes a Base64 encoded string.
+     *
+     * @param encodedString The Base64 encoded string to decode.
+     * @return The decoded string.
+     */
     private static String decode(String encodedString) {
         return new String(Base64.getUrlDecoder().decode(encodedString));
     }
