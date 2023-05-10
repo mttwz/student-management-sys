@@ -20,11 +20,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final RequestFilter requestFilter;
 
+
+    /**
+     * Overrides the authenticationManagerBean method to expose the AuthenticationManager as a bean.
+     *
+     * @return The AuthenticationManager bean.
+     * @throws Exception If an error occurs while creating the bean.
+     */
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
+
+    /**
+     * Configures the security settings for the HTTP requests.
+     *
+     * @param http The HttpSecurity object to configure.
+     * @throws Exception If an error occurs while configuring the security settings.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
