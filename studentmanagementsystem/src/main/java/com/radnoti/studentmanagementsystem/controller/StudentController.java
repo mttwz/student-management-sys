@@ -28,7 +28,13 @@ public class StudentController {
 
     private final StudentService studentService;
 
-
+    /**
+     * Registers a student.
+     *
+     * @param userDto the user DTO containing the student details.
+     * @return a ResponseDto object containing the registration response.
+     * @throws NoSuchAlgorithmException if the hashing algorithm is not found.
+     */
     @PostMapping(path = "/register-student", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseDto register(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
         return studentService.registerStudent(userDto);

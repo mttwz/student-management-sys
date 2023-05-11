@@ -64,6 +64,7 @@ public class UserService {
      * @throws FormValueInvalidException if a required field is missing or empty in the UserDto object
      * @throws UserAlreadyExistException if a user with the same email already exists in the database
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not available in the environment
+     * @throws RoleNotExistException If the role with the provided role name does not exist.
      */
 
     @Transactional
@@ -120,7 +121,19 @@ public class UserService {
 
 
 
-
+    /**
+     * Activates a user based on the provided UserDto object.
+     * The method retrieves a user from the database using the activation code specified in the UserDto object.
+     * It then verifies that the password provided in the UserDto object matches the stored password hash of the user.
+     * If the password does not match or the user is already activated or deleted, appropriate exceptions are thrown.
+     * The user's activated status is set to true and the activatedAt field is updated with the current date and time.
+     *
+     * @param userDto a Dto object containing the user's activation information
+     * @throws NoSuchAlgorithmException     if the SHA-256 algorithm is not available in the environment
+     * @throws UserNotActivatedException    if the user is not activated or the activation code is not found
+     * @throws UserAlreadyDeletedException  if the user is already deleted
+     * @throws UserAlreadyActivatedException if the user is already activated
+     */
     @Transactional
     public void setUserIsActivated(UserDto userDto) throws NoSuchAlgorithmException {
 
@@ -145,7 +158,16 @@ public class UserService {
 
 
 
-
+    /**
+     * Deletes a user from the database based on the provided user ID.
+     * The method retrieves the user from the database using the user ID.
+     * If the user is already deleted, a UserAlreadyDeletedException is thrown.
+     * The user's deleted status is set to true and the deletedAt field is updated with the current date and time.
+     *
+     * @param userIdString a string representing the ID of the user to be deleted
+     * @throws UserNotExistException        if the user with the provided ID does not exist in the database
+     * @throws UserAlreadyDeletedException  if the user is already deleted
+     */
     @Transactional
     public void deleteUser(String userIdString) {
         Integer userId = idValidatorUtil.idValidator(userIdString);
@@ -162,6 +184,17 @@ public class UserService {
 
     }
 
+
+    /**
+     * Restores a previously deleted user in the database based on the provided user ID.
+     * The method retrieves the user from the database using the user ID.
+     * If the user is not deleted, a UserNotDeletedException is thrown.
+     * The user's deleted status is set to false and the deletedAt field is set to null, indicating that the user is no longer deleted.
+     *
+     * @param userIdString a string representing the ID of the user to be restored
+     * @throws UserNotExistException    if the user with the provided ID does not exist in the database
+     * @throws UserNotDeletedException  if the user is not deleted
+     */
     @Transactional
     public void restoreDeletedUser(String userIdString) {
         Integer userId = idValidatorUtil.idValidator(userIdString);
@@ -177,6 +210,14 @@ public class UserService {
 
     }
 
+
+    /**
+     * Retrieves a list of all users from the database.
+     * The method fetches all user entities from the database and maps them to UserInfoDto objects using a mapper.
+     * The resulting list of UserInfoDto objects is returned.
+     *
+     * @return a list of UserInfoDto objects representing all users in the database
+     */
     @Transactional
     public List<UserInfoDto> getAllUser() {
         Iterable<User> userIterable = userRepository.findAll();
@@ -185,6 +226,17 @@ public class UserService {
         return userInfoDtoList;
     }
 
+
+    /**
+     * Retrieves the information of a user with the specified user ID.
+     * The method fetches the user entity from the database based on the provided user ID.
+     * If a user with the given ID is found, it is mapped to a UserInfoDto object using a mapper,
+     * and the UserInfoDto object is returned.
+     *
+     * @param userIdString a string representing the ID of the user
+     * @return a UserInfoDto object containing the information of the user
+     * @throws UserNotExistException if a user with the specified ID does not exist in the database
+     */
     @Transactional
     public UserInfoDto getUserInfo(String userIdString) {
         Integer userId = idValidatorUtil.idValidator(userIdString);
@@ -195,6 +247,23 @@ public class UserService {
 
     }
 
+
+    /**
+     * Edits the information of a user with the specified user ID based on the provided UserInfoDto object.
+     * The method retrieves the user entity from the database using the user ID.
+     * If a user with the given ID is found, the method checks if the provided email is already associated with another user.
+     * If so, it throws a UserAlreadyExistException.
+     * The method then updates the user's role, first name, last name, date of birth, email, and phone number based on the values in the UserInfoDto object.
+     * The user's role is determined based on the roleName field of the UserInfoDto object, which can be "superadmin", "admin", or "student".
+     * Finally, the method returns a ResponseDto object containing the ID of the edited user.
+     *
+     * @param userIdString a string representing the ID of the user to be edited
+     * @param userInfoDto  a UserInfoDto object containing the updated information of the user
+     * @return a ResponseDto object containing the ID of the edited user
+     * @throws UserNotExistException       if a user with the specified ID does not exist in the database
+     * @throws UserAlreadyExistException   if the provided email is already associated with another user
+     * @throws RoleNotExistException       if the roleName field of the UserInfoDto object does not match any valid role
+     */
     @Transactional
     public ResponseDto editUserInfo(String userIdString, UserInfoDto userInfoDto) {
 
@@ -226,6 +295,22 @@ public class UserService {
         return new ResponseDto(userId);
     }
 
+
+
+
+
+    /**
+     * Searches for superadmins, users, or workgroups based on the provided search criteria.
+     * The method allows searching for different categories of data, such as all users, superadmins, students, admins, workgroups, or users within a specific workgroup.
+     * The search is performed using the specified search query (q) and pageable parameters.
+     * The method returns a PagingDto object containing the search results and pagination information.
+     *
+     * @param groupIdString a string representing the ID of the workgroup (used for searching users within a workgroup)
+     * @param category      a string representing the category of data to search for (e.g., "all_users", "superadmin", "student", "admin", "workgroup", "users_in_workgroup")
+     * @param q             a string representing the search query
+     * @param pageable      a Pageable object defining the pagination parameters
+     * @return a PagingDto object containing the search results and pagination information
+     */
     @Transactional
     public PagingDto searchSuperadmin(String groupIdString, String category,String q,Pageable pageable) {
 
@@ -281,6 +366,18 @@ public class UserService {
     }
 
 
+    /**
+     * Searches for students, workgroups, or users within a specific workgroup based on the provided search criteria.
+     * The method allows searching for different categories of data, such as students, workgroups, or users within a workgroup.
+     * The search is performed using the specified search query (q) and pageable parameters.
+     * The method returns a PagingDto object containing the search results and pagination information.
+     *
+     * @param groupIdString a string representing the ID of the workgroup (used for searching users within a workgroup)
+     * @param category      a string representing the category of data to search for (e.g., "student", "workgroup", "users_in_workgroup")
+     * @param q             a string representing the search query
+     * @param pageable      a Pageable object defining the pagination parameters
+     * @return a PagingDto object containing the search results and pagination information
+     */
 
     @Transactional
     public PagingDto searchAdmin(String groupIdString, String category,String q,Pageable pageable) {

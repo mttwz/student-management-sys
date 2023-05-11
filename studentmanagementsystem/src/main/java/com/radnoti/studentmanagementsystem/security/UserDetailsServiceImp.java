@@ -17,6 +17,13 @@ import java.util.Optional;
 public class UserDetailsServiceImp implements UserDetailsService {
     private final UserRepository userRepository;
 
+    /**
+     * Loads user details based on the username (email).
+     *
+     * @param username The username (email) of the user.
+     * @return A UserDetails object representing the user details.
+     * @throws UsernameNotFoundException If the user with the given username is not found.
+     */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -10,6 +10,13 @@ import java.time.ZonedDateTime;
 
 @Component
 public class DateUtil {
+
+    /**
+     * Converts a ZonedDateTime object to a ZonedDateTime object with the same date and time values but using the current system zone.
+     *
+     * @param zonedDateTime The ZonedDateTime object to convert.
+     * @return The converted ZonedDateTime object.
+     */
     public ZonedDateTime dateConverter(ZonedDateTime zonedDateTime){
         if (zonedDateTime == null){
             return null;
@@ -17,6 +24,14 @@ public class DateUtil {
         return  ZonedDateTime.of(zonedDateTime.getYear(),zonedDateTime.getMonthValue(), zonedDateTime.getDayOfMonth(), zonedDateTime.getHour(), zonedDateTime.getMinute(), zonedDateTime.getSecond(), 0, ZonedDateTime.now().getZone());
 
     }
+
+    /**
+     * Checks if two ZonedDateTime objects represent the same day.
+     *
+     * @param date1 The first ZonedDateTime object.
+     * @param date2 The second ZonedDateTime object.
+     * @return true if the two ZonedDateTime objects represent the same day, false otherwise.
+     */
     public boolean isSameDay(ZonedDateTime date1, ZonedDateTime date2) {
 
         LocalDate localDate1 = date1.toInstant()

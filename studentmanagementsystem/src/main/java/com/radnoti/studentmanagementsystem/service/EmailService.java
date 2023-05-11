@@ -17,6 +17,12 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
 
 
+    /**
+     * Sends an email using the provided EmailDto object.
+     *
+     * @param email The EmailDto object containing the email details.
+     * @throws MessagingException If an error occurs while sending the email.
+     */
     public void sendEmail(EmailDto email) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

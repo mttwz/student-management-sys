@@ -46,7 +46,14 @@ public class PasswordResetService {
 
 
 
-
+    /**
+     * Generates a password reset code for the user with the provided username.
+     *
+     * @param userName The username of the user.
+     * @throws UserNotExistException If the user with the provided username does not exist.
+     * @throws UserDeletedException If the user has been deleted.
+     * @throws UserNotActivatedException If the user has not activated their account.
+     */
     @Transactional
     public void generatePasswordResetCode(String userName){
         Integer userId = userRepository.findByUsername(userName)
@@ -75,6 +82,16 @@ public class PasswordResetService {
     }
 
 
+
+    /**
+     * Resets the password of the user using the provided UserDto object.
+     *
+     * @param userDto The UserDto object containing the user's email, reset code, and new password.
+     * @throws NoSuchAlgorithmException If the SHA256 algorithm is not available.
+     * @throws ResetCodeNotExistException If the provided reset code does not exist.
+     * @throws InvalidCredentialsException If the email in the UserDto object does not match the user's email.
+     * @throws ResetCodeInvalidException If the provided reset code is invalid.
+     */
     @Transactional
     public void resetPassword(UserDto userDto) throws NoSuchAlgorithmException {
 
@@ -100,6 +117,14 @@ public class PasswordResetService {
     }
 
 
+    /**
+     * Retrieves the last valid password reset code for the user with the provided user ID.
+     *
+     * @param userId The ID of the user.
+     * @return The Passwordreset object representing the last valid reset code.
+     * @throws ResetCodeNotExistException If there is no valid reset code for the user.
+     * @throws ResetCodeExpiredException If the last valid reset code has expired.
+     */
     public Passwordreset getLastValidResetCode(Integer userId){
 
         Pageable pageable = PageRequest.of(0, 1);

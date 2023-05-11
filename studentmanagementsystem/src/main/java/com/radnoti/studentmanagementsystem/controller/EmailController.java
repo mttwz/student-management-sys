@@ -19,6 +19,12 @@ public class EmailController {
     private final EmailService emailService;
 
     // TODO: 2023. 04. 24. ez egy test
+
+    /**
+     * Sends an email.
+     *
+     * @throws MessagingException if an error occurs while sending the email.
+     */
     @PostMapping(path = "send")
     public void sendEmail() throws MessagingException {
         EmailDto email = new EmailDto();

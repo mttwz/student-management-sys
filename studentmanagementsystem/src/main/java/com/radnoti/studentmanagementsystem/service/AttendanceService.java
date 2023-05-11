@@ -57,17 +57,17 @@ public class AttendanceService {
 
 
     /**
-     * This method logs the attendance of a student with the given student ID.
-     * The method retrieves the student with the given ID from the database, validates the student's status,
-     * and creates an attendance record with the current date and time. The method also checks if there is an
-     * existing attendance record for the student on the same day, and if so, updates it with the leaving time.
+     * Logs the attendance of a student using the provided card hash.
      *
-     * @param cardHash ........
-     * @return a ResponseDto object containing the ID of the created or updated attendance record
-     * @throws InvalidIdException  if the provided student id is invalid eg: if the id contains a string
-     * @throws StudentNotExistException  if the student with the given ID does not exist in the database
-     * @throws UserDeletedException      if the student's user account has been deleted
-     * @throws UserNotActivatedException if the student's user account has not been activated
+     * @param cardHash The hash value of the card used for attendance logging.
+     * @return A ResponseDto object containing the ID of the attendance record.
+     * @throws CardNotExistException If the card with the given hash does not exist.
+     * @throws CardAlreadyDeletedException If the card has already been deleted.
+     * @throws CardNotAssignedException If the card has not been assigned to any student.
+     * @throws StudentNotExistException If the student associated with the card does not exist.
+     * @throws CardMismatchException If there is a mismatch between the card and the student.
+     * @throws UserDeletedException If the user associated with the student has been deleted.
+     * @throws UserNotActivatedException If the user associated with the student has not been activated.
      */
     @Transactional
     public ResponseDto logStudent(String cardHash){
@@ -124,6 +124,16 @@ public class AttendanceService {
 
     }
 
+
+    /**
+     * Creates an attendance record based on the provided AttendanceDto.
+     *
+     * @param attendanceDto the AttendanceDto object containing the attendance information
+     * @throws UserNotExistException if the user with the provided ID does not exist
+     * @throws UserDeletedException if the user is marked as deleted
+     * @throws UserNotActivatedException if the user is not activated
+     * @throws StudentNotExistException if the student corresponding to the user does not exist
+     */
     @Transactional
     public void createAttendance(AttendanceDto attendanceDto){
         User user = userRepository.findById(attendanceDto.getUserId())
@@ -147,6 +157,15 @@ public class AttendanceService {
         attendanceRepository.save(attendance);
     }
 
+
+    /**
+     * Retrieves a paginated list of attendance records for the user with the provided user ID.
+     *
+     * @param userIdString the ID of the user as a string
+     * @param pageable the Pageable object specifying the page size and number
+     * @return a PagingDto object containing the paginated list of attendance records
+     * @throws IllegalArgumentException if the provided user ID is invalid
+     */
     @Transactional
     public PagingDto getAttendanceByUserId(String userIdString,Pageable pageable){
         Integer userId = idValidatorUtil.idValidator(userIdString);
@@ -158,6 +177,17 @@ public class AttendanceService {
         return pagingDto;
 
     }
+
+
+
+    /**
+     * Retrieves a paginated list of attendance records for the student with the provided student ID.
+     *
+     * @param studentIdString the ID of the student as a string
+     * @param pageable the Pageable object specifying the page size and number
+     * @return a PagingDto object containing the paginated list of attendance records
+     * @throws IllegalArgumentException if the provided student ID is invalid
+     */
     @Transactional
     public PagingDto getAttendanceByStudentId(String studentIdString,Pageable pageable){
         Integer studentId = idValidatorUtil.idValidator(studentIdString);
@@ -171,6 +201,15 @@ public class AttendanceService {
     }
 
 
+    /**
+     * Retrieves a list of attendance records per day for the user with the provided user ID,
+     * based on the specified date in the UserScheduleInfoDto object.
+     *
+     * @param userScheduleInfoDto the UserScheduleInfoDto object containing the user ID and date
+     * @param pageable the Pageable object specifying the page size and number
+     * @return a list of AttendanceDto objects representing the attendance records per day
+     * @throws IllegalArgumentException if the provided user ID is invalid
+     */
     @Transactional
     public List<AttendanceDto> getAttendancePerDayByUserId(UserScheduleInfoDto userScheduleInfoDto, Pageable pageable){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -183,6 +222,14 @@ public class AttendanceService {
 
     }
 
+
+    /**
+     * Edits the attendance record based on the provided AttendanceDto.
+     *
+     * @param attendanceDto the AttendanceDto object containing the updated attendance information
+     * @throws FormValueInvalidException if the ID, arrival, or leaving value in the AttendanceDto is null
+     * @throws AttendanceNotExistException if the attendance record with the provided ID does not exist
+     */
     @Transactional
     public void editAttendance(AttendanceDto attendanceDto) {
         if(attendanceDto.getId() == null|| attendanceDto.getArrival() == null || attendanceDto.getLeaving() == null ){
@@ -195,6 +242,14 @@ public class AttendanceService {
         attendance.setLeaving(dateUtil.dateConverter(attendanceDto.getLeaving()));
     }
 
+
+    /**
+     * Deletes the attendance record with the provided attendance ID.
+     *
+     * @param attendanceIdString the ID of the attendance record as a string
+     * @throws IllegalArgumentException if the provided attendance ID is invalid
+     * @throws AttendanceNotExistException if the attendance record with the provided ID does not exist
+     */
     public void deleteAttendance(String attendanceIdString) {
         System.err.println(attendanceIdString);
         //lehet csak logikai torles kene idk
