@@ -87,7 +87,7 @@ public class UserController {
     public @ResponseBody PagingDto searchAdmin(@RequestParam(required = false) String groupId, @RequestParam String category,
                                                     @RequestParam String q,
                                                     Pageable pageable){
-        return userService.searchSuperadmin(groupId,category,q,pageable);
+        return userService.searchAdmin(groupId,category,q,pageable);
 
     }
 
