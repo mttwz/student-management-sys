@@ -1,7 +1,9 @@
 package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
+import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
+import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
@@ -47,28 +49,51 @@ public class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
 
-
     @Test
     public void testRegisterStudent() throws NoSuchAlgorithmException {
+        // Mocking dependencies and test data
         UserDto userDto = new UserDto();
-        userDto.setFirstName("testuser");
-        userDto.setPassword("testpassword");
-        userDto.setRoleName(RoleEnum.Types.STUDENT);
+        userDto.setPassword("password");
 
-
-        when(userService.adduser(userDto)).thenReturn(new ResponseDto(1));
+        ResponseDto savedUserIdResponse = new ResponseDto(123);
 
         User user = new User();
-        user.setId(1);
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        user.setId(123);
 
-        Student student = new Student();
-        student.setUserId(user);
-        when(studentRepository.save(any())).thenReturn(student);
+        when(userService.adduser(any(UserDto.class))).thenReturn(savedUserIdResponse);
+        when(userRepository.findById(123)).thenReturn(Optional.of(user));
 
-        int actual = studentService.registerStudent(userDto).getId();
+        // Calling the method to be tested
+        ResponseDto response = studentService.registerStudent(userDto);
 
-        assertEquals(1, actual);
+        // Verifying the behavior and assertions
+        verify(userService, times(1)).adduser(userDto);
+        verify(userRepository, times(1)).findById(123);
+        verify(studentRepository, times(1)).save(any(Student.class));
+
+        assertNotNull(response);
+        assertEquals(savedUserIdResponse.getId(), response.getId());
+    }
+
+
+
+    @Test
+    public void testRegisterStudent_NullPassword_ThrowsFormValueInvalidException() {
+        // Mocking dependencies and test data
+        UserDto userDto = new UserDto();
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(FormValueInvalidException.class, () -> {
+            studentService.registerStudent(userDto);
+        });
+
+
     }
 
 }
+
+
+
+
+
+
