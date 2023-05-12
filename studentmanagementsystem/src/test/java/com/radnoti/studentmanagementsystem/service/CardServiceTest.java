@@ -1,15 +1,12 @@
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.exception.card.CardAlreadyDeletedException;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
-import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
+import com.radnoti.studentmanagementsystem.exception.card.*;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
+import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;
-import com.radnoti.studentmanagementsystem.model.dto.CardDto;
-import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
-import com.radnoti.studentmanagementsystem.model.dto.UserDto;
+import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
 import com.radnoti.studentmanagementsystem.model.entity.User;
@@ -21,11 +18,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import static org.mockito.Mockito.*;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,405 +56,547 @@ public class CardServiceTest {
     @Mock
     IdValidatorUtil idValidatorUtil;
 
-
     @Test
-    public void createCardTest_valid() {
+    public void testCreateCard_Success() {
         // Arrange
-        CardDto cardDto = new CardDto();
-        cardDto.setHash("valid-hash");
-        Card card = new Card();
-        card.setId(1);
-        card.setHash("valid-hash");
-        when(cardRepository.save(any())).thenReturn(card);
-        when(cardMapper.fromDtoToEntity(any())).thenReturn(card);
-
-        // Act
-        Integer cardId = cardService.createCard("valid-hash").getId();
-
-        // Assert
-        assertNotNull(cardId);
-    }
-
-    @Test
-    public void createCardTest_cardDto_null() {
-        // Arrange
-        CardDto cardDto = null;
-
-        // Act and Assert
-        assertThrows(FormValueInvalidException.class, () -> cardService.createCard("valid-hash"));
-        verifyNoInteractions(cardRepository);
-    }
-
-    @Test
-    public void createCardTest_card_hash_null() {
-        // Arrange
-        CardDto cardDto = new CardDto();
-        cardDto.setHash(null);
-
-        // Act and Assert
-        assertThrows(FormValueInvalidException.class, () -> cardService.createCard("valid-hash"));
-        verifyNoInteractions(cardRepository);
-    }
-
-    @Test
-    public void createCardTest_empty_hash() {
-        // Arrange
-        CardDto cardDto = new CardDto();
-        cardDto.setHash("");
-
-        // Act and Assert
-        assertThrows(FormValueInvalidException.class, () -> cardService.createCard("valid-hash"));
-        verifyNoInteractions(cardRepository);
-    }
-
-
-    @Test
-    public void connectCardToStudentTest_valid() {
-        // arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
-        studentDto.setCardId(1);
-
-        Student mockStudent = mock(Student.class);
-        mockStudent.setId(1);
-
-        Card mockCard = mock(Card.class);
-        mockCard.setId(1);
-        mockCard.setIsDeleted(false);
-        mockCard.setIsAssigned(false);
-        mockCard.setLastAssignedTo(null);
-
-        // mock the behavior of your repositories
-        when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.of(mockCard));
-        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(mockStudent));
-
-        cardService.assignCardToStudent(studentDto);
-        // act and assert
-        verify(mockStudent,times(1)).setCardId(mockCard);
-        verify(mockCard,times(1)).setIsAssigned(true);
-        verify(mockCard,times(1)).setLastAssignedTo(mockStudent.getId());
-    }
-
-    @Test
-    public void connectCardToStudentTest_studentId_null() {
-        // arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(null);
-        studentDto.setCardId(2);
-
-        // act and assert
-        assertThrows(FormValueInvalidException.class, () -> cardService.assignCardToStudent(studentDto));
-    }
-
-    @Test
-    public void connectCardToStudentTest_student_cardId_null() {
-        // arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
-        studentDto.setCardId(null);
-
-        // act and assert
-        assertThrows(FormValueInvalidException.class, () -> cardService.assignCardToStudent(studentDto));
-    }
-
-    @Test
-    public void connectCardToStudentTest_student_not_exist() {
-        // arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
-        studentDto.setCardId(2);
-
-        // mock the behavior of your repositories
-        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.empty());
-
-        // act and assert
-        assertThrows(StudentNotExistException.class, () -> cardService.assignCardToStudent(studentDto));
-    }
-
-    @Test
-    public void connectCardToStudentTest_card_not_exist() {
-        // arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
-        studentDto.setCardId(2);
-
-        // mock the behavior of your repositories
-        when(cardRepository.findById(studentDto.getCardId())).thenReturn(Optional.empty());
-        when(studentRepository.findById(studentDto.getId())).thenReturn(Optional.of(new Student()));
-
-        // act and assert
-        assertThrows(CardNotExistException.class, () -> cardService.assignCardToStudent(studentDto));
-    }
-
-
-
-    @Test
-    public void getCardByUserIdTest_valid() {
-        // Arrange
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-
-        User user = new User();
-        user.setId(userDto.getId());
-
-        when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(user));
+        String cardHash = "cardHash";
+        Mockito.when(cardRepository.findByHash(cardHash)).thenReturn(Optional.empty());
 
         Card card = new Card();
-        card.setId(1);
+        card.setHash(cardHash);
+        card.setCreatedAt(ZonedDateTime.now());
+        card.setIsDeleted(false);
+        card.setIsAssigned(false);
 
-        when(cardRepository.getCardByUserId(userDto.getId())).thenReturn(Optional.of(card));
-        when(idValidatorUtil.idValidator(userDto.getId().toString())).thenReturn(1);
+        Mockito.when(cardRepository.save(Mockito.any(Card.class))).thenReturn(card);
+
         // Act
-        Integer result = cardService.getCardByUserId(userDto.getId().toString()).getId();
+        ResponseDto response = cardService.createCard(cardHash);
 
         // Assert
-        assertEquals(1, result);
+        assertEquals(card.getId(), response.getId());
     }
 
-
-
     @Test
-    public void getCardByUserIdTest_user_not_exist() {
+    public void testCreateCard_MissingCardHash_ThrowsFormValueInvalidException() {
         // Arrange
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-
-
-        when(userRepository.findById(any())).thenReturn(Optional.empty());
-        when(idValidatorUtil.idValidator(userDto.getId().toString())).thenReturn(null);
 
         // Act & Assert
-        assertThrows(UserNotExistException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
+        assertThrows(FormValueInvalidException.class, () -> {
+            cardService.createCard(null);
+        });
     }
 
     @Test
-    public void getCardByUserIdTest_card_not_exist() {
+    public void testCreateCard_CardAlreadyAssigned_ThrowsCardAlreadyAssignedException() {
         // Arrange
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
-
-        User user = new User();
-        user.setId(1);
-
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        when(cardRepository.getCardByUserId(any())).thenReturn(Optional.empty());
-//        when(cardRepository.getCardByUserId(any())).thenThrow(CardNotExistException.class);
+        String cardHash = "cardHash";
+        Optional<Card> optionalCard = Optional.of(new Card());
+        Mockito.when(cardRepository.findByHash(cardHash)).thenReturn(optionalCard);
 
         // Act & Assert
-        assertThrows(CardNotExistException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
+        assertThrows(CardAlreadyAssignedException.class, () -> {
+            cardService.createCard(cardHash);
+        });
     }
 
     @Test
-    public void getCardByUserIdTest_card_already_deleted(){
-        UserDto userDto = new UserDto();
-        userDto.setId(1);
+    public void testDeleteCard() {
+        // Mocking dependencies and test data
+        String cardIdString = "1";
+        Integer cardId = 1;
+        Card card = new Card();
+        card.setId(cardId);
+        card.setIsDeleted(false);
+        card.setLastAssignedTo(123);
 
-        User user = new User();
-        user.setId(1);
+        when(idValidatorUtil.idValidator(cardIdString)).thenReturn(cardId);
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
+        when(studentRepository.findById(card.getLastAssignedTo())).thenReturn(Optional.of(new Student()));
 
+        // Calling the method to be tested
+        cardService.deleteCard(cardIdString);
+
+
+        assertTrue(card.getIsDeleted());
+        assertFalse(card.getIsAssigned());
+        assertNotNull(card.getDeletedAt());
+    }
+
+    @Test
+    public void testDeleteCard_InvalidCardId() {
+        // Mocking dependencies and test data
+        String cardIdString = "invalid";
+
+        when(idValidatorUtil.idValidator(cardIdString)).thenThrow(new CardNotExistException());
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardNotExistException.class, () -> {
+            cardService.deleteCard(cardIdString);
+        });
+
+    }
+
+    @Test
+    public void testDeleteCard_CardAlreadyDeleted() {
+        // Mocking dependencies and test data
+        String cardIdString = "deleted";
         Card card = new Card();
         card.setId(1);
         card.setIsDeleted(true);
 
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-        when(cardRepository.getCardByUserId(any())).thenReturn(Optional.of(card));
+        when(idValidatorUtil.idValidator(cardIdString)).thenReturn(1);
+        when(cardRepository.findById(1)).thenReturn(Optional.of(card));
 
-        // Act & Assert
-        assertThrows(CardAlreadyDeletedException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardAlreadyDeletedException.class, () -> {
+            cardService.deleteCard(cardIdString);
+        });
+
     }
 
 
     @Test
-    public void getCardByStudentIdTest_valid() {
-        // Arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
-
+    public void testRestoreDeletedCard_ValidCardId() {
+        // Mocking dependencies and test data
+        String cardIdString = "1";
+        Integer cardId = 1;
         Card card = new Card();
-        card.setId(1);
+        card.setId(cardId);
+        card.setIsDeleted(true);
 
+        int studentId = 123;
         Student student = new Student();
-        student.setId(1);
-        student.setCardId(card);
+        student.setId(studentId);
+        student.setCardId(null);
+        card.setLastAssignedTo(studentId);
 
-        when(studentRepository.findById(any())).thenReturn(Optional.of(student));
+        when(idValidatorUtil.idValidator(cardIdString)).thenReturn(cardId);
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
+        when(studentRepository.findById(card.getLastAssignedTo())).thenReturn(Optional.of(student));
 
-        // Act
-        Integer actual = cardService.getCardByStudentId(studentDto.getId().toString()).getId();
+        // Calling the method to be tested
+        cardService.restoreDeletedCard(cardIdString);
 
-        // Assert
-        assertEquals(1, actual);
+        // Verifying the student and card state after the method call
+        assertEquals(card, student.getCardId());
+        assertTrue(student.getCardId() != null && student.getCardId().equals(card));
+        assertTrue(card.getIsAssigned());
+        assertFalse(card.getIsDeleted());
+    }
+
+
+    @Test
+    public void testRestoreDeletedCard_InvalidCardId() {
+        // Mocking dependencies and test data
+        String cardIdString = "invalid";
+
+        when(idValidatorUtil.idValidator(cardIdString)).thenThrow(new InvalidIdException());
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(InvalidIdException.class, () -> {
+            cardService.restoreDeletedCard(cardIdString);
+        });
     }
 
     @Test
-    public void getCardByStudentIdTest_student_not_exist() {
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
+    public void testRestoreDeletedCard_CardNotExist() {
+        // Mocking dependencies and test data
+        String cardIdString = "1";
+        Integer cardId = 1;
 
-        assertThrows(StudentNotExistException.class, () -> cardService.getCardByStudentId(studentDto.getId().toString()));
+        when(idValidatorUtil.idValidator(cardIdString)).thenReturn(cardId);
+        when(cardRepository.findById(cardId)).thenReturn(Optional.empty());
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardNotExistException.class, () -> {
+            cardService.restoreDeletedCard(cardIdString);
+        });
     }
 
+    @Test
+    public void testRestoreDeletedCard_CardNotDeleted() {
+        // Mocking dependencies and test data
+        String cardIdString = "1";
+        Integer cardId = 1;
+        Card card = new Card();
+        card.setId(cardId);
+        card.setIsDeleted(false);
+
+        when(idValidatorUtil.idValidator(cardIdString)).thenReturn(cardId);
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardNotDeletedException.class, () -> {
+            cardService.restoreDeletedCard(cardIdString);
+        });
+    }
 
     @Test
-    public void getCardByStudentIdTest_card_not_assigned() {
-        // Arrange
-        StudentDto studentDto = new StudentDto();
-        studentDto.setId(1);
-
+    public void testRestoreDeletedCard_StudentCardNotAssigned() {
+        // Mocking dependencies and test data
+        String cardIdString = "1";
+        Integer cardId = 1;
+        Card card = new Card();
+        card.setId(cardId);
+        card.setIsDeleted(true);
+        int studentId = 123;
         Student student = new Student();
-        student.setId(1);
+        student.setId(studentId);
         student.setCardId(null);
 
-        when(studentRepository.findById(any())).thenReturn(Optional.of(student));
+        when(idValidatorUtil.idValidator(cardIdString)).thenReturn(cardId);
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
+        when(studentRepository.findById(card.getLastAssignedTo())).thenReturn(Optional.of(student));
 
-        // Act and Assert
-        assertThrows(CardNotAssignedException.class, () -> cardService.getCardByStudentId(studentDto.getId().toString()));
-    }
+        // Calling the method to be tested
+        cardService.restoreDeletedCard(cardIdString);
 
-
-
-    @Test
-    public void deleteCardTest_valid(){
-        CardDto cardDto = new CardDto();
-        cardDto.setId(1);
-        cardDto.setIsDeleted(false);
-
-        Card mockCard = mock(Card.class);
-        mockCard.setId(1);
-
-        when(cardRepository.findById(any())).thenReturn(Optional.of(mockCard));
-
-        cardService.deleteCard(cardDto.getId().toString());
-
-        verify(mockCard, times(1)).setIsDeleted(true);
-    }
-
-    @Test
-    public void deleteCardTest_card_not_exist(){
-        CardDto cardDto = new CardDto();
-        cardDto.setId(1);
-        cardDto.setIsDeleted(false);
-
-        when(cardRepository.findById(any()))
-                .thenReturn(Optional.empty());
-
-        assertThrows(CardNotExistException.class, ()-> cardService.deleteCard(cardDto.getId().toString()));
+        // Verifying the student and card state after the method call
+        assertEquals(card, student.getCardId());
+        assertTrue(card.getIsAssigned());
+        assertFalse(card.getIsDeleted());
 
     }
 
+
     @Test
-    public void deleteCardTest_card_already_deleted(){
-        CardDto cardDto = new CardDto();
-        cardDto.setId(1);
-        cardDto.setIsDeleted(true);
+    public void testAssignCardToStudent_ValidStudentDto() {
+        // Mocking dependencies and test data
+        Integer studentId = 123;
+        Integer cardId = 456;
+
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(studentId);
+        studentDto.setCardId(cardId);
+
+        Student student = new Student();
+        student.setId(studentId);
+        student.setCardId(null);
 
         Card card = new Card();
-        card.setIsDeleted(true);
+        card.setId(cardId);
+        card.setIsAssigned(false);
+        card.setIsDeleted(false);
 
-        when(cardRepository.findById(any()))
-                .thenReturn(Optional.of(card));
+        when(studentRepository.findById(studentId)).thenReturn(Optional.of(student));
+        when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
 
-        assertThrows(CardAlreadyDeletedException.class, ()-> cardService.deleteCard(cardDto.getId().toString()));
+        // Calling the method to be tested
+        cardService.assignCardToStudent(studentDto);
+
+        // Verifying the student and card state after the method call
+        assertEquals(card, student.getCardId());
+        assertTrue(card.getIsAssigned());
+        assertEquals(studentId, card.getLastAssignedTo());
+
     }
 
     @Test
-    public void restoreDeletedCardTest_valid(){
-        CardDto cardDto = new CardDto();
-        cardDto.setId(1);
-        cardDto.setIsDeleted(true);
+    public void testAssignCardToStudent_InvalidStudentDto() {
+        // Mocking dependencies and test data
+        StudentDto studentDto = new StudentDto(); // Invalid StudentDto object with null ID and card ID
 
-        Card mockCard = mock(Card.class);
-        mockCard.setId(1);
-        mockCard.setIsDeleted(true);
+        // Calling the method to be tested and asserting the thrown exceptions
+        assertThrows(FormValueInvalidException.class, () -> {
+            cardService.assignCardToStudent(studentDto);
+        });
 
-        when(cardRepository.findById(any())).thenReturn(Optional.of(mockCard));
+    }
 
-        cardService.deleteCard(cardDto.getId().toString());
+    @Test
+    public void testAssignCardToStudent_StudentNotExist() {
+        // Mocking dependencies and test data
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(123); // Valid student ID
+        studentDto.setCardId(456); // Valid card ID
 
-        verify(mockCard, times(1)).setIsDeleted(false);
+        when(studentRepository.findById(123)).thenReturn(Optional.empty()); // Simulating student not found in the database
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(StudentNotExistException.class, () -> {
+            cardService.assignCardToStudent(studentDto);
+        });
+
+    }
+
+    @Test
+    public void testAssignCardToStudent_CardNotExist() {
+        // Mocking dependencies and test data
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(123); // Valid student ID
+        studentDto.setCardId(456); // Valid card ID
+
+        when(studentRepository.findById(123)).thenReturn(Optional.of(new Student())); // Simulating existing student
+        when(cardRepository.findById(456)).thenReturn(Optional.empty()); // Simulating card not found in the database
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardNotExistException.class, () -> {
+            cardService.assignCardToStudent(studentDto);
+        });
+
+
+    }
+
+    @Test
+    public void testAssignCardToStudent_CardAlreadyAssigned() {
+        // Mocking dependencies and test data
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(123); // Valid student ID
+        studentDto.setCardId(456); // Valid card ID
+
+        Student student = new Student();
+        student.setId(123);
+        student.setCardId(new Card());
+
+        Card card = new Card();
+        card.setId(456);
+        card.setIsAssigned(true);
+
+        when(studentRepository.findById(123)).thenReturn(Optional.of(student)); // Simulating existing student
+        when(cardRepository.findById(456)).thenReturn(Optional.of(card)); // Simulating assigned card
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardAlreadyAssignedException.class, () -> {
+            cardService.assignCardToStudent(studentDto);
+        });
+
+    }
+
+    @Test
+    public void testAssignCardToStudent_CardAlreadyDeleted() {
+        // Mocking dependencies and test data
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(123); // Valid student ID
+        studentDto.setCardId(456); // Valid card ID
+
+        Student student = new Student();
+        student.setId(123);
+        student.setCardId(null);
+
+        Card card = new Card();
+        card.setId(456);
+        card.setIsDeleted(true);
+        card.setIsAssigned(false);
+
+        when(studentRepository.findById(123)).thenReturn(Optional.of(student)); // Simulating existing student
+        when(cardRepository.findById(456)).thenReturn(Optional.of(card)); // Simulating deleted card
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardAlreadyDeletedException.class, () -> {
+            cardService.assignCardToStudent(studentDto);
+        });
     }
 
 
 
 
-//    @Test
-//    public void testGetCardByUserId() {
-//        // Setup
-//        Integer userId = 1;
-//        Integer cardId = 123;
-//        UserDto userDto = new UserDto();
-//        userDto.setId(userId);
-//        Card card = new Card(cardId);
-//
-//        when(userRepository.findById(any())).thenReturn(Optional.of(new User()));
-//        //when(cardRepository.getCardByUserId(any())).thenReturn(cardId);
-//        when(cardRepository.findById(any())).thenReturn(Optional.of(card));
-//
-//        // Verify
-//        assertEquals(cardId, cardService.getCardByUserId(userDto.getId().toString()).getId());
-//
-//        // Check if userRepository.findById was called once with userId as parameter
-//        verify(userRepository, times(1)).findById(userId);
-//        // Check if cardRepository.getCardByUserId was called once with userId as parameter
-//        verify(cardRepository, times(1)).getCardByUserId(userId);
-//    }
+
+    @Test
+    public void testAssignCardToStudent_AnotherCardAlreadyAssigned() {
+        // Mocking dependencies and test data
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(123); // Valid student ID
+        studentDto.setCardId(456); // Valid card ID
+
+        Student student = new Student();
+        student.setId(123);
+        student.setCardId(new Card());
+
+        Card card = new Card();
+        card.setId(456);
+        card.setIsDeleted(false);
+        card.setIsAssigned(false);
+
+        when(studentRepository.findById(123)).thenReturn(Optional.of(student)); // Simulating existing student
+        when(cardRepository.findById(456)).thenReturn(Optional.of(card)); // Simulating unassigned card
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(AnotherCardAlreadyAssignedException.class, () -> {
+            cardService.assignCardToStudent(studentDto);
+        });
+    }
 
 
-//    @Test
-//    public void testGetCardByUserIdUserNotExistException() {
-//        // Setup
-//        Integer userId = 1;
-//        UserDto userDto = new UserDto();
-//        userDto.setId(userId);
-//
-//        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-//
-//        // Verify
-//        assertThrows(UserNotExistException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
-//
-//        // Check if userRepository.findById was called once with userId as parameter
-//        verify(userRepository, times(1)).findById(userId);
-//        // Check if cardRepository.getCardByUserId was not called
-//        verify(cardRepository, times(0)).getCardByUserId(any());
-//    }
+    @Test
+    public void testGetCardByUserId() {
+        // Mocking dependencies and test data
+        String userIdString = "123"; // Valid user ID
 
-//    @Test
-//    public void testGetCardByUserIdCardNotExist() {
-//        // Setup
-//        Integer userId = 1;
-//        UserDto userDto = new UserDto();
-//        userDto.setId(userId);
-//
-//        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-//        when(cardRepository.getCardByUserId(userId)).thenReturn(null);
-//
-//        // Verify
-//        assertThrows(CardNotExistException.class, () -> cardService.getCardByUserId(userDto.getId().toString()));
-//
-//        // Check if userRepository.findById was called once with userId as parameter
-//        verify(userRepository, times(1)).findById(userId);
-//        // Check if cardRepository.getCardByUserId was called once with userId as parameter
-//        verify(cardRepository, times(1)).getCardByUserId(userId);
-//    }
+        User user = new User();
+        user.setId(123);
+
+        Card card = new Card();
+        card.setId(456);
+        card.setIsDeleted(false);
+
+        when(idValidatorUtil.idValidator(userIdString)).thenReturn(123); // Simulating valid user ID
+        when(userRepository.findById(123)).thenReturn(Optional.of(user)); // Simulating existing user
+        when(cardRepository.getCardByUserId(123)).thenReturn(Optional.of(card)); // Simulating existing card
+
+        // Calling the method to be tested
+        ResponseDto responseDto = cardService.getCardByUserId(userIdString);
+
+        // Verifying the returned response
+        assertNotNull(responseDto);
+        assertEquals(456, responseDto.getId());
+    }
 
 
 
+    @Test
+    public void testGetCardByUserId_UserNotExist() {
+        // Mocking dependencies and test data
+        String userIdString = "123"; // Valid user ID
+
+        when(idValidatorUtil.idValidator(userIdString)).thenReturn(123); // Simulating valid user ID
+        when(userRepository.findById(123)).thenReturn(Optional.empty()); // Simulating non-existent user
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(UserNotExistException.class, () -> {
+            cardService.getCardByUserId(userIdString);
+        });
+    }
+
+    @Test
+    public void testGetCardByUserId_CardNotExist() {
+        // Mocking dependencies and test data
+        String userIdString = "123"; // Valid user ID
+
+        User user = new User();
+        user.setId(123);
+
+        when(idValidatorUtil.idValidator(userIdString)).thenReturn(123); // Simulating valid user ID
+        when(userRepository.findById(123)).thenReturn(Optional.of(user)); // Simulating existing user
+        when(cardRepository.getCardByUserId(123)).thenReturn(Optional.empty()); // Simulating non-existent card
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardNotExistException.class, () -> {
+            cardService.getCardByUserId(userIdString);
+        });
+    }
+
+    @Test
+    public void testGetCardByUserId_CardAlreadyDeleted() {
+        // Mocking dependencies and test data
+        String userIdString = "123"; // Valid user ID
+
+        User user = new User();
+        user.setId(123);
+
+        Card card = new Card();
+        card.setId(456);
+        card.setIsDeleted(true);
+
+        when(idValidatorUtil.idValidator(userIdString)).thenReturn(123); // Simulating valid user ID
+        when(userRepository.findById(123)).thenReturn(Optional.of(user)); // Simulating existing user
+        when(cardRepository.getCardByUserId(123)).thenReturn(Optional.of(card)); // Simulating deleted card
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardAlreadyDeletedException.class, () -> {
+            cardService.getCardByUserId(userIdString);
+        });
+    }
 
 
-//    @Test
-//    public void testGetCardByStudentId_withStudentNotExist() {
-//        // Arrange
-//        StudentDto studentDto = new StudentDto();
-//        studentDto.setId(1);
-//        when(studentRepository.findById(1)).thenReturn(Optional.empty());
-//
-//        // Act and Assert
-//        assertThrows(StudentNotExistException.class, () -> {
-//            cardService.getCardByStudentId(studentDto.getId().toString());
-//        });
-//        verify(studentRepository, times(1)).findById(1);
-//        verify(cardRepository, times(0)).findById(any());
-//    }
+    @Test
+    public void testGetCardByStudentId() {
+        // Mocking dependencies and test data
+        String studentIdString = "123"; // Valid student ID
+
+        Card card = new Card();
+        card.setId(456);
+
+        Student student = new Student();
+        student.setId(123);
+        student.setCardId(card);
+
+        when(idValidatorUtil.idValidator(studentIdString)).thenReturn(123); // Simulating valid student ID
+        when(studentRepository.findById(123)).thenReturn(Optional.of(student)); // Simulating existing student
+
+
+        // Calling the method to be tested
+        ResponseDto responseDto = cardService.getCardByStudentId(studentIdString);
+
+        // Verifying the returned response
+        assertNotNull(responseDto);
+        assertEquals(456, responseDto.getId());
+
+    }
+
+    @Test
+    public void testGetCardByStudentId_StudentNotExist() {
+        // Mocking dependencies and test data
+        String studentIdString = "123"; // Valid student ID
+
+        when(idValidatorUtil.idValidator(studentIdString)).thenReturn(123); // Simulating valid student ID
+        when(studentRepository.findById(123)).thenReturn(Optional.empty()); // Simulating non-existent student
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(StudentNotExistException.class, () -> {
+            cardService.getCardByStudentId(studentIdString);
+        });
+    }
+
+    @Test
+    public void testGetCardByStudentId_CardNotAssigned() {
+        // Mocking dependencies and test data
+        String studentIdString = "123"; // Valid student ID
+
+        Student student = new Student();
+        student.setId(123);
+        student.setCardId(null);
+
+        when(idValidatorUtil.idValidator(studentIdString)).thenReturn(123); // Simulating valid student ID
+        when(studentRepository.findById(123)).thenReturn(Optional.of(student)); // Simulating existing student
+
+        // Calling the method to be tested and asserting the thrown exception
+        assertThrows(CardNotAssignedException.class, () -> {
+            cardService.getCardByStudentId(studentIdString);
+        });
+    }
+
+
+    @Test
+    public void testGetAllCard() {
+        // Mocking dependencies and test data
+        Pageable pageable = PageRequest.of(0, 10); // Page 1 with 10 items per page
+
+        List<Card> cardList = new ArrayList<>();
+        for (int i = 1; i <= 20; i++) {
+            Card card = new Card();
+            card.setId(i);
+            cardList.add(card);
+        }
+        Page<Card> cardPage = new PageImpl<>(cardList, pageable, 20);
+
+        when(cardRepository.findAll(pageable)).thenReturn(cardPage); // Simulating cards pagination
+
+        // Calling the method to be tested
+        PagingDto pagingDto = cardService.getAllCard(pageable);
+
+        // Verifying the returned response
+        assertNotNull(pagingDto);
+        assertEquals(2, pagingDto.getAllPages());
+        assertEquals(20, pagingDto.getCardDtoList().size());
+        // Add more assertions as needed
+    }
+
+
+
+
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
