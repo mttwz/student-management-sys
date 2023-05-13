@@ -51,6 +51,7 @@ public class WorkgroupScheduleService {
 
 
 
+
     /**
      * Retrieves the workgroup schedule for a user based on the provided user ID and authentication header.
      * The method first validates the user ID to ensure it exists in the database, throwing a UserNotExistException if not.
@@ -107,19 +108,13 @@ public class WorkgroupScheduleService {
      */
     @Transactional
     public PagingDto getWorkgroupScheduleByWorkgroupId(String authHeader, WorkgroupscheduleDto workgroupscheduleDto, Pageable pageable) {
-
-
         Page<Workgroupschedule> workgroupSchedulePage;
         PagingDto pagingDto = new PagingDto();
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = workgroupscheduleDto.getStart().format(formatter);
-
         workgroupRepository.findById(workgroupscheduleDto.getWorkgroupId())
                 .orElseThrow(WorkgroupNotExistException::new);
-
         if (jwtUtil.getRoleFromAuthHeader(authHeader).equalsIgnoreCase(RoleEnum.Types.SUPERADMIN) || jwtUtil.getRoleFromAuthHeader(authHeader).equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
-
             workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(workgroupscheduleDto.getWorkgroupId(),formattedDate,pageable);
         } else {
             workgroupSchedulePage = workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(jwtUtil.getIdFromAuthHeader(authHeader),formattedDate,pageable);
@@ -198,7 +193,6 @@ public class WorkgroupScheduleService {
         if (workgroupschedule.getIsDeleted()){
             throw new WorkgroupAlreadyDeletedException();
         }
-
         ZonedDateTime currDate = java.time.ZonedDateTime.now();
         workgroupschedule.setIsDeleted(true);
         workgroupschedule.setDeletedAt(currDate);
