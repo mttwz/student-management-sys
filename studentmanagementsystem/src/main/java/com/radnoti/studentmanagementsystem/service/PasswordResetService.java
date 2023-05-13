@@ -77,8 +77,6 @@ public class PasswordResetService {
         passwordreset.setExpireDate(currDate.plusHours(ACTIVATION_CODE_VALID_IN_HOURS));
         passwordreset.setIsUsed(false);
         passwordResetRepository.save(passwordreset);
-        
-
     }
 
 
@@ -94,14 +92,12 @@ public class PasswordResetService {
      */
     @Transactional
     public void resetPassword(UserDto userDto) throws NoSuchAlgorithmException {
-
         User userByCode = userRepository.findByResetCode(userDto.getResetCode())
                 .orElseThrow(ResetCodeNotExistException::new);
 
         if (!Objects.equals(userByCode.getEmail(), userDto.getEmail())){
             throw new InvalidCredentialsException();
         }
-
 
         Passwordreset passwordreset = getLastValidResetCode(userByCode.getId());
 
@@ -110,7 +106,6 @@ public class PasswordResetService {
             throw new ResetCodeInvalidException();
 
         }
-
         userByCode.setPassword( hashUtil.getSHA256Hash(userDto.getPassword()));
         passwordreset.setIsUsed(true);
 
