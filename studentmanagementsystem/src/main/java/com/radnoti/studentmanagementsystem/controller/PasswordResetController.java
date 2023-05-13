@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/password-reset")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class PasswordResetController {
 

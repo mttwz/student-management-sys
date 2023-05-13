@@ -17,6 +17,7 @@ import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
 import com.radnoti.studentmanagementsystem.model.entity.Card;
 import com.radnoti.studentmanagementsystem.model.entity.Student;
+import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.repository.CardRepository;
 import com.radnoti.studentmanagementsystem.repository.StudentRepository;
 import com.radnoti.studentmanagementsystem.repository.UserRepository;
@@ -150,12 +151,12 @@ public class CardService {
      */
     @Transactional
     public void assignCardToStudent(StudentDto studentDto) {
-        if (studentDto.getId() == null || studentDto.getCardId() == null) {
+        if (studentDto.getUserId() == null || studentDto.getCardId() == null) {
             throw new FormValueInvalidException();
         }
 
-        Student student = studentRepository.findById(studentDto.getId())
-                .orElseThrow(StudentNotExistException::new);
+        User user = userRepository.findById(studentDto.getUserId())
+                .orElseThrow(UserNotExistException::new);
 
         Card card = cardRepository.findById(studentDto.getCardId())
                 .orElseThrow(CardNotExistException::new);
@@ -168,13 +169,13 @@ public class CardService {
             throw new CardAlreadyDeletedException();
         }
 
-        if(student.getCardId() != null){
+        if(user.getStudent().getCardId() != null){
             throw new AnotherCardAlreadyAssignedException();
         }
 
-        student.setCardId(card);
+        user.getStudent().setCardId(card);
         card.setIsAssigned(true);
-        card.setLastAssignedTo(student.getId());
+        card.setLastAssignedTo(user.getStudent().getId());
     }
 
     /**

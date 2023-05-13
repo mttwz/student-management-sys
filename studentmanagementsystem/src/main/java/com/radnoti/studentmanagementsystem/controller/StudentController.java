@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(path = "/student")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class StudentController {
 
