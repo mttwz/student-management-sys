@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/workgroupschedule")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class WorkgroupScheduleController {
     private final WorkgroupScheduleService workgroupscheduleService;
@@ -38,7 +38,7 @@ public class WorkgroupScheduleController {
      * Retrieves the daily workgroup schedule for a specific workgroup.
      *
      * @param authHeader          the authorization header.
-     * @param workgroupScheduleDto the WorkgroupscheduleDto object containing the workgroup ID and date.
+     * @param workgroupscheduleDto the WorkgroupscheduleDto object containing the workgroup ID and date.
      * @param pageable            the pageable object for pagination.
      * @return a PagingDto containing the daily workgroup schedule.
      */
@@ -52,7 +52,7 @@ public class WorkgroupScheduleController {
     /**
      * Creates a new workgroup schedule.
      *
-     * @param workgroupScheduleDto the WorkgroupscheduleDto object containing the workgroup schedule information.
+     * @param workgroupscheduleDto the WorkgroupscheduleDto object containing the workgroup schedule information.
      * @return a ResponseDto containing the response.
      */
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})

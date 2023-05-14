@@ -247,4 +247,24 @@ public class WorkgroupService {
     }
 
 
+    public PagingDto searchAddableUsers(String userSearchString,String workgroupIdAsString, Pageable pageable) {
+        Integer workgroupId = idValidatorUtil.idValidator(workgroupIdAsString);
+        workgroupRepository.findById(workgroupId)
+                .orElseThrow(WorkgroupNotExistException::new);
+
+        System.err.println(workgroupId);
+        Page <User> userPage = userRepository.getAllAddableUsers(userSearchString,workgroupId,pageable);
+
+        PagingDto pagingDto = new PagingDto();
+
+        pagingDto.setAllPages(userPage.getTotalPages());
+
+        pagingDto.setUserInfoDtoList(userPage.map(userMapper::fromEntityToInfoDto)
+                .stream().toList());
+
+        return pagingDto;
+
+
+
+    }
 }
