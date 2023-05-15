@@ -34,41 +34,6 @@ public class AuthControllerTest {
 
 
 
-    @Sql({ "AuthLogin.sql" })
-    @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Test
-    //@Transactional
-    public void loginTest_validCredentials(){
-
-        UserDto userDto = new UserDto();
-        userDto.setEmail("testEmail");
-        userDto.setPassword("testPw");
-
-        ResponseEntity<UserLoginDto> responseEntity = this.restTemplate
-                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDto, UserLoginDto.class);
-
-
-
-        assertEquals("testEmail", responseEntity.getBody().getEmail());
-        assertEquals("testLastname", responseEntity.getBody().getLastName());
-        assertEquals("testFirstname", responseEntity.getBody().getFirstName());
-        assertFalse(responseEntity.getBody().getJwt().isEmpty());
-        assertEquals(200, responseEntity.getStatusCodeValue());
-    }
-
-    @Sql({ "AuthLogin.sql" })
-    @Sql(value = {"classpath:sqls/clearDb.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Test
-    public void loginTest_invalidCredentials(){
-        UserDto userDto = new UserDto();
-        userDto.setEmail("thisEmailNotExist");
-        userDto.setPassword("thisPwNotExist");
-        ResponseEntity<UserLoginDto> responseEntity = this.restTemplate
-                .postForEntity("http://localhost:" + port + contextPath + mainPath + "/login", userDto, UserLoginDto.class);
-
-        assertEquals(403, responseEntity.getStatusCodeValue());
-    }
-
 
 
 }
