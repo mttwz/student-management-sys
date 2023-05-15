@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/user")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -153,6 +153,9 @@ public class UserController {
         return userService.searchAdmin(groupId,category,q,pageable);
 
     }
+
+
+
 
 
 

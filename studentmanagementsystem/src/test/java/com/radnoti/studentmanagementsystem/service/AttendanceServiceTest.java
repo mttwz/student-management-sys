@@ -61,7 +61,7 @@ public class AttendanceServiceTest {
 
 
     @Test
-    public void testCreateAttendance() {
+    public void test_createAttendance_successful() {
 
         AttendanceDto attendanceDto = new AttendanceDto();
         attendanceDto.setUserId(1);
@@ -140,7 +140,7 @@ public class AttendanceServiceTest {
         });
 
         // Verify that the userRepository method was called with the correct argument
-        Mockito.verify(userRepository).findById(1);
+        verify(userRepository).findById(1);
     }
 
 

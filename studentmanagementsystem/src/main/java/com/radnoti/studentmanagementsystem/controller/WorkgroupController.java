@@ -2,6 +2,7 @@ package com.radnoti.studentmanagementsystem.controller;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.model.dto.*;
+import com.radnoti.studentmanagementsystem.service.UserService;
 import com.radnoti.studentmanagementsystem.service.WorkgroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +16,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/workgroup")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class WorkgroupController {
 
 
     private final WorkgroupService workgroupService;
+
+    private final UserService userService;
 
 
     /**
@@ -118,16 +121,19 @@ public class WorkgroupController {
      */
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
     @PostMapping(path = "/edit-workgroup-info/{workgroupId}", consumes = {"application/json"}, produces = {"application/json"})
-    public @ResponseBody ResponseDto editWorkgroupInfo(@PathVariable String workgroupId, @RequestBody WorkgroupInfoDto workgroupInfoDto) {
+    public ResponseDto editWorkgroupInfo(@PathVariable String workgroupId, @RequestBody WorkgroupInfoDto workgroupInfoDto) {
         return workgroupService.editWorkgroupInfo(workgroupId,workgroupInfoDto);
     }
 
 
-//    @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-//    @GetMapping(path = "/get-user-from-workgroup")
-//    public @ResponseBody List<UserInfoDto> getAllUserIdFromWorkgroup(@RequestBody UserDto userDto){
-//        return workgroupService.getUserFromWorkgroup(userDto);
-//    }
+
+    @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
+    @GetMapping(path = "/search-addable-users/{workgroupId}{q}")
+    public PagingDto searchAddableUsers(@RequestParam(required = false) String q, @PathVariable String workgroupId, Pageable pageable){
+        System.err.println(q);
+        return workgroupService.searchAddableUsers(q,workgroupId,pageable);
+
+    }
 
 
 }

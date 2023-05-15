@@ -13,7 +13,7 @@ import javax.mail.MessagingException;
 
 @RestController
 @RequestMapping("/mail")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class EmailController {
     private final EmailService emailService;

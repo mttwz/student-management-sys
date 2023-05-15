@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/auth")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -30,6 +30,7 @@ public class AuthController {
     **/
     @PostMapping(path = "/login", consumes = {"application/json"}, produces = {"application/json"})
     public UserLoginDto login(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
+
         return authService.login(userDto);
     }
 

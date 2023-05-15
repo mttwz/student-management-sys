@@ -39,6 +39,7 @@ public class UserService {
 
     private static final int ACTIVATION_CODE_LENGTH = 8;
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
     private final WorkgroupRepository workgroupRepository;
     private final HashUtil hashUtil;
     private final UserMapper userMapper;
@@ -280,10 +281,15 @@ public class UserService {
 
         if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
             user.setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
+            studentRepository.findByUserId(user.getId()).ifPresent(studentRepository::delete);
         } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
             user.setRoleId(new Role(RoleEnum.ADMIN.getId()));
+            studentRepository.findByUserId(user.getId()).ifPresent(studentRepository::delete);
         } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.STUDENT)){
             user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
+            Student student = new Student();
+            student.setUserId(user);
+            studentRepository.save(student);
         }else throw new RoleNotExistException();
 
         user.setFirstName(userInfoDto.getFirstName());
@@ -417,8 +423,6 @@ public class UserService {
 
         return pagingDto;
     }
-
-
 
 
 

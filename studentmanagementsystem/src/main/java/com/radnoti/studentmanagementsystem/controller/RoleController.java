@@ -11,7 +11,7 @@ import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/role")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "${cross-origin}")
 @RequiredArgsConstructor
 public class RoleController {
 
