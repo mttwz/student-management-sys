@@ -70,7 +70,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "u.email like concat(:userSearchString,'%')) and " +
             "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).ADMIN.id}")
     Page<User>  searchAdmins(String userSearchString,Pageable pageable);
-    //test
 
     @Query("select u from User u where " +
             ":userSearchString is null or " +
