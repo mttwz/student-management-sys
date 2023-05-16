@@ -40,15 +40,9 @@
         <sqlFile path="db/changelog/v_0_0_1/schema/09_workgroup-schedule.sql" stripComments="true"/>
     </changeSet>
 
-    <!--                    procedures                      -->
 
 
-    <changeSet id="get-user-from-workgroup" author="mate">
-        <sqlFile path="db/changelog/v_0_0_1/procedures/get-user-from-workgroup.sql" stripComments="true"
-                 endDelimiter="$$"/>
-    </changeSet>
-
-    <changeSet id="test" author="mate">
+    <changeSet id="dummyData" author="mate">
         <sqlFile path="db/changelog/v_0_0_1/data/someData.sql" stripComments="true"/>
     </changeSet>
 

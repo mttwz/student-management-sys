@@ -10,7 +10,6 @@ import com.radnoti.studentmanagementsystem.enums.SearchFilterEnum;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.*;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.*;
 import com.radnoti.studentmanagementsystem.model.dto.*;
 import com.radnoti.studentmanagementsystem.model.entity.*;
@@ -21,6 +20,8 @@ import com.radnoti.studentmanagementsystem.security.JwtUtil;
 import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.radnoti.studentmanagementsystem.util.IdValidatorUtil;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,8 @@ public class UserService {
                 userDto.getEmail().isBlank())) {
             throw new FormValueInvalidException();
         }
+
+        phoneNumberCheck(userDto.getPhone());
 
         if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
             userDto.setPassword(userDto.getFirstName()+userDto.getBirth().getYear());
@@ -423,6 +426,21 @@ public class UserService {
 
         return pagingDto;
     }
+
+    /**
+     * Checks if the given number is a valid phone number.
+     *
+     * @param number the phone number to check
+     * @throws FormValueInvalidException if the number is not a valid phone number
+     */
+    void phoneNumberCheck(String number){
+        try {
+            Long.parseLong(number);
+        }catch (NumberFormatException e){
+            throw new FormValueInvalidException();
+        }
+    }
+
 
 
 
