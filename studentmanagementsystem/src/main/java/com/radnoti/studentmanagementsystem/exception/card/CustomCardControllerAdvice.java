@@ -67,12 +67,12 @@ public class CustomCardControllerAdvice {
     @ExceptionHandler(AnotherCardAlreadyAssignedException.class)
     public ResponseEntity<ErrorResponse> handleException(AnotherCardAlreadyAssignedException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_006_ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_007_ERR"), status);
     }
 
     @ExceptionHandler(CardMismatchException.class)
     public ResponseEntity<ErrorResponse> handleException(CardMismatchException e) {
         setErrBody(e);
-        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_007_ERR"), status);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "CARD_008_ERR"), status);
     }
 }
