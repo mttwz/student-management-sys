@@ -20,7 +20,7 @@ The student attendance logging system is a valuable tool for educational institu
 - Student
 ---
 ## User Accounts
-The application provides three types of user accounts, each with a predefined username and password:
+The application provides three types of user accounts(for testing purpuses only), each with a predefined username and password:
 
 1. Superadmin:
    - Username: superadmin

@@ -405,7 +405,7 @@ public class UserService {
         PagingDto pagingDto = new PagingDto();
 
         if (Objects.equals(category, SearchFilterEnum.Types.STUDENT)) {
-            userPage = userRepository.searchStudents(q,pageable);
+            userPage = userRepository.searchStudentsNotDeleted(q,pageable);
             totalPages = userPage.getTotalPages();
             pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
 
@@ -415,7 +415,7 @@ public class UserService {
             pagingDto.setWorkgroupDtoList(workgroupPage.stream().map(workgroupMapper::fromEntityToDto).toList());
 
         }else if (Objects.equals(category, SearchFilterEnum.Types.USERS_IN_WORKGROUP)) {
-            userPage = userRepository.searchUsersInWorkgroups(q,groupId,pageable);
+            userPage = userRepository.searchUsersInWorkgroupsNotDeleted(q,groupId,pageable);
             totalPages = userPage.getTotalPages();
             pagingDto.setUserInfoDtoList(userPage.stream().map(userMapper::fromEntityToInfoDto).toList());
         }

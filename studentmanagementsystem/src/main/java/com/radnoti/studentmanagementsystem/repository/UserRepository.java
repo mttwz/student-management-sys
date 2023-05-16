@@ -68,6 +68,15 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "(u.firstName like concat(:userSearchString,'%') or " +
             "u.lastName like concat(:userSearchString,'%') or " +
             "u.email like concat(:userSearchString,'%')) and " +
+            "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).STUDENT.id} and " +
+            "u.isDeleted = false")
+    Page<User>  searchStudentsNotDeleted(String userSearchString,Pageable pageable);
+
+    @Query("select u from User u where " +
+            ":userSearchString is null or " +
+            "(u.firstName like concat(:userSearchString,'%') or " +
+            "u.lastName like concat(:userSearchString,'%') or " +
+            "u.email like concat(:userSearchString,'%')) and " +
             "u.roleId.id = :#{T(com.radnoti.studentmanagementsystem.enums.RoleEnum).ADMIN.id}")
     Page<User>  searchAdmins(String userSearchString,Pageable pageable);
 
@@ -89,7 +98,16 @@ public interface UserRepository extends CrudRepository<User, Integer> {
             "w.id = :groupId")
     Page<User> searchUsersInWorkgroups(String userSearchString, Integer groupId, Pageable pageable);
 
-
+    @Query("select u from User u " +
+            "join Workgroupmembers wm on wm.userId.id = u.id " +
+            "join Workgroup w on w.id = wm.workgroupId.id " +
+            "where :userSearchString is null or " +
+            "(u.firstName like concat('%',:userSearchString,'%') or " +
+            "u.lastName like concat('%',:userSearchString,'%') or " +
+            "u.email like concat('%',:userSearchString,'%')) and " +
+            "w.id = :groupId and " +
+            "u.isDeleted = false")
+    Page<User> searchUsersInWorkgroupsNotDeleted(String userSearchString, Integer groupId, Pageable pageable);
 
     @Query("select u from User u " +
             "where " +
