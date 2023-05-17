@@ -9,7 +9,7 @@
 -----
 The **Student Management System** is a web-based application that uses MySQL database and Spring Boot backend to track and manage attendance data for students in a school or educational institution. The system uses NFC card technology to log attendance data and is powered by custom-made software running on an Arduino board, which provides audio and visual feedback to users during the logging process.
 
-The system has three roles: superadmin, admin, and student. The superadmin role has full access to the system and can view, edit, and add user data, workgroups, and schedules. The admin role is assigned to teachers who have access to view attendance data for students in specific workgroups, manage student data, and edit attendance data if necessary. The student role is assigned to individual students who can view their own attendance data and schedule information.
+The system has three roles: superadmin, admin, and student. The superadmin role has full access to the system and can view, edit, and add user data, workgroups, and schedules. The admin role is assigned to teachers who have access to view attendance data for students in workgroups, manage student data, and edit attendance data if necessary. The student role is assigned to individual students who can view their own attendance data and schedule information.
 
 The system is designed to be user-friendly and efficient, with features that allow for quick and easy data entry and management. The NFC logging system is an essential component of the attendance tracking process, providing an accurate and reliable method for tracking student attendance. The system also supports the use of a master card, which can be used to register additional NFC cards to the system.
 
@@ -20,7 +20,7 @@ The student attendance logging system is a valuable tool for educational institu
 - Student
 ---
 ## User Accounts
-The application provides three types of user accounts(for testing purpuses only), each with a predefined username and password:
+The application provides three types of user accounts (for testing purpuses only), each with a predefined username and password:
 
 1. Superadmin:
    - Username: superadmin
@@ -65,8 +65,8 @@ The admin role is assigned to teachers who have limited access to the system. Ea
 
 - View attendance data of students in their specific workgroup: The admin can view attendance data of students assigned to their specific workgroup. This includes dates and times of attendance, as well as any notes or comments associated with the attendance record.
 - Edit user attendance if wrongly logged: If an attendance record is wrongly logged, the admin can edit the record to correct any mistakes or errors.
-- View user data with limitations: The admin can view user data of students assigned to their specific workgroup. However, the admin's view is limited to attendance data, workgroup assignments, and basic personal information such as the student's name and contact information.
-- Manage students in the specific workgroups: The admin can manage students assigned to their specific workgroup. This includes assigning new students to the workgroup, removing students from the workgroup, and updating student information as needed.
+- View user data with limitations: The admin can view user data of students assigned to their specific workgroup.
+- Manage students in the specific workgroups: The admin can manage students assigned to their specific workgroup. This includes assigning new students to the workgroup, removing students from the workgroup, and updating student attendance as needed.
 
 The admin role is essential to the system's functionality, as it allows for the management of attendance data and the monitoring of student attendance for specific workgroups. With this level of access, the admin can ensure that attendance data is accurately collected and stored for students in their specific workgroup.
 
@@ -78,7 +78,7 @@ The student role can only view their own attendance data. The student cannot vie
 
 The student can perform the following actions:
 
-- View their own attendance data: The student can view their own attendance data in the system, including dates and times of attendance, as well as any notes or comments associated with the attendance record.
+- View their own attendance data: The student can view their own attendance data in the system, including dates and times of attendance.
 - View their own schedule: The student can view their own schedule in the system, including dates and times of classes or other activities associated with their workgroup.
 
 The student role is essential to the system's functionality, as it allows individual students to monitor their own attendance and schedule information. With this level of access, the student can ensure that they are attending classes and activities as required and can stay informed about their workgroup's schedule.
@@ -148,13 +148,6 @@ The system includes a master card which can be used to register additional NFC c
 ## Conclusion
 
 <br>
-
-
-In summary, the student attendance logging system is a useful tool for tracking the attendance of students in different workgroups. The system uses NFC cards to log student attendance, and it includes three different roles: superadmin, admin, and student.
-
-The superadmin has full access to the user data and can edit it, add new users, workgroups, and create new schedules. The admin role is assigned to teachers who have limited access to the system and can only view attendance data for students in their specific workgroups. The student role is the most basic role and can only view their own attendance data.
-
-Each user has their own account and personal information, including their workgroup, schedule, and attendance data. Workgroups have their own schedules, and the superadmin can create new workgroups and schedules as needed. Additionally, the system includes a master card which can be used to register additional NFC cards to the system.
 
 Overall, the student attendance logging system provides an efficient and effective way to track student attendance in different workgroups. By using NFC cards and assigning different roles to different users, the system is designed to be user-friendly and easy to use. With this documentation, users should be able to navigate the system with ease and take full advantage of its features.
 

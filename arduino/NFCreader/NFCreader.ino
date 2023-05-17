@@ -11,8 +11,8 @@ MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
 MFRC522::MIFARE_Key key; 
 
 
-const char* ssid = "TP-Link_A0D0";
-const char* password = "18306736";
+const char* ssid = "";
+const char* password = "";
 
 const char* loggingUrl = "http://192.168.2.186:8888/api/v1/attendance/log-student";
 const char* addCardUrl = "http://192.168.2.186:8888/api/v1/card/create-card";

@@ -32,7 +32,7 @@
       - Depending on the mode ("log" or "add"), the appropriate HTTP request is made to the corresponding URL.
       - The HTTP response code is checked, and the built-in LED is toggled accordingly.
       - The HTTP connection is closed.
-    - If the WiFi is disconnected, a message is printed.
+    - If the WiFi is disconnected, a message is printed and trying to recconnect.
 
 11. The `toggleMode()` function switches the `mode` variable between "log" and "add".
 
