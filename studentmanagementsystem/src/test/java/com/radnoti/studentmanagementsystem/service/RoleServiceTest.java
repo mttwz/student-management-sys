@@ -38,6 +38,9 @@ public class RoleServiceTest {
     @InjectMocks
     private RoleService roleService;
 
+    /**
+     * Test case to verify that calling setUserRole with a valid UserDto sets the user role correctly.
+     */
     @Test
     public void testSetUserRole_ValidUserDto_SetsUserRole() {
         // Arrange
@@ -56,6 +59,10 @@ public class RoleServiceTest {
         Mockito.verify(userRepository, Mockito.times(1)).setUserRole(validUserDto.getId(), validUserDto.getRoleName());
     }
 
+    /**
+     * Test case to verify that calling setUserRole with a UserDto missing the roleName
+     * @throws FormValueInvalidException
+     */
     @Test
     public void testSetUserRole_MissingRoleName_ThrowsFormValueInvalidException() {
         // Arrange

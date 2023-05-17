@@ -47,10 +47,8 @@ public class EmailServiceTest {
         JavaMailSender javaMailSender = mock(JavaMailSender.class);
         MimeMessage mimeMessage = mock(MimeMessage.class);
 
-        // Set up the JavaMailSender mock to return the MimeMessage mock when createMimeMessage is called
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
 
-        // Create the EmailService with the JavaMailSender mock
         EmailService emailService = new EmailService(javaMailSender);
 
         // Act

@@ -59,7 +59,13 @@ public class AttendanceServiceTest {
     private IdValidatorUtil idValidatorUtil;
 
 
-
+    /**
+     * Test case to verify that the createAttendance() method successfully creates an attendance record when all the required conditions are met.
+     * The test sets up the necessary objects and mocks, including an AttendanceDto, User, Student, and Attendance objects.
+     * It configures the mock behavior for the userRepository, studentRepository, and attendanceMapper.
+     * The createAttendance() method is then called with the attendanceDto.
+     * Finally, it verifies that the userRepository and studentRepository methods were called with the correct arguments.
+     */
     @Test
     public void test_createAttendance_successful() {
 
@@ -90,6 +96,13 @@ public class AttendanceServiceTest {
 
     }
 
+    /**
+     * Test case to verify that the createAttendance() method throws a UserNotExistException when the user does not exist.
+     * The test sets up the necessary objects, including an AttendanceDto.
+     * It configures the mock behavior for the userRepository to return Optional.empty() when findById() is called with the specified user ID.
+     * The createAttendance() method is then called with the attendanceDto using an assertThrows statement to catch the expected UserNotExistException.
+     * Finally, it verifies that the userRepository method was called with the correct argument.
+     */
     @Test
     public void testCreateAttendance_userNotExistException() {
         AttendanceDto attendanceDto = new AttendanceDto();
@@ -105,6 +118,13 @@ public class AttendanceServiceTest {
         Mockito.verify(userRepository).findById(1);
     }
 
+    /**
+     * Test case to verify that the createAttendance() method throws a UserDeletedException when the user is marked as deleted.
+     * The test sets up the necessary objects, including an AttendanceDto and a User object with isDeleted set to true.
+     * It configures the mock behavior for the userRepository to return the specified User object when findById() is called with the user ID.
+     * The createAttendance() method is then called with the attendanceDto using an assertThrows statement to catch the expected UserDeletedException.
+     * Finally, it verifies that the userRepository method was called with the correct argument.
+     */
     @Test
     public void testCreateAttendance_userDeletedException() {
         AttendanceDto attendanceDto = new AttendanceDto();
@@ -124,6 +144,14 @@ public class AttendanceServiceTest {
         Mockito.verify(userRepository).findById(1);
     }
 
+
+    /**
+     * Test case to verify that the createAttendance() method throws a UserNotActivatedException when the user is not activated.
+     * The test sets up the necessary objects, including an AttendanceDto and a User object with isActivated set to false.
+     * It configures the mock behavior for the userRepository to return the specified User object when findById() is called with the user ID.
+     * The createAttendance() method is then called with the attendanceDto using an assertThrows statement to catch the expected UserNotActivatedException.
+     * Finally, it verifies that the userRepository method was called with the correct argument.
+     */
     @Test
     public void testCreateAttendance_userNotActivatedException() {
         AttendanceDto attendanceDto = new AttendanceDto();

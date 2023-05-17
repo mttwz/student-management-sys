@@ -49,6 +49,11 @@ public class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
 
+    /**
+     * Test case to verify the behavior of the registerStudent method when a student is successfully registered.
+     *
+     * @throws NoSuchAlgorithmException if an error occurs during password hashing.
+     */
     @Test
     public void testRegisterStudent() throws NoSuchAlgorithmException {
         // Mocking dependencies and test data
@@ -77,12 +82,16 @@ public class StudentServiceTest {
 
 
 
+    /**
+     * Test case to verify that calling registerStudent with a UserDto containing a null password
+     * @throws FormValueInvalidException if one of the form values are invalid.
+     */
     @Test
     public void testRegisterStudent_NullPassword_ThrowsFormValueInvalidException() {
         // Mocking dependencies and test data
         UserDto userDto = new UserDto();
 
-        // Calling the method to be tested and asserting the thrown exception
+
         assertThrows(FormValueInvalidException.class, () -> {
             studentService.registerStudent(userDto);
         });

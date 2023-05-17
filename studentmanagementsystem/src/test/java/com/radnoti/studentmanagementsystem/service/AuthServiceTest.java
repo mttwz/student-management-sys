@@ -49,7 +49,15 @@ public class AuthServiceTest {
     private AuthService authService;
 
 
-
+    /**
+     * Test case to verify that the login() method successfully authenticates a user with valid credentials.
+     * The test sets up the necessary objects and mocks, including a UserDto and a User object.
+     * It configures the mock behavior for the hashUtil, userRepository, userMapper, and jwtUtil.
+     * The login() method is then called with the userDto.
+     * Finally, it asserts that the result is not null and the generated JWT token is as expected.
+     *
+     * @throws NoSuchAlgorithmException if the hashing algorithm is not available
+     */
     @Test
     public void testLogin_success() throws NoSuchAlgorithmException {
         // Arrange
@@ -77,6 +85,12 @@ public class AuthServiceTest {
         assertEquals("jwt_token", result.getJwt());
     }
 
+    /**
+     * Test case to verify that the login() method throws an InvalidCredentialsException when the user provides invalid credentials.
+     * The test sets up the necessary objects, including a UserDto.
+     * It configures the mock behavior for the hashUtil and userRepository to return Optional.empty() when the login credentials are checked.
+     * The login() method is then called with the userDto using an assertThrows statement to catch the expected InvalidCredentialsException.
+     */
     @Test
     public void testLogin_invalidCredentials() throws NoSuchAlgorithmException {
         // Arrange
@@ -91,6 +105,12 @@ public class AuthServiceTest {
         assertThrows(InvalidCredentialsException.class, () -> authService.login(userDto));
     }
 
+    /**
+     * Test case to verify that the login() method throws a UserNotActivatedException when the user is not activated.
+     * The test sets up the necessary objects, including a UserDto and a User object with isActivated set to false.
+     * It configures the mock behavior for the hashUtil and userRepository to return the specified User object when the login credentials are checked.
+     * The login() method is then called with the userDto using an assertThrows statement to catch the expected UserNotActivatedException.
+     */
     @Test
     public void testLogin_userNotActivated() throws NoSuchAlgorithmException {
         // Arrange
@@ -112,6 +132,12 @@ public class AuthServiceTest {
         assertThrows(UserNotActivatedException.class, () -> authService.login(userDto));
     }
 
+    /**
+     * Test case to verify that the login() method throws a UserDeletedException when the user is marked as deleted.
+     * The test sets up the necessary objects, including a UserDto and a User object with isDeleted set to true.
+     * It configures the mock behavior for the hashUtil and userRepository to return the specified User object when the login credentials are checked.
+     * The login() method is then called with the userDto using an assertThrows statement to catch the expected UserDeletedException.
+     */
     @Test
     public void testLogin_userDeleted() throws NoSuchAlgorithmException {
         // Arrange
@@ -134,6 +160,13 @@ public class AuthServiceTest {
         assertThrows(UserDeletedException.class, () -> authService.login(userDto));
     }
 
+    /**
+     * Test case to verify that the validateJwt() method correctly validates a JWT token and returns true.
+     * The test sets up the necessary objects, including a UserDto with a valid JWT token.
+     * It configures the mock behavior for the jwtUtil to return true when the JWT token is validated.
+     * The validateJwt() method is then called with the userDto.
+     * Finally, it asserts that the result is not null and true.
+     */
     @Test
     public void testValidateJwt_valid() {
         // Arrange
@@ -150,6 +183,13 @@ public class AuthServiceTest {
         assertTrue(result);
     }
 
+    /**
+     * Test case to verify that the validateJwt() method correctly validates a JWT token and returns false.
+     * The test sets up the necessary objects, including a UserDto with an invalid JWT token.
+     * It configures the mock behavior for the jwtUtil to return false when the JWT token is validated.
+     * The validateJwt() method is then called with the userDto.
+     * Finally, it asserts that the result is not null and false.
+     */
     @Test
     public void testValidateJwt_invalid() {
         // Arrange

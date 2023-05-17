@@ -45,9 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
-//@SpringBootTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public final class UserServiceTest {

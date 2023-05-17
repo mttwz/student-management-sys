@@ -57,6 +57,10 @@ public class PasswordResetServiceTest {
     @Captor
     private ArgumentCaptor<Passwordreset> passwordResetCaptor;
 
+    /**
+     * Test case for the generatePasswordResetCode method in the PasswordResetService class.
+     * It verifies that the method generates a reset code and saves the password reset details correctly.
+     */
     @Test
     void generatePasswordResetCode_shouldGenerateResetCodeAndSavePasswordReset() {
         String userName = "testuser";
@@ -83,9 +87,10 @@ public class PasswordResetServiceTest {
     }
 
 
-
-
-
+    /**
+     * Test case for the generatePasswordResetCode method in the PasswordResetService class.
+     * It verifies that the method throws a UserNotExistException when the user does not exist.
+     */
     @Test
     void generatePasswordResetCode_shouldThrowUserNotExistException() {
 
@@ -95,6 +100,11 @@ public class PasswordResetServiceTest {
 }
 
 
+    /**
+     * Test case for the generatePasswordResetCode method in the PasswordResetService class.
+     *  *
+     *  * It verifies that the method throws a UserDeletedException when the user is deleted.
+     */
     @Test
     void generatePasswordResetCode_shouldThrowUserDeletedException_whenUserIsDeleted() {
         String userName = "testuser";
@@ -108,6 +118,10 @@ public class PasswordResetServiceTest {
         assertThrows(UserDeletedException.class, () -> passwordResetService.generatePasswordResetCode(userName));
     }
 
+    /**
+     * Test case for the generatePasswordResetCode method in the PasswordResetService class.
+     * It verifies that the method throws a UserNotActivatedException when the user is not activated.
+     */
     @Test
     void generatePasswordResetCode_shouldThrowUserNotActivatedException_whenUserIsNotActivated() {
         String userName = "testuser";
@@ -123,7 +137,10 @@ public class PasswordResetServiceTest {
     }
 
 
-
+    /**
+     * Test case for the resetPassword method in the PasswordResetService class.
+     * It verifies that the method throws a ResetCodeNotExistException when the reset code is not found.
+     */
     @Test
     void resetPassword_shouldThrowResetCodeNotExistException() {
         // Arrange
