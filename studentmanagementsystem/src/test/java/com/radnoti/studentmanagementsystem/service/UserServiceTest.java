@@ -266,7 +266,7 @@ public final class UserServiceTest {
     }
 
     @Test
-    public void testSetUserIsActivated_InvalidActivationCode_ThrowsUserNotActivatedException() {
+    public void testSetUserIsActivated_InvalidActivationCode_ThrowsUserNotExistException() {
         // Arrange
         UserDto userDto = new UserDto();
         userDto.setActivationCode("invalid");
@@ -275,12 +275,12 @@ public final class UserServiceTest {
         when(userRepository.findByActivationCode("invalid")).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(UserNotActivatedException.class, () -> userService.setUserIsActivated(userDto));
+        assertThrows(UserNotExistException.class, () -> userService.setUserIsActivated(userDto));
         verify(userRepository).findByActivationCode("invalid");
     }
 
     @Test
-    public void testSetUserIsActivated_IncorrectPassword_ThrowsUserNotActivatedException() throws NoSuchAlgorithmException {
+    public void testSetUserIsActivated_IncorrectPassword_ThrowsUserNotExistException() throws NoSuchAlgorithmException {
         // Arrange
         UserDto userDto = new UserDto();
         userDto.setActivationCode("123456");
@@ -293,7 +293,7 @@ public final class UserServiceTest {
         when(userRepository.findByActivationCode("123456")).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(UserNotActivatedException.class, () -> userService.setUserIsActivated(userDto));
+        assertThrows(UserNotExistException.class, () -> userService.setUserIsActivated(userDto));
     }
 
     @Test
