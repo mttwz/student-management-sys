@@ -195,7 +195,7 @@ public class CardService {
                 .orElseThrow(UserNotExistException::new);
 
         Card card = cardRepository.getCardByUserId(userId)
-                .orElseThrow(CardNotExistException::new);
+                .orElseThrow(CardNotAssignedException::new);
 
         if (Boolean.TRUE.equals(card.getIsDeleted())) {
             throw new CardAlreadyDeletedException();
@@ -249,23 +249,25 @@ public class CardService {
     /**
      * Unassigns the card from the student with the provided student ID.
      *
-     * @param studentIdString A string representing the ID of the student.
+     * @param userIdString A string representing the ID of the user.
      * @throws InvalidIdException If the provided student ID is invalid.
-     * @throws StudentNotExistException If the student with the provided ID does not exist.
+     * @throws UserNotExistException If the student with the provided ID does not exist.
      * @throws CardNotAssignedException If the student does not have an assigned card.
      */
     @Transactional
-    public void unassignCardfromStudent(String studentIdString) {
-        Integer studentId = idValidatorUtil.idValidator(studentIdString);
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(StudentNotExistException::new);
-
-        if (student.getCardId() == null){
+    public void unassignCardfromStudent(String userIdString) {
+        Integer userId = idValidatorUtil.idValidator(userIdString);
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotExistException::new);
+        Card card = user.getStudent().getCardId();
+        if (card == null){
             throw new CardNotAssignedException();
         }
 
-        student.setCardId(null);
-        studentRepository.save(student);
+
+        card.setIsAssigned(false);
+        user.getStudent().setCardId(null);
+
     }
 
 

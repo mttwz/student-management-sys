@@ -442,7 +442,7 @@ public class CardServiceTest {
 
         // Act
         // Assert
-        assertThrows(CardNotExistException.class, () -> {
+        assertThrows(CardNotAssignedException.class, () -> {
             cardService.getCardByUserId(userIdString);
         });
     }

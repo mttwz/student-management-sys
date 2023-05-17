@@ -47,12 +47,14 @@ INSERT INTO `card` (`id`, `hash`,`created_at`,`is_deleted`,`deleted_at`,`is_assi
 VALUES (6, '06 06 06 06', '1111-11-11 08:08:08', 0, null, 0, null);
 
 INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (1, 1, 3);
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (2, null, 6);
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (3, null, 7);
 
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (4, null, 9);
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (5, 2, 10);
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (6, null, 11);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (2, null, 5);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (3, null, 6);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (4, null, 7);
+
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (5, null, 9);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (6, 2, 10);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (7, null, 11);
 
 INSERT INTO `workgroup` (`id`, `group_name`, `institution`)
 VALUES (1, 'Workgroup1_name', 'Institution_name');

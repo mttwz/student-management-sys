@@ -36,12 +36,12 @@ public class CardController {
     /**
      * Unassigns a card from a student.
      *
-     * @param studentId The ID of the student to unassign the card from.
+     * @param userId The ID of the user to unassign the card from.
      */
     @RolesAllowed({RoleEnum.Types.SUPERADMIN})
-    @PostMapping(path = "/unassign-card-from-student/{studentId}")
-    public void disconnectCardFromStudent(@PathVariable String studentId) {
-        cardService.unassignCardfromStudent(studentId);
+    @PostMapping(path = "/unassign-card-from-student/{userId}")
+    public void disconnectCardFromStudent(@PathVariable String userId) {
+        cardService.unassignCardfromStudent(userId);
     }
 
 
