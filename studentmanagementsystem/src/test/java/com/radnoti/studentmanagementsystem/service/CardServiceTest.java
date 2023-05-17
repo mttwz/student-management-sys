@@ -66,6 +66,7 @@ public class CardServiceTest {
      */
     @Test
     public void testCreateCard_Success() {
+        // Arrange
 
         String cardHash = "cardHash";
         Mockito.when(cardRepository.findByHash(cardHash)).thenReturn(Optional.empty());
@@ -79,9 +80,11 @@ public class CardServiceTest {
         Mockito.when(cardRepository.save(Mockito.any(Card.class))).thenReturn(card);
 
 
+        // Act
         ResponseDto response = cardService.createCard(cardHash);
 
 
+        // Assert
         assertEquals(card.getId(), response.getId());
     }
 
@@ -93,9 +96,9 @@ public class CardServiceTest {
      */
     @Test
     public void testCreateCard_MissingCardHash_ThrowsFormValueInvalidException() {
-
-
-
+        // Arrange
+        // Act
+        // Assert
         assertThrows(FormValueInvalidException.class, () -> {
             cardService.createCard(null);
         });
@@ -109,12 +112,14 @@ public class CardServiceTest {
      */
     @Test
     public void testCreateCard_CardAlreadyAssigned_ThrowsCardAlreadyAssignedException() {
-
+        // Arrange
         String cardHash = "cardHash";
         Optional<Card> optionalCard = Optional.of(new Card());
         Mockito.when(cardRepository.findByHash(cardHash)).thenReturn(optionalCard);
 
 
+        // Act
+        // Assert
         assertThrows(CardAlreadyAssignedException.class, () -> {
             cardService.createCard(cardHash);
         });
@@ -132,7 +137,7 @@ public class CardServiceTest {
      */
     @Test
     public void testDeleteCard() {
-
+        // Arrange
         String cardIdString = "1";
         Integer cardId = 1;
         Card card = new Card();
@@ -145,9 +150,11 @@ public class CardServiceTest {
         when(studentRepository.findById(card.getLastAssignedTo())).thenReturn(Optional.of(new Student()));
 
 
+        // Act
         cardService.deleteCard(cardIdString);
 
 
+        // Assert
         assertTrue(card.getIsDeleted());
         assertFalse(card.getIsAssigned());
         assertNotNull(card.getDeletedAt());
@@ -161,12 +168,15 @@ public class CardServiceTest {
      */
     @Test
     public void testDeleteCard_InvalidCardId() {
+        // Arrange
 
         String cardIdString = "invalid";
 
         when(idValidatorUtil.idValidator(cardIdString)).thenThrow(new CardNotExistException());
 
 
+        // Act
+        // Assert
         assertThrows(CardNotExistException.class, () -> {
             cardService.deleteCard(cardIdString);
         });
@@ -181,7 +191,7 @@ public class CardServiceTest {
      */
     @Test
     public void testDeleteCard_CardAlreadyDeleted() {
-
+        // Arrange
         String cardIdString = "deleted";
         Card card = new Card();
         card.setId(1);
@@ -191,6 +201,8 @@ public class CardServiceTest {
         when(cardRepository.findById(1)).thenReturn(Optional.of(card));
 
 
+        // Act
+        // Assert
         assertThrows(CardAlreadyDeletedException.class, () -> {
             cardService.deleteCard(cardIdString);
         });
@@ -205,7 +217,7 @@ public class CardServiceTest {
      */
     @Test
     public void testRestoreDeletedCard_ValidCardId() {
-
+        // Arrange
         String cardIdString = "1";
         Integer cardId = 1;
         Card card = new Card();
@@ -223,9 +235,10 @@ public class CardServiceTest {
         when(studentRepository.findById(card.getLastAssignedTo())).thenReturn(Optional.of(student));
 
 
+        // Act
         cardService.restoreDeletedCard(cardIdString);
 
-
+        // Assert
         assertEquals(card, student.getCardId());
         assertTrue(student.getCardId() != null && student.getCardId().equals(card));
         assertTrue(card.getIsAssigned());
@@ -240,12 +253,14 @@ public class CardServiceTest {
      */
     @Test
     public void testRestoreDeletedCard_InvalidCardId() {
-
+        // Arrange
         String cardIdString = "invalid";
 
         when(idValidatorUtil.idValidator(cardIdString)).thenThrow(new InvalidIdException());
 
 
+        // Act
+        // Assert
         assertThrows(InvalidIdException.class, () -> {
             cardService.restoreDeletedCard(cardIdString);
         });
@@ -258,7 +273,7 @@ public class CardServiceTest {
      */
     @Test
     public void testRestoreDeletedCard_CardNotExist() {
-
+        // Arrange
         String cardIdString = "1";
         Integer cardId = 1;
 
@@ -266,6 +281,8 @@ public class CardServiceTest {
         when(cardRepository.findById(cardId)).thenReturn(Optional.empty());
 
 
+        // Act
+        // Assert
         assertThrows(CardNotExistException.class, () -> {
             cardService.restoreDeletedCard(cardIdString);
         });
@@ -278,6 +295,7 @@ public class CardServiceTest {
      */
     @Test
     public void testRestoreDeletedCard_CardNotDeleted() {
+        // Arrange
 
         String cardIdString = "1";
         Integer cardId = 1;
@@ -288,7 +306,8 @@ public class CardServiceTest {
         when(idValidatorUtil.idValidator(cardIdString)).thenReturn(cardId);
         when(cardRepository.findById(cardId)).thenReturn(Optional.of(card));
 
-
+        // Act
+        // Assert
         assertThrows(CardNotDeletedException.class, () -> {
             cardService.restoreDeletedCard(cardIdString);
         });
@@ -302,7 +321,7 @@ public class CardServiceTest {
      */
     @Test
     public void testRestoreDeletedCard_StudentCardNotAssigned() {
-
+        // Arrange
         String cardIdString = "1";
         Integer cardId = 1;
         Card card = new Card();
@@ -318,9 +337,10 @@ public class CardServiceTest {
         when(studentRepository.findById(card.getLastAssignedTo())).thenReturn(Optional.of(student));
 
 
+        // Act
         cardService.restoreDeletedCard(cardIdString);
 
-
+        // Assert
         assertEquals(card, student.getCardId());
         assertTrue(card.getIsAssigned());
         assertFalse(card.getIsDeleted());
@@ -335,10 +355,13 @@ public class CardServiceTest {
      */
     @Test
     public void testAssignCardToStudent_InvalidStudentDto() {
+        // Arrange
 
         StudentDto studentDto = new StudentDto();
 
 
+        // Act
+        // Assert
         assertThrows(FormValueInvalidException.class, () -> {
             cardService.assignCardToStudent(studentDto);
         });
@@ -353,7 +376,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByUserId() {
-
+        // Arrange
         String userIdString = "123";
 
         User user = new User();
@@ -368,9 +391,11 @@ public class CardServiceTest {
         when(cardRepository.getCardByUserId(123)).thenReturn(Optional.of(card));
 
 
+        // Act
         ResponseDto responseDto = cardService.getCardByUserId(userIdString);
 
 
+        // Assert
         assertNotNull(responseDto);
         assertEquals(456, responseDto.getId());
     }
@@ -383,6 +408,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByUserId_UserNotExist() {
+        // Arrange
 
         String userIdString = "123";
 
@@ -390,6 +416,8 @@ public class CardServiceTest {
         when(userRepository.findById(123)).thenReturn(Optional.empty());
 
 
+        // Act
+        // Assert
         assertThrows(UserNotExistException.class, () -> {
             cardService.getCardByUserId(userIdString);
         });
@@ -402,7 +430,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByUserId_CardNotExist() {
-
+        // Arrange
         String userIdString = "123";
 
         User user = new User();
@@ -412,7 +440,8 @@ public class CardServiceTest {
         when(userRepository.findById(123)).thenReturn(Optional.of(user));
         when(cardRepository.getCardByUserId(123)).thenReturn(Optional.empty());
 
-
+        // Act
+        // Assert
         assertThrows(CardNotExistException.class, () -> {
             cardService.getCardByUserId(userIdString);
         });
@@ -425,7 +454,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByUserId_CardAlreadyDeleted() {
-
+        // Arrange
         String userIdString = "123";
 
         User user = new User();
@@ -440,6 +469,8 @@ public class CardServiceTest {
         when(cardRepository.getCardByUserId(123)).thenReturn(Optional.of(card));
 
 
+        // Act
+        // Assert
         assertThrows(CardAlreadyDeletedException.class, () -> {
             cardService.getCardByUserId(userIdString);
         });
@@ -453,7 +484,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByStudentId() {
-
+        // Arrange
         String studentIdString = "123";
 
         Card card = new Card();
@@ -468,9 +499,11 @@ public class CardServiceTest {
 
 
 
+        // Act
         ResponseDto responseDto = cardService.getCardByStudentId(studentIdString);
 
-
+        
+        // Assert
         assertNotNull(responseDto);
         assertEquals(456, responseDto.getId());
 

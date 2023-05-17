@@ -153,10 +153,10 @@ public class PasswordResetServiceTest {
         user.setId(1);
         user.setEmail("test@example.com");
 
-        // Mock the behavior when the reset code is not found
+        // Act
         when(userRepository.findByResetCode(userDto.getResetCode())).thenThrow(ResetCodeNotExistException.class);
 
-        // Act and Assert
+        // Assert
         assertThrows(ResetCodeNotExistException.class, () -> passwordResetService.resetPassword(userDto));
         verify(userRepository).findByResetCode(userDto.getResetCode());
         verifyNoMoreInteractions(passwordResetRepository);

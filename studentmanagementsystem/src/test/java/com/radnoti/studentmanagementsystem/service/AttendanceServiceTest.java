@@ -68,7 +68,7 @@ public class AttendanceServiceTest {
      */
     @Test
     public void test_createAttendance_successful() {
-
+        // Arrange
         AttendanceDto attendanceDto = new AttendanceDto();
         attendanceDto.setUserId(1);
 
@@ -87,10 +87,10 @@ public class AttendanceServiceTest {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(studentRepository.findByUserId(1)).thenReturn(Optional.of(student));
         when(attendanceMapper.fromDtoToEntity(attendanceDto)).thenReturn(attendance);
-
+        // Act
         attendanceService.createAttendance(attendanceDto);
 
-        // Verify that the userRepository, studentRepository, and attendanceRepository methods were called with the correct arguments
+        // Assert
         Mockito.verify(userRepository).findById(1);
         Mockito.verify(studentRepository).findByUserId(1);
 
@@ -105,16 +105,18 @@ public class AttendanceServiceTest {
      */
     @Test
     public void testCreateAttendance_userNotExistException() {
+        // Arrange
         AttendanceDto attendanceDto = new AttendanceDto();
         attendanceDto.setUserId(1);
 
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
+        // Act
         assertThrows(UserNotExistException.class, () -> {
             attendanceService.createAttendance(attendanceDto);
         });
 
-        // Verify that the userRepository method was called with the correct argument
+        // Assert
         Mockito.verify(userRepository).findById(1);
     }
 
@@ -127,6 +129,7 @@ public class AttendanceServiceTest {
      */
     @Test
     public void testCreateAttendance_userDeletedException() {
+        // Arrange
         AttendanceDto attendanceDto = new AttendanceDto();
         attendanceDto.setUserId(1);
 
@@ -136,11 +139,12 @@ public class AttendanceServiceTest {
 
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
+        // Act
         assertThrows(UserDeletedException.class, () -> {
             attendanceService.createAttendance(attendanceDto);
         });
 
-        // Verify that the userRepository method was called with the correct argument
+        // Assert
         Mockito.verify(userRepository).findById(1);
     }
 
@@ -154,6 +158,8 @@ public class AttendanceServiceTest {
      */
     @Test
     public void testCreateAttendance_userNotActivatedException() {
+        // Arrange
+
         AttendanceDto attendanceDto = new AttendanceDto();
         attendanceDto.setUserId(1);
 
@@ -163,11 +169,11 @@ public class AttendanceServiceTest {
 
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
+        // Act
+        // Assert
         assertThrows(UserNotActivatedException.class, () -> {
             attendanceService.createAttendance(attendanceDto);
         });
-
-        // Verify that the userRepository method was called with the correct argument
         verify(userRepository).findById(1);
     }
 
