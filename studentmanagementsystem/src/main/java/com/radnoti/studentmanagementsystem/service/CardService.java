@@ -7,7 +7,6 @@ package com.radnoti.studentmanagementsystem.service;
 import com.radnoti.studentmanagementsystem.exception.card.*;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
 import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
-import com.radnoti.studentmanagementsystem.exception.form.FormValueNullException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.mapper.CardMapper;

@@ -4,17 +4,13 @@
  */
 package com.radnoti.studentmanagementsystem.service;
 
-import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
-import com.radnoti.studentmanagementsystem.exception.role.RoleNotExistException;
-import com.radnoti.studentmanagementsystem.exception.user.UserAlreadyExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.exception.workgroup.*;
 import com.radnoti.studentmanagementsystem.mapper.UserMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMapper;
 import com.radnoti.studentmanagementsystem.mapper.WorkgroupMembersMapper;
 import com.radnoti.studentmanagementsystem.model.dto.*;
-import com.radnoti.studentmanagementsystem.model.entity.Role;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroup;
 import com.radnoti.studentmanagementsystem.model.entity.Workgroupmembers;
@@ -29,8 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.Objects;
-import java.util.Optional;
+
 
 /**
  * @author matevoros

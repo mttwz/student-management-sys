@@ -6,7 +6,6 @@ import com.radnoti.studentmanagementsystem.exception.card.CardMismatchException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotAssignedException;
 import com.radnoti.studentmanagementsystem.exception.card.CardNotExistException;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import com.radnoti.studentmanagementsystem.exception.student.StudentNotExistException;
 import com.radnoti.studentmanagementsystem.exception.user.UserDeletedException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotActivatedException;

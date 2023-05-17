@@ -1,9 +1,6 @@
 package com.radnoti.studentmanagementsystem.exception.workgroupSchedule;
 
 import com.radnoti.studentmanagementsystem.exception.ErrorResponse;
-import com.radnoti.studentmanagementsystem.exception.workgroup.UserNotAddedToWorkgroupException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotCreatedException;
-import com.radnoti.studentmanagementsystem.exception.workgroup.WorkgroupNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

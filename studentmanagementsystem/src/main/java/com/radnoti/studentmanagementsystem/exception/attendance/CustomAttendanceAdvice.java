@@ -1,9 +1,6 @@
 package com.radnoti.studentmanagementsystem.exception.attendance;
 
 import com.radnoti.studentmanagementsystem.exception.ErrorResponse;
-import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
-import com.radnoti.studentmanagementsystem.exception.form.FormValueNullException;
-import com.radnoti.studentmanagementsystem.exception.form.InvalidIdException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

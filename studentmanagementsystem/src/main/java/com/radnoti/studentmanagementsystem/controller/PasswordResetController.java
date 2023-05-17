@@ -1,14 +1,11 @@
 package com.radnoti.studentmanagementsystem.controller;
 
-import com.radnoti.studentmanagementsystem.enums.RoleEnum;
-import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
-import com.radnoti.studentmanagementsystem.model.dto.StudentDto;
+
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
 import com.radnoti.studentmanagementsystem.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.security.NoSuchAlgorithmException;
 
 @RestController

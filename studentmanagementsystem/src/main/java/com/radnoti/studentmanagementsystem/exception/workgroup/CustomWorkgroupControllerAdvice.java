@@ -1,7 +1,6 @@
 package com.radnoti.studentmanagementsystem.exception.workgroup;
 
 import com.radnoti.studentmanagementsystem.exception.ErrorResponse;
-import com.radnoti.studentmanagementsystem.exception.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
