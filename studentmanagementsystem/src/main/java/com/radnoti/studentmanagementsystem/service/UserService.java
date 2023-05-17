@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final int ACTIVATION_CODE_LENGTH = 8;
+    private static final int ACTIVATION_CODE_LENGTH = 16;
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final WorkgroupRepository workgroupRepository;
@@ -49,6 +49,7 @@ public class UserService {
     private final WorkgroupMapper workgroupMapper;
     private final CardRepository cardRepository;
     private final WorkgroupscheduleRepository workgroupscheduleRepository;
+    private final AttendanceRepository attendanceRepository;
 
 
     /**
@@ -281,25 +282,32 @@ public class UserService {
         if (optionalUserByEmail.isPresent() && !Objects.equals(optionalUserByEmail.get().getId(), userId)) {
             throw new UserAlreadyExistException();
         }
+        if(!userInfoDto.getRoleName().equalsIgnoreCase(user.getRoleId().getRoleType())){
+            if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
+                user.setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
+                attendanceRepository.deleteAllByStudentId(user.getStudent().getId());
+                cardRepository.getCardByLastAssignedTo(user.getStudent().getId()).ifPresent(c -> c.setIsAssigned(false));
+                studentRepository.findByUserId(user.getId()).ifPresent(studentRepository::delete);
+            } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
+                user.setRoleId(new Role(RoleEnum.ADMIN.getId()));
+                attendanceRepository.deleteAllByStudentId(user.getStudent().getId());
+                cardRepository.getCardByLastAssignedTo(user.getStudent().getId()).ifPresent(c -> c.setIsAssigned(false));
+                studentRepository.findByUserId(user.getId()).ifPresent(studentRepository::delete);
+            } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.STUDENT)){
+                user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
+                Student student = new Student();
+                student.setUserId(user);
+                studentRepository.save(student);
+            }else throw new RoleNotExistException();
+        }
 
-        if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.SUPERADMIN)) {
-            user.setRoleId(new Role(RoleEnum.SUPERADMIN.getId()));
-            studentRepository.findByUserId(user.getId()).ifPresent(studentRepository::delete);
-        } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.ADMIN)) {
-            user.setRoleId(new Role(RoleEnum.ADMIN.getId()));
-            studentRepository.findByUserId(user.getId()).ifPresent(studentRepository::delete);
-        } else if (userInfoDto.getRoleName().equalsIgnoreCase(RoleEnum.Types.STUDENT)){
-            user.setRoleId(new Role(RoleEnum.STUDENT.getId()));
-            Student student = new Student();
-            student.setUserId(user);
-            studentRepository.save(student);
-        }else throw new RoleNotExistException();
 
         user.setFirstName(userInfoDto.getFirstName());
         user.setLastName(userInfoDto.getLastName());
         user.setBirth(userInfoDto.getBirth());
         user.setEmail(userInfoDto.getEmail());
         user.setPhone(userInfoDto.getPhone());
+
 
         return new ResponseDto(userId);
     }

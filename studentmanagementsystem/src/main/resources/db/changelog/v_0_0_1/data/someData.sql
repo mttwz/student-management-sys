@@ -46,8 +46,8 @@ VALUES (5, '05 05 05 05', '1111-11-11 08:08:08', 0, null, 0, null);
 INSERT INTO `card` (`id`, `hash`,`created_at`,`is_deleted`,`deleted_at`,`is_assigned`,`last_assigned_to`)
 VALUES (6, '06 06 06 06', '1111-11-11 08:08:08', 0, null, 0, null);
 
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (1, null, 5);
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (2, 1, 6);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (1, 1, 5);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (2, null, 6);
 INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (3, null, 7);
 
 INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (4, null, 9);

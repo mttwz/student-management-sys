@@ -6,6 +6,7 @@ import com.radnoti.studentmanagementsystem.model.dto.UserLoginDto;
 import com.radnoti.studentmanagementsystem.model.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring"
@@ -21,6 +22,9 @@ public interface UserMapper {
     UserLoginDto fromEntityToLoginDto(User user);
     @Mapping(source = "roleId.roleType", target = "roleName")
     UserInfoDto fromEntityToInfoDto(User user);
+
+
+
 
 
 }

@@ -3,10 +3,12 @@ package com.radnoti.studentmanagementsystem.repository;
 import com.radnoti.studentmanagementsystem.model.entity.Attendance;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AttendanceRepository extends CrudRepository<Attendance, Integer> {
     @Query("select a from Attendance a " +
@@ -38,4 +40,8 @@ public interface AttendanceRepository extends CrudRepository<Attendance, Integer
             "where u.id = :userId and " +
             "a.arrival like concat(:dateStr,'%')")
     Page<Attendance> getOwnAttendancePerDay(Integer userId, String dateStr,Pageable pageable);
+
+    @Modifying
+    @Query("delete from Attendance a where a.studentId.id = :studentId")
+    void deleteAllByStudentId(Integer studentId);
 }

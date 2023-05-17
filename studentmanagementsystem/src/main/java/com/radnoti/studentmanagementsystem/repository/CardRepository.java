@@ -38,4 +38,8 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
             "c.isAssigned = false " +
             "order by c.createdAt desc")
     List<Card> findAllAvaliableCard();
+
+
+    @Query("select c from Card c where c.lastAssignedTo = :studentId")
+    Optional<Card> getCardByLastAssignedTo(Integer studentId);
 }
