@@ -63,6 +63,7 @@ public class PasswordResetServiceTest {
      */
     @Test
     void generatePasswordResetCode_shouldGenerateResetCodeAndSavePasswordReset() {
+        // Arrange
         String userName = "testuser";
         User user = new User();
         user.setId(1);
@@ -93,9 +94,13 @@ public class PasswordResetServiceTest {
      */
     @Test
     void generatePasswordResetCode_shouldThrowUserNotExistException() {
-
+        // Arrange
         String userNameNotExist = "usernotexist";
         when(userRepository.findByUsername(userNameNotExist)).thenReturn(Optional.empty());
+
+
+        // Act
+        // Assert
         assertThrows(UserNotExistException.class, () -> passwordResetService.generatePasswordResetCode(userNameNotExist));
 }
 
@@ -107,6 +112,7 @@ public class PasswordResetServiceTest {
      */
     @Test
     void generatePasswordResetCode_shouldThrowUserDeletedException_whenUserIsDeleted() {
+        // Arrange
         String userName = "testuser";
         User user = new User();
         user.setId(1);
@@ -115,6 +121,8 @@ public class PasswordResetServiceTest {
         when(userRepository.findByUsername(userName)).thenReturn(Optional.of(user));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
+        // Act
+        // Assert
         assertThrows(UserDeletedException.class, () -> passwordResetService.generatePasswordResetCode(userName));
     }
 
@@ -124,6 +132,7 @@ public class PasswordResetServiceTest {
      */
     @Test
     void generatePasswordResetCode_shouldThrowUserNotActivatedException_whenUserIsNotActivated() {
+        // Arrange
         String userName = "testuser";
         User user = new User();
         user.setId(1);
@@ -133,6 +142,8 @@ public class PasswordResetServiceTest {
         when(userRepository.findByUsername(userName)).thenReturn(Optional.of(user));
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
+        // Act
+        // Assert
         assertThrows(UserNotActivatedException.class, () -> passwordResetService.generatePasswordResetCode(userName));
     }
 

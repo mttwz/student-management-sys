@@ -56,7 +56,7 @@ public class StudentServiceTest {
      */
     @Test
     public void testRegisterStudent() throws NoSuchAlgorithmException {
-        // Mocking dependencies and test data
+        // Arrange
         UserDto userDto = new UserDto();
         userDto.setPassword("password");
 
@@ -68,10 +68,10 @@ public class StudentServiceTest {
         when(userService.adduser(any(UserDto.class))).thenReturn(savedUserIdResponse);
         when(userRepository.findById(123)).thenReturn(Optional.of(user));
 
-        // Calling the method to be tested
+        // Act
         ResponseDto response = studentService.registerStudent(userDto);
 
-        // Verifying the behavior and assertions
+        // Assert
         verify(userService, times(1)).adduser(userDto);
         verify(userRepository, times(1)).findById(123);
         verify(studentRepository, times(1)).save(any(Student.class));

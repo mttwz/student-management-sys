@@ -55,7 +55,6 @@ public class RoleServiceTest {
         roleService.setUserRole(validUserDto);
 
         // Assert
-        // ... perform assertions as necessary to verify that the user role was set successfully
         Mockito.verify(userRepository, Mockito.times(1)).setUserRole(validUserDto.getId(), validUserDto.getRoleName());
     }
 

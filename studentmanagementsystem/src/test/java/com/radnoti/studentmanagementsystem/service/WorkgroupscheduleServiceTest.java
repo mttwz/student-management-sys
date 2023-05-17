@@ -82,7 +82,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testGetWorkgroupScheduleByUserId_SuperadminRole() {
-        // Mocking dependencies and test data
+        // Arrange
         String authHeader = "Bearer [token]";
         String userIdString = "123";
         Integer userId = 123;
@@ -97,10 +97,10 @@ public class WorkgroupscheduleServiceTest {
         when(workgroupSchedulePage.getTotalPages()).thenReturn(1);
         when(workgroupSchedulePage.stream()).thenReturn(Stream.empty());
 
-        // Calling the method to be tested
+        // Act
         PagingDto result = workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userIdString, pageable);
 
-        // Verifying the behavior and assertions
+        // Assert
         verify(idValidatorUtil, times(1)).idValidator(userIdString);
         verify(userRepository, times(1)).findById(userId);
         verify(jwtUtil, times(1)).getRoleFromAuthHeader(authHeader);
@@ -115,7 +115,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testGetWorkgroupScheduleByUserId_InvalidUserId() {
-        // Mocking dependencies and test data
+        // Arrange
         String authHeader = "authHeader";
         String userIdString = "123";
         Integer userId = 123;
@@ -124,12 +124,12 @@ public class WorkgroupscheduleServiceTest {
         when(idValidatorUtil.idValidator(userIdString)).thenReturn(userId);
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // Calling the method to be tested and asserting the thrown exception
+        // Act
         assertThrows(UserNotExistException.class, () -> {
             workgroupScheduleService.getWorkgroupScheduleByUserId(authHeader, userIdString, pageable);
         });
 
-        // Verifying the behavior
+        // Assert
         verify(idValidatorUtil, times(1)).idValidator(userIdString);
         verify(userRepository, times(1)).findById(userId);
         verifyNoMoreInteractions(jwtUtil, workgroupscheduleRepository, workgroupScheduleMapper);
@@ -138,7 +138,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testGetWorkgroupScheduleByWorkgroupId() {
-        // Mocking dependencies and test data
+        // Arrange
         String authHeader = "authHeader";
         WorkgroupscheduleDto workgroupScheduleDto = new WorkgroupscheduleDto();
         workgroupScheduleDto.setWorkgroupId(123);
@@ -153,10 +153,10 @@ public class WorkgroupscheduleServiceTest {
         when(jwtUtil.getRoleFromAuthHeader(anyString())).thenReturn(RoleEnum.Types.ADMIN);
         when(workgroupscheduleRepository.getWorkgroupScheduleByWorkgroupId(anyInt(), anyString(), any(Pageable.class))).thenReturn(workgroupSchedulePage);
 
-        // Calling the method to be tested
+        // Act
         PagingDto result = workgroupScheduleService.getWorkgroupScheduleByWorkgroupId(authHeader, workgroupScheduleDto, pageable);
 
-        // Asserting the result
+        // Assert
         assertNotNull(result);
         assertEquals(1, result.getWorkgroupscheduleDtoList().size());
         assertEquals(1, result.getAllPages());
@@ -166,7 +166,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testDeleteWorkgroupSchedule() {
-        // Mocking dependencies and test data
+        // Arrange
         String workgroupScheduleIdString = "1";
 
         Workgroupschedule workgroupSchedule = new Workgroupschedule();
@@ -176,10 +176,10 @@ public class WorkgroupscheduleServiceTest {
         when(idValidatorUtil.idValidator(workgroupScheduleIdString)).thenReturn(1);
         when(workgroupscheduleRepository.findById(1)).thenReturn(Optional.of(workgroupSchedule));
 
-        // Calling the method to be tested
+        // Act
         workgroupScheduleService.deleteWorkgroupSchedule(workgroupScheduleIdString);
 
-        // Verifying the changes made to the workgroup schedule
+        // Assert
         assertTrue(workgroupSchedule.getIsDeleted());
         assertNotNull(workgroupSchedule.getDeletedAt());
     }
@@ -187,13 +187,15 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testDeleteWorkgroupSchedule_WorkgroupScheduleNotExistException() {
-        // Mocking dependencies and test data
+        // Arrange
         String workgroupScheduleIdString = "1";
 
         when(idValidatorUtil.idValidator(workgroupScheduleIdString)).thenReturn(1);
         when(workgroupscheduleRepository.findById(1)).thenReturn(Optional.empty());
 
-        // Calling the method to be tested and asserting the thrown exception
+
+        // Act
+        // Assert
         assertThrows(WorkgroupScheduleNotExistException.class, () -> {
             workgroupScheduleService.deleteWorkgroupSchedule(workgroupScheduleIdString);
         });
@@ -201,7 +203,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testDeleteWorkgroupSchedule_WorkgroupAlreadyDeletedException() {
-        // Mocking dependencies and test data
+        // Arrange
         String workgroupScheduleIdString = "1";
 
         Workgroupschedule workgroupSchedule = new Workgroupschedule();
@@ -211,7 +213,9 @@ public class WorkgroupscheduleServiceTest {
         when(idValidatorUtil.idValidator(workgroupScheduleIdString)).thenReturn(1);
         when(workgroupscheduleRepository.findById(1)).thenReturn(Optional.of(workgroupSchedule));
 
-        // Calling the method to be tested and asserting the thrown exception
+
+        // Act
+        // Assert
         assertThrows(WorkgroupAlreadyDeletedException.class, () -> {
             workgroupScheduleService.deleteWorkgroupSchedule(workgroupScheduleIdString);
         });
@@ -219,7 +223,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testRestoreDeletedWorkgroupSchedule() {
-        // Mocking dependencies and test data
+        // Arrange
         String workgroupScheduleIdString = "1";
 
         Workgroupschedule workgroupSchedule = new Workgroupschedule();
@@ -230,10 +234,11 @@ public class WorkgroupscheduleServiceTest {
         when(idValidatorUtil.idValidator(workgroupScheduleIdString)).thenReturn(1);
         when(workgroupscheduleRepository.findById(1)).thenReturn(Optional.of(workgroupSchedule));
 
-        // Calling the method to be tested
+        // Act
         workgroupScheduleService.restoreDeletedWorkgroupSchedule(workgroupScheduleIdString);
 
-        // Verifying the changes made to the workgroup schedule
+
+        // Assert
         assertFalse(workgroupSchedule.getIsDeleted());
         assertNull(workgroupSchedule.getDeletedAt());
     }
@@ -245,7 +250,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void testGetWorkgroupScheduleByWorkgroupId_InvalidWorkgroupId() {
-        // Mocking dependencies and test data
+        // Arrange
         String authHeader = "authHeader";
         WorkgroupscheduleDto workgroupScheduleDto = new WorkgroupscheduleDto();
         workgroupScheduleDto.setWorkgroupId(123);
@@ -254,7 +259,8 @@ public class WorkgroupscheduleServiceTest {
 
         when(workgroupRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        // Calling the method to be tested and asserting the thrown exception
+        // Act
+        // Assert
         assertThrows(WorkgroupNotExistException.class, () -> {
             workgroupScheduleService.getWorkgroupScheduleByWorkgroupId(authHeader, workgroupScheduleDto, pageable);
         });
@@ -263,6 +269,7 @@ public class WorkgroupscheduleServiceTest {
 
     @Test
     public void createWorkgroupScheduleTest_not_created(){
+        // Arrange
         Workgroup workgroup = new Workgroup(1);
 
         WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
@@ -275,12 +282,15 @@ public class WorkgroupscheduleServiceTest {
         workgroupschedule.setId(1);
 
 
+        // Act
+        // Assert
         assertThrows(FormValueInvalidException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
 
     }
 
     @Test
     public void createWorkgroupScheduleTest_workgroup_does_not_exist(){
+        // Arrange
         Workgroup workgroup = new Workgroup(1);
 
         WorkgroupscheduleDto workgroupscheduleDto = new WorkgroupscheduleDto();
@@ -301,6 +311,8 @@ public class WorkgroupscheduleServiceTest {
 
         when(workgroupRepository.findById(any())).thenReturn(Optional.empty());
 
+        // Act
+        // Assert
         assertThrows(WorkgroupNotExistException.class,()->workgroupScheduleService.createWorkgroupSchedule(workgroupscheduleDto));
 
     }

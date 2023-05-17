@@ -502,7 +502,7 @@ public class CardServiceTest {
         // Act
         ResponseDto responseDto = cardService.getCardByStudentId(studentIdString);
 
-        
+
         // Assert
         assertNotNull(responseDto);
         assertEquals(456, responseDto.getId());
@@ -516,11 +516,14 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByStudentId_StudentNotExist() {
+        // Arrange
         String studentIdString = "123";
 
         when(idValidatorUtil.idValidator(studentIdString)).thenReturn(123);
         when(studentRepository.findById(123)).thenReturn(Optional.empty());
 
+        // Act
+        // Assert
         assertThrows(StudentNotExistException.class, () -> {
             cardService.getCardByStudentId(studentIdString);
         });
@@ -533,6 +536,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetCardByStudentId_CardNotAssigned() {
+        // Arrange
         String studentIdString = "123";
 
         Student student = new Student();
@@ -542,6 +546,8 @@ public class CardServiceTest {
         when(idValidatorUtil.idValidator(studentIdString)).thenReturn(123);
         when(studentRepository.findById(123)).thenReturn(Optional.of(student));
 
+        // Act
+        // Assert
         assertThrows(CardNotAssignedException.class, () -> {
             cardService.getCardByStudentId(studentIdString);
         });
@@ -557,7 +563,7 @@ public class CardServiceTest {
      */
     @Test
     public void testGetAllCard() {
-
+        // Arrange
         Pageable pageable = PageRequest.of(0, 10);
 
         List<Card> cardList = new ArrayList<>();
@@ -571,9 +577,11 @@ public class CardServiceTest {
         when(cardRepository.findAll(pageable)).thenReturn(cardPage);
 
 
+        // Act
         PagingDto pagingDto = cardService.getAllCard(pageable);
 
 
+        // Assert
         assertNotNull(pagingDto);
         assertEquals(2, pagingDto.getAllPages());
         assertEquals(20, pagingDto.getCardDtoList().size());
