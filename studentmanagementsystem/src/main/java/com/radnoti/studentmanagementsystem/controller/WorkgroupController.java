@@ -128,7 +128,6 @@ public class WorkgroupController {
     @RolesAllowed({RoleEnum.Types.SUPERADMIN, RoleEnum.Types.ADMIN})
     @GetMapping(path = "/search-addable-users/{workgroupId}{q}")
     public PagingDto searchAddableUsers(@RequestParam(required = false) String q, @PathVariable String workgroupId, Pageable pageable){
-        System.err.println(q);
         return workgroupService.searchAddableUsers(q,workgroupId,pageable);
 
     }

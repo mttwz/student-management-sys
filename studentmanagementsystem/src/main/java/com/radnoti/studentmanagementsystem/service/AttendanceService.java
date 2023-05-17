@@ -110,7 +110,6 @@ public class AttendanceService {
             if (lastLeaving == null && dateUtil.isSameDay(currDate, lastArrival)) {
                 lastAttendance.setLeaving(currDate);
                 attendanceRepository.save(lastAttendance);
-                System.err.println(cardHash);
                 return new ResponseDto(lastAttendance.getId());
             }
         }
@@ -250,8 +249,7 @@ public class AttendanceService {
      * @throws AttendanceNotExistException if the attendance record with the provided ID does not exist
      */
     public void deleteAttendance(String attendanceIdString) {
-        System.err.println(attendanceIdString);
-        //lehet csak logikai torles kene idk
+
         Integer attendanceId = idValidatorUtil.idValidator(attendanceIdString);
         Attendance attendance = attendanceRepository.findById(attendanceId)
                 .orElseThrow(AttendanceNotExistException::new);

@@ -247,7 +247,7 @@ public class WorkgroupService {
         workgroupRepository.findById(workgroupId)
                 .orElseThrow(WorkgroupNotExistException::new);
 
-        System.err.println(workgroupId);
+
         Page <User> userPage = userRepository.getAllAddableUsers(userSearchString,workgroupId,pageable);
 
         PagingDto pagingDto = new PagingDto();

@@ -416,11 +416,6 @@ public class WorkgroupScheduleService {
                     checkOut = checkIn.withHour(23).withMinute(59).withSecond(59);
                 }else checkOut = attendanceDtoList.get(j).getLeaving();
 
-                System.err.println(workgroupscheduleDtoList.get(i).getName());
-                System.err.println(scheduleStart);
-                System.err.println(scheduleEnd);
-                System.err.println(checkIn);
-                System.err.println(checkOut);
 
                 //overlap check
                 if (((scheduleStart.isBefore(checkOut) || scheduleStart.isEqual(checkOut)) && (scheduleEnd.isAfter(checkIn) || scheduleEnd.isEqual(checkIn)))) {

@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IdValidatorUtil {
-
-
     /**
      * Validates and converts the given ID string to an Integer.
      *
