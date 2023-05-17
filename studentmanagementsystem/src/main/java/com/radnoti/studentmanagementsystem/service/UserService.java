@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final int ACTIVATION_CODE_LENGTH = 16;
+    private static final int ACTIVATION_CODE_LENGTH = 24;
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final WorkgroupRepository workgroupRepository;
