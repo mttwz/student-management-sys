@@ -46,7 +46,7 @@ VALUES (5, '05 05 05 05', '1111-11-11 08:08:08', 0, null, 0, null);
 INSERT INTO `card` (`id`, `hash`,`created_at`,`is_deleted`,`deleted_at`,`is_assigned`,`last_assigned_to`)
 VALUES (6, '06 06 06 06', '1111-11-11 08:08:08', 0, null, 0, null);
 
-INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (1, 1, 5);
+INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (1, 1, 3);
 INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (2, null, 6);
 INSERT INTO `student` (`id`, `card_id`, `user_id`) VALUES (3, null, 7);
 
@@ -60,6 +60,10 @@ VALUES (1, 'Workgroup1_name', 'Institution_name');
 INSERT INTO `workgroup` (`id`, `group_name`, `institution`)
 VALUES (2, 'Workgroup2_name', 'Institution2_name');
 
+INSERT INTO `workgroup` (`id`, `group_name`, `institution`)
+VALUES (3, 'test', 'test');
+
+
 INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (1, 4, 1);
 INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (2, 5, 1);
 INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (3, 6, 1);
@@ -69,3 +73,20 @@ INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (5, 8, 
 INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (6, 9, 2);
 INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (7, 10, 2);
 INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (8, 11, 2);
+
+INSERT INTO `workgroup_members` (`id`, `user_id`, `workgroup_id`) VALUES (9, 3, 3);
+
+INSERT INTO `workgroup_schedule` (`id`, `name`, `workgroup_id`, `start`, `end`, `is_onsite`, `is_deleted`, `deleted_at`)
+VALUES (1, "test_name1", 3, '2023-05-17 10:27:09.000000', '2023-05-17 12:27:09.000000', '1', '0', null);
+
+INSERT INTO `workgroup_schedule` (`id`, `name`, `workgroup_id`, `start`, `end`, `is_onsite`, `is_deleted`, `deleted_at`)
+VALUES (2, "test_name2", 3, '2023-05-17 13:27:09.000000', '2023-05-17 14:00:09.000000', '1', '0', null);
+
+INSERT INTO `attendance` (`id`, `student_id`, `arrival`, `leaving`)
+VALUES (NULL, '1', '2023-05-17 11:23:10.000000', '2023-05-17 12:23:10.000000');
+
+INSERT INTO `attendance` (`id`, `student_id`, `arrival`, `leaving`)
+VALUES (NULL, '1', '2023-05-17 12:43:10.000000', '2023-05-17 13:23:10.000000');
+
+INSERT INTO `attendance` (`id`, `student_id`, `arrival`, `leaving`)
+VALUES (NULL, '1', '2023-05-17 15:23:10.000000', '2023-05-17 17:23:10.000000');

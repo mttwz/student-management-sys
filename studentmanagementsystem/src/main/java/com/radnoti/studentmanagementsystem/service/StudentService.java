@@ -6,6 +6,7 @@ package com.radnoti.studentmanagementsystem.service;
 
 import com.radnoti.studentmanagementsystem.enums.RoleEnum;
 import com.radnoti.studentmanagementsystem.exception.form.FormValueInvalidException;
+import com.radnoti.studentmanagementsystem.exception.form.PasswordTooShortException;
 import com.radnoti.studentmanagementsystem.exception.user.UserNotExistException;
 import com.radnoti.studentmanagementsystem.model.dto.ResponseDto;
 import com.radnoti.studentmanagementsystem.model.dto.UserDto;
@@ -42,12 +43,17 @@ public class StudentService {
      * @param userDto The UserDto object containing the student's information.
      * @return A ResponseDto object containing the ID of the registered student.
      * @throws NoSuchAlgorithmException If the hashing algorithm is not available.
+     * @throws PasswordTooShortException If the password does not meet the minimum length requirement.
      * @throws FormValueInvalidException If the password in the UserDto object is null or empty.
      * @throws UserNotExistException If the user with the provided ID does not exist.
      */
     @Transactional
     public ResponseDto registerStudent(UserDto userDto) throws NoSuchAlgorithmException {
         userDto.setRoleName(RoleEnum.Types.STUDENT);
+
+        if(userDto.getPassword().length() <= 8){
+            throw new PasswordTooShortException();
+        }
 
         if (userDto.getPassword() == null || userDto.getPassword().isBlank()){
             throw new FormValueInvalidException();

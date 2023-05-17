@@ -50,4 +50,10 @@ public class CustomFormAdvice {
         setErrBody(e);
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_004_ERR"), status);
     }
+
+    @ExceptionHandler(PasswordTooShortException.class)
+    public ResponseEntity<ErrorResponse> handleException(PasswordTooShortException e) {
+        setErrBody(e);
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage(), stackTrace, "FORM_005_ERR"), status);
+    }
 }

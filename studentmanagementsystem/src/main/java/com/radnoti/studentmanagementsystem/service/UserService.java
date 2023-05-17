@@ -143,7 +143,7 @@ public class UserService {
     public void setUserIsActivated(UserDto userDto) throws NoSuchAlgorithmException {
 
         User userByCode = userRepository.findByActivationCode(userDto.getActivationCode())
-                .orElseThrow(UserNotActivatedException::new);
+                .orElseThrow(UserNotExistException::new);
 
         if (!Objects.equals(userByCode.getPassword(), hashUtil.getSHA256Hash(userDto.getPassword()))){
             throw new UserNotActivatedException();
